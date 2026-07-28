@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import '../styles/index.scss'
+import './styles/index.scss'
 
 import { Roboto } from 'next/font/google'
 
