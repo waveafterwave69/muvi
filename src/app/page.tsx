@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 }
 
 const Home = () => {
-    return <>dsadasada</>
+    return <div></div>
 }
 
 export default Home
