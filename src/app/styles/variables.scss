@@ -37,6 +37,10 @@
     --h3-font-size: 38px;
     --h3-font-size-small: 28px;
     --h3-font-size-small: 18px;
+
+    --tabs-bg: #0b080b;
+    --tabs-border-color: #fff5fa14;
+    --tabs-active-text: #000;
 }
 
 @media (prefers-color-scheme: light) {
@@ -54,5 +58,8 @@
 
         --card-bg: #fffffff2;
         --card-border-color: #c9e0f5;
+        --tabs-bg: #ffffffcc;
+        --tabs-border-color: #c9e0f5;
+        --tabs-active-text: #fff;
     }
 }
