@@ -23,12 +23,30 @@
 }
 
 .primary {
+    position: relative;
+    overflow: hidden;
     background: var(--button-primary-gradient);
     color: var(--text-secondary);
     font-weight: 700;
+    z-index: 1;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--button-primary-gradient-hover);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: -1;
+    }
 
     &:not(:disabled):hover {
-        background-color: var(--accent-soft);
+        &::before {
+            opacity: 1;
+        }
     }
 }
 
