@@ -57,37 +57,18 @@ const HomeContent = () => {
             </motion.p>
 
             <motion.div variants={itemVariants} className={styles.buttons}>
-                <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.98 }}
+                <Button
+                    onClick={() => handleRedirectAuth('login')}
+                    className={styles.button__border}
+                    variant="secondary"
                 >
-                    <Button
-                        onClick={() => handleRedirectAuth('login')}
-                        className={styles.button__border}
-                        variant="secondary"
-                    >
-                        <LogIn size={22} /> Войти
-                    </Button>
-                </motion.div>
+                    <LogIn size={22} /> Войти
+                </Button>
 
-                <motion.div whileHover="hover" whileTap={{ scale: 0.98 }}>
-                    <Button onClick={() => handleRedirectAuth('register')}>
-                        Зарегистрироваться
-                        <motion.div
-                            variants={{
-                                hover: { x: 5 },
-                            }}
-                            transition={{
-                                type: 'spring',
-                                stiffness: 300,
-                                damping: 20,
-                            }}
-                            style={{ display: 'flex', alignItems: 'center' }}
-                        >
-                            <MoveRight size={24} />
-                        </motion.div>
-                    </Button>
-                </motion.div>
+                <Button onClick={() => handleRedirectAuth('register')}>
+                    Зарегистрироваться
+                    <MoveRight size={24} />
+                </Button>
             </motion.div>
         </motion.div>
     )
