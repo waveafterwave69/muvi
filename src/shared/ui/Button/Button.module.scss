@@ -5,7 +5,14 @@
   gap: 8px;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.15s;
+
+  white-space: nowrap;
+  width: fit-content;
 
   &:disabled {
     opacity: 0.8;
@@ -50,12 +57,36 @@
 
 .sm {
   padding: 8px 14px;
+  font-size: var(--base-font-size-medium);
 }
 
 .md {
   padding: 12px 18px;
+  font-size: var(--base-font-size);
 }
 
 .lg {
   padding: 16px 24px;
+  font-size: var(--base-font-size-large);
+}
+
+@media (max-width: 768px) {
+  .button {
+    gap: 6px;
+  }
+
+  .sm {
+    padding: 6px 12px;
+    font-size: var(--base-font-size-small);
+  }
+
+  .md {
+    padding: 10px 16px;
+    font-size: var(--base-font-size-medium);
+  }
+
+  .lg {
+    padding: 14px 20px;
+    font-size: var(--base-font-size);
+  }
 }
