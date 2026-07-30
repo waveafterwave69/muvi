@@ -2,7 +2,7 @@ import styles from './SignupPage.module.scss';
 import { Heart } from 'lucide-react';
 import { SignUpForm } from '../../components';
 
-export function SignupPage() {
+export const SignupPage = () => {
     return (
         <div className={styles.root}>
             <section className={styles.intro}>

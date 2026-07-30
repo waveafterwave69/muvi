@@ -3,7 +3,7 @@ import Link from "next/link";
 import {ReactNode} from "react";
 import {classNames} from "@/shared/helpers/className";
 
-type Props = {
+interface Props {
     href: string;
     children: ReactNode;
     className?: string;

@@ -15,7 +15,7 @@ interface FormValues {
     password: string;
 }
 
-export function SignUpForm() {
+export const SignUpForm = () => {
     const [error, setError] = useState<AuthError | null>(null);
     const { handleSignUp } = useAuth()
     const router = useRouter()
