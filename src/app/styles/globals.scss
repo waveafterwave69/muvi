@@ -1,9 +1,25 @@
 body {
     background-color: var(--bg);
+
+    background-image:
+        radial-gradient(
+            circle at 80% 20%,
+            var(--glow-top-color-1) 0%,
+            var(--glow-top-color-2) var(--glow-top-size)
+        ),
+        radial-gradient(
+            circle at 15% 75%,
+            var(--glow-bottom-color-1) 0%,
+            var(--glow-bottom-color-2) var(--glow-bottom-size-1),
+            transparent var(--glow-bottom-size-2)
+        );
+    background-attachment: fixed;
+
     color: var(--text-primary);
     font-size: var(--base-font-size);
     font-weight: var(--base-font-weight);
     font-family: var(--font-roboto), sans-serif;
+    margin: 0;
 }
 
 .container {
@@ -19,17 +35,16 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: var(----title-font-weight);
+    font-weight: var(--title-font-weight);
+    margin: 0;
 }
 
 h1 {
     font-size: var(--h1-font-size);
 }
-
 h2 {
     font-size: var(--h2-font-size);
 }
-
 h3 {
     font-size: var(--h3-font-size);
 }
@@ -38,15 +53,12 @@ h3 {
     h1 {
         font-size: var(--h1-font-size-medium);
     }
-
     h2 {
         font-size: var(--h2-font-size-medium);
     }
-
-    h2 {
+    h3 {
         font-size: var(--h3-font-size-medium);
     }
-
     body {
         font-size: var(--base-font-size-medium);
     }
@@ -56,19 +68,15 @@ h3 {
     h1 {
         font-size: var(--h1-font-size-small);
     }
-
     h2 {
         font-size: var(--h2-font-size-small);
     }
-
-    h2 {
+    h3 {
         font-size: var(--h3-font-size-small);
     }
-
     .container {
         padding: 0 var(--container-padding-mobile-x);
     }
-
     body {
         font-size: var(--base-font-size-small);
     }
