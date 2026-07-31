@@ -1,0 +1,23 @@
+
+.link {
+ font-size: 14px;
+  font-weight: 600;
+}
+
+.primary {
+  color: var(--accent-soft);
+}
+
+.secondary {
+  color: var(--text-primary);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+@media(max-width: 768px) {
+  .link {
+    font-size: 12px;
+  }
+}
