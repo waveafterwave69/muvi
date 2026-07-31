@@ -1,13 +1,13 @@
-import { SignUpForm } from '../../components'
+import { LogInForm } from '../../components'
 import SideContent from '../../components/SideContent/SideContent'
-import styles from './SignupPage.module.scss'
+import styles from './LogInPage.module.scss'
 
-export const SignupPage = () => {
+export const LogInPage = () => {
     return (
         <div className={styles.root}>
             <SideContent />
             <div className={styles.form}>
-                <SignUpForm />
+                <LogInForm />
             </div>
         </div>
     )

@@ -31,7 +31,7 @@ const HomeContent = () => {
 
     const handleRedirectAuth = (type: 'register' | 'login') => {
         if (type === 'register') {
-            router.push('/register')
+            router.push('/signup')
         } else {
             router.push('/login')
         }

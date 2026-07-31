@@ -1,5 +1,5 @@
-import {SignupPage} from "@/modules/auth";
+import { SignupPage } from '@/modules/auth'
 
 export default function Page() {
-    return <SignupPage/>
+    return <SignupPage />
 }
