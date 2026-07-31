@@ -41,5 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 .idea
-.package-lock.*
-.package-lock.json
+/package-lock.*
+/package-lock.json
