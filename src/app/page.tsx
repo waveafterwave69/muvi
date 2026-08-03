@@ -2,15 +2,15 @@ import { HomeContent } from '@/modules/home'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Home',
+  title: 'Home',
 }
 
 const Home = () => {
-    return (
-        <>
-            <HomeContent />
-        </>
-    )
+  return (
+    <>
+      <HomeContent />
+    </>
+  )
 }
 
 export default Home
