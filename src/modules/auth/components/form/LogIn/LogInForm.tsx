@@ -1,13 +1,13 @@
 'use client'
 
-import styles from './SignUpForm.module.scss'
+import styles from './LogInForm.module.scss'
 import { Button, Card, Input, Link } from '@/shared/ui'
-import { ArrowRight, Lock, Mail, User } from 'lucide-react'
-import { useAuth } from '../../hooks/useAuth'
+import { ArrowRight, Lock, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import type { AuthError } from '@supabase/auth-js'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/modules/auth/hooks/useAuth'
 
 interface FormValues {
     username: string
@@ -15,9 +15,9 @@ interface FormValues {
     password: string
 }
 
-export const SignUpForm = () => {
+export const LogInForm = () => {
     const [error, setError] = useState<AuthError | null>(null)
-    const { handleSignUp } = useAuth()
+    const { handleLogin } = useAuth()
     const router = useRouter()
 
     const {
@@ -30,20 +30,14 @@ export const SignUpForm = () => {
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         setError(null)
-        const { error, user } = await handleSignUp(
-            data.username,
-            data.email,
-            data.password,
-        )
+        const error = await handleLogin(data.email, data.password)
 
         if (!!error) {
             setError(error)
             return
         }
 
-        if (user?.id) {
-            router.push(`/profile/${user.id}`)
-        }
+        router.push('/yes')
     }
 
     return (
@@ -54,23 +48,9 @@ export const SignUpForm = () => {
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <div className={styles.title}>
-                    <h3>Регистрация</h3>
-                    <p>Заполни данные, чтобы сохранить фильмы и общие планы.</p>
+                    <h3>Вход</h3>
+                    <p>Заполни данные, чтобы войти в свой аккаунт.</p>
                 </div>
-                <Input
-                    label="Имя пользователя"
-                    placeholder="Например, luna.movie"
-                    icon={<User />}
-                    autoComplete="username"
-                    error={errors.username?.message}
-                    {...register('username', {
-                        required: 'Введите имя пользователя',
-                        setValueAs: (value: string) => value.trim(),
-                        validate: (value) =>
-                            value.length >= 2 ||
-                            'Имя пользователя должно содержать минимум 2 символа',
-                    })}
-                />
                 <Input
                     label="Почта"
                     placeholder="name@example.com"
@@ -117,12 +97,12 @@ export const SignUpForm = () => {
                     type="submit"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? 'Регистрация…' : 'Зарегистрироваться'}
+                    {isSubmitting ? 'Вход...' : 'Войти'}
                 </Button>
                 {error && <span>{error.message}</span>}
                 <div className={styles.footer}>
-                    <span>Уже есть аккаунт?</span>
-                    <Link href="/login">Войти</Link>
+                    <span>Нет аккаунта?</span>
+                    <Link href="/signup">Регистрация</Link>
                 </div>
             </form>
         </Card>
