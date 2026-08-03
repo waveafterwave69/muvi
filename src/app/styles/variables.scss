@@ -1,111 +1,99 @@
 :root {
-    --container-padding-mobile-x: 15px;
-    --container-width: 1200px;
-    --container-padding: 24px;
+  --container-padding-mobile-x: 15px;
+  --container-width: 1200px;
+  --container-padding: 24px;
 
-    --bg: #080609;
-    --text-primary: #fff5fa;
-    --text-secondary: #000000;
-    --text-muted: #d6baca;
-    --surface: #120d12;
-    --surface-soft: #1c141c;
-    --surface-raised: #241924;
-    --accent: #ff4f9e;
-    --accent-soft: #ff7ab6;
-    --accent-hover: #ff4f9e14;
+  --bg: #080609;
+  --text-primary: #fff5fa;
+  --text-secondary: #000000;
+  --text-muted: #d6baca;
+  --surface: #120d12;
+  --surface-soft: #1c141c;
+  --surface-raised: #241924;
+  --accent: #ff4f9e;
+  --accent-soft: #ff7ab6;
+  --accent-hover: #ff4f9e14;
 
-    --glow-top-color-1: rgba(22, 137, 245, 0.07);
-    --glow-top-color-2: transparent;
-    --glow-top-size: 20%;
+  --glow-top-color-1: rgba(22, 137, 245, 0.07);
+  --glow-top-color-2: transparent;
+  --glow-top-size: 20%;
 
-    --glow-bottom-color-1: rgba(255, 79, 158, 0.08);
-    --glow-bottom-color-2: rgba(255, 79, 158, 0.02);
-    --glow-bottom-size-1: 20%;
-    --glow-bottom-size-2: 70%;
+  --glow-bottom-color-1: rgba(255, 79, 158, 0.08);
+  --glow-bottom-color-2: rgba(255, 79, 158, 0.02);
+  --glow-bottom-size-1: 20%;
+  --glow-bottom-size-2: 70%;
 
-    --base-font-size-large: 18px;
-    --card-bg: #120d12e6;
-    --card-border-color: #fff5fa20;
+  --base-font-size-large: 18px;
+  --card-bg: #120d12e6;
+  --card-border-color: #fff5fa20;
 
-    --base-font-size: 16px;
-    --base-font-size-medium: 14px;
-    --base-font-size-small: 12px;
+  --base-font-size: 16px;
+  --base-font-size-medium: 14px;
+  --base-font-size-small: 12px;
 
-    --base-font-weight: 400;
-    --title-font-weight: 800;
+  --base-font-weight: 400;
+  --title-font-weight: 800;
 
-    --h1-font-size: 104px;
-    --h1-font-size-medium: 56px;
-    --h1-font-size-small: 38px;
+  --h1-font-size: 104px;
+  --h1-font-size-medium: 56px;
+  --h1-font-size-small: 38px;
 
-    --h2-font-size: 52px;
-    --h2-font-size-medium: 32px;
-    --h2-font-size-small: 22px;
+  --h2-font-size: 52px;
+  --h2-font-size-medium: 32px;
+  --h2-font-size-small: 22px;
 
-    --h3-font-size: 38px;
-    --h3-font-size-medium: 28px;
-    --h3-font-size-small: 18px;
+  --h3-font-size: 38px;
+  --h3-font-size-medium: 28px;
+  --h3-font-size-small: 18px;
 
-    --brand-bg: #ffffff0a;
-    --brand-border-color: #ffffff1a;
+  --brand-bg: #ffffff0a;
+  --brand-border-color: #ffffff1a;
 
-    --border-button-color: #3b2a35;
+  --border-button-color: #3b2a35;
 
-    --button-primary-gradient: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
-    --button-primary-gradient-hover: linear-gradient(
-        90deg,
-        #f166a5 0%,
-        #c5206a 100%
-    );
-    --tabs-bg: #0b080b;
-    --tabs-border-color: #fff5fa14;
-    --tabs-active-text: #000;
-    --tabs-secondary-bg: #ff4f9e24;
-    --tabs-secondary-border-color: #ff7ab666;
+  --button-primary-gradient: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
+  --button-primary-gradient-hover: linear-gradient(90deg, #f166a5 0%, #c5206a 100%);
+  --tabs-bg: #0b080b;
+  --tabs-border-color: #fff5fa14;
+  --tabs-active-text: #000;
+  --tabs-secondary-bg: #ff4f9e24;
+  --tabs-secondary-border-color: #ff7ab666;
 }
 
 @media (prefers-color-scheme: light) {
-    :root {
-        --text-primary: #102a42;
-        --text-secondary: #ffffff;
-        --text-muted: #48647d;
-        --bg: #f5f9ff;
-        --surface: #ffffff;
-        --surface-soft: #edf7ff;
-        --surface-raised: #def0ff;
-        --accent: #1689f5;
-        --accent-soft: #59b2ff;
-        --accent-hover: #1689f514;
+  :root {
+    --text-primary: #102a42;
+    --text-secondary: #ffffff;
+    --text-muted: #48647d;
+    --bg: #f5f9ff;
+    --surface: #ffffff;
+    --surface-soft: #edf7ff;
+    --surface-raised: #def0ff;
+    --accent: #1689f5;
+    --accent-soft: #59b2ff;
+    --accent-hover: #1689f514;
 
-        --card-bg: #fffffff2;
-        --card-border-color: #c9e0f5;
-        --glow-top-color-1: rgba(22, 137, 245, 0.12);
-        --glow-top-color-2: rgba(22, 137, 245, 0.02);
-        --glow-top-size: 45%;
+    --card-bg: #fffffff2;
+    --card-border-color: #c9e0f5;
+    --glow-top-color-1: rgba(22, 137, 245, 0.12);
+    --glow-top-color-2: rgba(22, 137, 245, 0.02);
+    --glow-top-size: 45%;
 
-        --glow-bottom-color-1: rgba(22, 137, 245, 0.14);
-        --glow-bottom-color-2: rgba(22, 137, 245, 0.03);
-        --glow-bottom-size-1: 35%;
-        --glow-bottom-size-2: 75%;
+    --glow-bottom-color-1: rgba(22, 137, 245, 0.14);
+    --glow-bottom-color-2: rgba(22, 137, 245, 0.03);
+    --glow-bottom-size-1: 35%;
+    --glow-bottom-size-2: 75%;
 
-        --brand-bg: #ffffffcc;
-        --brand-border-color: #1689f433;
+    --brand-bg: #ffffffcc;
+    --brand-border-color: #1689f433;
 
-        --border-button-color: #c9e0f5;
+    --border-button-color: #c9e0f5;
 
-        --button-primary-gradient: linear-gradient(
-            90deg,
-            #5ab1ff 0%,
-            #1689f4 100%
-        );
+    --button-primary-gradient: linear-gradient(90deg, #5ab1ff 0%, #1689f4 100%);
 
-        --button-primary-gradient-hover: linear-gradient(
-            90deg,
-            #4697dd 0%,
-            #1665af 100%
-        );
-        --tabs-bg: #ffffffcc;
-        --tabs-border-color: #c9e0f5;
-        --tabs-active-text: #fff;
-    }
+    --button-primary-gradient-hover: linear-gradient(90deg, #4697dd 0%, #1665af 100%);
+    --tabs-bg: #ffffffcc;
+    --tabs-border-color: #c9e0f5;
+    --tabs-active-text: #fff;
+  }
 }
