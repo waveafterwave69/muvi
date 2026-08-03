@@ -49,6 +49,11 @@ h3 {
     font-size: var(--h3-font-size);
 }
 
+.subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
 @media (max-width: 1200px) {
     h1 {
         font-size: var(--h1-font-size-medium);
