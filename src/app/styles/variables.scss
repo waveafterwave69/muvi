@@ -53,6 +53,11 @@
 
   --button-primary-gradient: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
   --button-primary-gradient-hover: linear-gradient(90deg, #f166a5 0%, #c5206a 100%);
+  --tabs-bg: #0b080b;
+  --tabs-border-color: #fff5fa14;
+  --tabs-active-text: #000;
+  --tabs-secondary-bg: #ff4f9e24;
+  --tabs-secondary-border-color: #ff7ab666;
 }
 
 @media (prefers-color-scheme: light) {
@@ -87,5 +92,8 @@
     --button-primary-gradient: linear-gradient(90deg, #5ab1ff 0%, #1689f4 100%);
 
     --button-primary-gradient-hover: linear-gradient(90deg, #4697dd 0%, #1665af 100%);
+    --tabs-bg: #ffffffcc;
+    --tabs-border-color: #c9e0f5;
+    --tabs-active-text: #fff;
   }
 }
