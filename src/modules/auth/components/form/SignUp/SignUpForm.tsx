@@ -30,16 +30,14 @@ export const SignUpForm = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setError(null)
-    const { error, user } = await handleSignUp(data.username, data.email, data.password)
+    const { error } = await handleSignUp(data.username, data.email, data.password)
 
     if (!!error) {
       setError(error)
       return
     }
 
-    if (user?.id) {
-      router.push(`/profile/${user.id}`)
-    }
+    router.push('/profile')
   }
 
   return (

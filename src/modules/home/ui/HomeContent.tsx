@@ -1,8 +1,10 @@
 'use client'
 
-
-import styles from './HomeContent.module.scss'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { LogIn, MoveRight } from 'lucide-react'
+import styles from './HomeContent.module.scss'
+import { Button } from '@/shared/ui'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -27,14 +29,13 @@ const itemVariants = {
 const HomeContent = () => {
   const router = useRouter()
 
-    const handleRedirectAuth = (type: 'register' | 'login') => {
-        if (type === 'register') {
-            router.push('/signup')
-        } else {
-            router.push('/login')
-        }
+  const handleRedirectAuth = (type: 'register' | 'login') => {
+    if (type === 'register') {
+      router.push('/signup')
+    } else {
+      router.push('/login')
     }
-  }
+  } // Скобка функции handleRedirectAuth
 
   return (
     <motion.div
@@ -46,15 +47,12 @@ const HomeContent = () => {
       <motion.p variants={itemVariants} className={styles.brand__text}>
         Ваш маленький киноуголок
       </motion.p>
-
       <motion.h1 variants={itemVariants} className={styles.title}>
         Кино, вечер, мы.
       </motion.h1>
-
       <motion.p variants={itemVariants} className={styles.subtitle}>
         Тёплое место для любимых фильмов и общих планов.
       </motion.p>
-
       <motion.div variants={itemVariants} className={styles.buttons}>
         <Button
           onClick={() => handleRedirectAuth('login')}
@@ -63,10 +61,8 @@ const HomeContent = () => {
         >
           <LogIn size={22} /> Войти
         </Button>
-
         <Button onClick={() => handleRedirectAuth('register')}>
-          Зарегистрироваться
-          <MoveRight size={24} />
+          Зарегистрироваться <MoveRight size={24} />
         </Button>
       </motion.div>
     </motion.div>
