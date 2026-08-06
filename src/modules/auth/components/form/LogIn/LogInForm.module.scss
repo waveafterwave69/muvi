@@ -1,31 +1,31 @@
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .title {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
-    h3 {
-        font-weight: 900;
-    }
+  h3 {
+    font-weight: 900;
+  }
 
-    p {
-        font-size: var(--base-font-size-medium);
-    }
+  p {
+    font-size: var(--base-font-size-medium);
+  }
 }
 
 .submit_button {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 .footer {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
 }

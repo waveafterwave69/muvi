@@ -1,0 +1,25 @@
+.root {
+  width: 100%;
+  padding-block: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.error {
+  display: grid;
+  width: 100%;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 24px;
+  color: #ff4d4f;
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .root {
+    padding-block: 20px;
+  }
+}
