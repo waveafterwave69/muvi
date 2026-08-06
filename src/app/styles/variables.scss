@@ -56,6 +56,7 @@
   --tabs-bg: #0b080b;
   --tabs-border-color: #fff5fa14;
   --tabs-active-text: #000;
+  --tabs-primary-bg: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
   --tabs-secondary-bg: #ff4f9e24;
   --tabs-secondary-border-color: #ff7ab666;
 }
@@ -93,6 +94,9 @@
 
     --button-primary-gradient-hover: linear-gradient(90deg, #4697dd 0%, #1665af 100%);
     --tabs-bg: #ffffffcc;
+    --tabs-primary-bg: linear-gradient(90deg, #63abe9 0%, #1d88ec 100%);
+    --tabs-secondary-bg: #4f9bff24;
+    --tabs-secondary-border-color: #c9e0f5;
     --tabs-border-color: #c9e0f5;
     --tabs-active-text: #fff;
   }
