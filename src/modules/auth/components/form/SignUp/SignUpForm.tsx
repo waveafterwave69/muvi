@@ -28,11 +28,15 @@ export const SignUpForm = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setError(null)
-    const error = await handleSignUp(data.username, data.email, data.password)
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
+        setError(null)
+        const error = await handleSignUp(
+            data.username,
+            data.email,
+            data.password,
+        )
 
-    if (!!error) {
+    if (error) {
       setError(error)
       return
     }

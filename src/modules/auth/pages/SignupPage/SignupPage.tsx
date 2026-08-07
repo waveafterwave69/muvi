@@ -5,7 +5,7 @@ import styles from './SignupPage.module.scss'
 export const SignupPage = () => {
   return (
     <div className={styles.root}>
-      <SideContent />
+      <SideContent variant={'signup'} />
       <div className={styles.form}>
         <SignUpForm />
       </div>

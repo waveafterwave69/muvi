@@ -36,12 +36,14 @@
 .primary {
   .is__active {
     color: var(--tabs-active-text);
+    background-color: var(--tabs-bg);
+    font-weight: 500;
     &:hover {
       color: var(--tabs-active-text);
     }
   }
   .tab__bg {
-    background: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
+    background: var(--tabs-primary-bg);
   }
 }
 
@@ -51,6 +53,7 @@
   }
   .is__active {
     .tab__text {
+      font-weight: 500;
       color: var(--accent-soft);
     }
   }

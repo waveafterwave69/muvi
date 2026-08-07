@@ -63,27 +63,30 @@ export const LogInForm = () => {
             },
           })}
         />
-        <Input
-          label="Пароль"
-          placeholder="Минимум 8 символов"
-          type="password"
-          icon={<Lock />}
-          autoComplete="new-password"
-          error={errors.password?.message}
-          {...register('password', {
-            required: 'Введите пароль',
-            minLength: {
-              value: 8,
-              message: 'Пароль должен содержать минимум 8 символов',
-            },
-            validate: {
-              uppercase: (value) =>
-                value !== value.toLocaleLowerCase() || 'Добавьте хотя бы одну заглавную букву',
-              specialCharacter: (value) =>
-                /[^\p{L}\p{N}\s]/u.test(value) || 'Добавьте хотя бы один специальный символ',
-            },
-          })}
-        />
+        <div className={styles.password_container}>
+          <Link href={'/forgot-password'}>Забыли пароль?</Link>
+          <Input
+            label="Пароль"
+            placeholder="Минимум 8 символов"
+            type="password"
+            icon={<Lock />}
+            autoComplete="new-password"
+            error={errors.password?.message}
+            {...register('password', {
+              required: 'Введите пароль',
+              minLength: {
+                value: 8,
+                message: 'Пароль должен содержать минимум 8 символов',
+              },
+              validate: {
+                uppercase: (value) =>
+                  value !== value.toLocaleLowerCase() || 'Добавьте хотя бы одну заглавную букву',
+                specialCharacter: (value) =>
+                  /[^\p{L}\p{N}\s]/u.test(value) || 'Добавьте хотя бы один специальный символ',
+              },
+            })}
+          />
+        </div>
         <Button
           leftIcon={<ArrowRight />}
           className={styles.submit_button}

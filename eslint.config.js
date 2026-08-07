@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint'
 import { FlatCompat } from '@eslint/eslintrc'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import nextVitals from 'eslint-config-next/core-web-vitals'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,7 +20,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
 
-  ...compat.extends('next/core-web-vitals'),
+  ...nextVitals,
 
   {
     files: ['**/*.{js,mjs,ts,tsx}'],

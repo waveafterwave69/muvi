@@ -5,7 +5,7 @@ import styles from './LogInPage.module.scss'
 export const LogInPage = () => {
   return (
     <div className={styles.root}>
-      <SideContent />
+      <SideContent variant={'login'} />
       <div className={styles.form}>
         <LogInForm />
       </div>
