@@ -6,6 +6,7 @@ const SkeletonMovieList = () => {
 
   return (
     <Card className={styles.wrapper_card}>
+      <div className={styles.tabs} />
       <div className={styles.movies__grid}>
         {skeletonItems.map((_, index) => (
           <div key={index} className={styles.movie__card}>

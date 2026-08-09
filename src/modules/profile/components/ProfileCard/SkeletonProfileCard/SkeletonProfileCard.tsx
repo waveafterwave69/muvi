@@ -25,9 +25,9 @@ const SkeletonProfileCard: FC<SkeletonProfilePage> = ({ isOwn }) => {
             </div>
           </div>
           <div className={styles.profile__right}>
-            <div className={styles.right__item}></div>
+            <div className={`${styles.right__item} ${!isOwn && styles.is__own}`}></div>
             <div className={styles.bar}></div>
-            <div className={styles.right__item}></div>
+            <div className={`${styles.right__item} ${!isOwn && styles.is__own}`}></div>
           </div>
         </div>
       </Card>
