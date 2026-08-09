@@ -18,6 +18,7 @@ export const profileService = {
 
     return { data: normalizedProfile, error: null }
   },
+
   async updateProfile(username: string, avatarUrl?: string) {
     const updateData: { username: string; avatar_url?: string } = { username }
     if (avatarUrl) updateData.avatar_url = avatarUrl

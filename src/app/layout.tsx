@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import '@/app/styles/index.scss'
 
 import { Roboto } from 'next/font/google'
-import ReduxProvider from './store/providers/provider'
+import { Providers } from './providers/queryProvider'
 
 const roboto = Roboto({
   variable: '--font-roboto',
@@ -22,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${roboto.variable}`}>
       <body>
-        <ReduxProvider>
+        <Providers>
           <div className="container">{children}</div>
-        </ReduxProvider>
+        </Providers>
       </body>
     </html>
   )

@@ -1,0 +1,200 @@
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.card {
+  pointer-events: none;
+
+  &:hover {
+    border-color: var(--card-border-color);
+    transform: none;
+  }
+
+  margin-top: 15px;
+}
+
+.skeletonSurface {
+  color: transparent !important;
+  border-color: var(--card-border-color) !important;
+  background-color: var(--surface-raised) !important;
+  background-image: linear-gradient(
+    100deg,
+    var(--surface-raised) 30%,
+    var(--accent-hover) 50%,
+    var(--surface-raised) 70%
+  ) !important;
+  background-size: 220% 100% !important;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+
+  svg,
+  img,
+  span,
+  p {
+    visibility: hidden !important;
+  }
+}
+
+.profile__content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.profile__left {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.avatar__container {
+  @extend .skeletonSurface;
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border: var(--card-border-color) 1px solid;
+  border-radius: 20px;
+}
+
+.left__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.info__text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info__name {
+  @extend .skeletonSurface;
+  font-size: 32px;
+  font-weight: 700;
+  width: 230px;
+  height: 35px;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.profile__actions {
+  @extend .skeletonSurface;
+  width: 100px;
+  height: 40px;
+  border-radius: 10px;
+  margin-top: -5px;
+}
+
+.info__date,
+.info__email {
+  @extend .skeletonSurface;
+  font-size: 16px;
+  color: var(--text-muted);
+  width: 280px;
+  height: 25px;
+  border-radius: 10px;
+  margin-top: -3px;
+}
+
+.profile__right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.bar {
+  width: 2px;
+  @extend .skeletonSurface;
+  border-radius: 20px;
+  height: 80px;
+}
+
+.right__item {
+  @extend .skeletonSurface;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100px;
+  height: 130px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .profile__actions {
+    width: 100px;
+    height: 35px;
+    margin-top: -7px;
+  }
+
+  .profile__content {
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile__left {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .avatar__container {
+    width: 110px;
+    height: 110px;
+  }
+
+  .left__info {
+    align-items: center;
+    gap: 20px;
+  }
+
+  .info__text {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .info__name {
+    font-size: 24px;
+    width: 170px;
+    height: 30px;
+  }
+
+  .info__date,
+  .info__email {
+    font-size: 14px;
+    width: 250px;
+    height: 23px;
+  }
+
+  .profile__right {
+    gap: 25px;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .bar {
+    width: 2px;
+    height: 60px;
+  }
+
+  .right__item {
+    width: 75px;
+    height: 93px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonSurface {
+    animation: none !important;
+  }
+}
