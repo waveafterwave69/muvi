@@ -32,7 +32,7 @@ export const LogInForm = () => {
     setError(null)
     const error = await handleLogin(data.email, data.password)
 
-    if (!!error) {
+    if (error) {
       setError(error)
       return
     }

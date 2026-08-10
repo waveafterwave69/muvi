@@ -6,13 +6,21 @@ import styles from './MovieCard.module.scss'
 
 interface MovieCardProps {
   movie: Movie
-  add: (movie: Movie, status: MovieWatchStatus) => Promise<void>
   remove: (movieId: number) => Promise<void>
   status: MovieWatchStatus | undefined
   isUpdating: boolean
+  onMarkAsWatched: (movie: Movie) => void
+  onMarkAsFavorite: (movie: Movie) => void
 }
 
-export function MovieCard({ movie, add, remove, status, isUpdating }: MovieCardProps) {
+export function MovieCard({
+  movie,
+  remove,
+  status,
+  isUpdating,
+  onMarkAsWatched,
+  onMarkAsFavorite,
+}: MovieCardProps) {
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
 
@@ -27,7 +35,7 @@ export function MovieCard({ movie, add, remove, status, isUpdating }: MovieCardP
               src={posterUrl}
               alt={`Постер фильма «${movie.title}»`}
               fill
-              sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 25vw"
+              sizes="(max-width: 768px) 50vw, (max-width: 900px) 50vw, 25vw"
               className={styles.poster}
             />
           ) : (
@@ -57,7 +65,7 @@ export function MovieCard({ movie, add, remove, status, isUpdating }: MovieCardP
             if (isFavorite) {
               void remove(movie.id)
             } else {
-              void add(movie, 'planned')
+              onMarkAsFavorite(movie)
             }
           }}
         >
@@ -78,15 +86,21 @@ export function MovieCard({ movie, add, remove, status, isUpdating }: MovieCardP
           aria-pressed={isWatched}
           aria-busy={isUpdating}
           disabled={isUpdating}
+          aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
           onClick={() => {
             if (isWatched) {
               void remove(movie.id)
             } else {
-              void add(movie, 'watched')
+              onMarkAsWatched(movie)
             }
           }}
         >
-          {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
+          <span className={styles.watchedButtonLabel}>
+            {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
+          </span>
+          <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
+            {isWatched ? 'Просмотрено' : 'Добавить'}
+          </span>
         </Button>
       </div>
     </Card>

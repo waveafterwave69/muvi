@@ -2,9 +2,11 @@
 
 import styles from './MovieList.module.scss'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { MovieCard, MovieCardSkeleton } from '../../components'
+import { CommentModal, MovieCard, MovieCardSkeleton } from '../../components'
 import { Movie } from '../../api/types'
 import { useMovieStatus } from '../../hooks'
+import { StarsModal } from '../StarsModal/StarsModal'
+import { useState } from 'react'
 
 interface MovieListProps {
   movies: Movie[]
@@ -21,6 +23,10 @@ export const MovieList = ({
   fetchNextPage,
   isPending,
 }: MovieListProps) => {
+  const [selectedWatchedMovie, setSelectedWatchedMovie] = useState<Movie | null>(null)
+  const [selectedFavoriteMovie, setSelectedFavoriteMovie] = useState<Movie | null>(null)
+  const [stars, setStars] = useState<number | null>(null)
+  const [comment, setComment] = useState<string | null>(null)
   const { addMovieToCollection, pendingMovieIds, removeMovieFromCollection, statuses } =
     useMovieStatus(movies)
 
@@ -30,6 +36,28 @@ export const MovieList = ({
         <MovieCardSkeleton />
       </div>
     )
+  }
+
+  const addToWatched = () => {
+    if (!selectedWatchedMovie) return
+    void addMovieToCollection(selectedWatchedMovie, {
+      status: 'watched',
+      rating: stars,
+      comment: null,
+    })
+    setStars(null)
+    setSelectedWatchedMovie(null)
+  }
+
+  const addToFavorite = () => {
+    if (!selectedFavoriteMovie) return
+    void addMovieToCollection(selectedFavoriteMovie, {
+      status: 'planned',
+      rating: null,
+      comment: comment,
+    })
+    setComment(null)
+    setSelectedFavoriteMovie(null)
   }
 
   return (
@@ -51,13 +79,28 @@ export const MovieList = ({
           <MovieCard
             movie={movie}
             key={movie.id}
-            add={addMovieToCollection}
+            onMarkAsWatched={setSelectedWatchedMovie}
+            onMarkAsFavorite={setSelectedFavoriteMovie}
             isUpdating={pendingMovieIds.has(movie.id)}
             remove={removeMovieFromCollection}
             status={collectionEntry?.status}
           />
         )
       })}
+      <StarsModal
+        isOpen={!!selectedWatchedMovie}
+        onClose={() => setSelectedWatchedMovie(null)}
+        setStars={setStars}
+        stars={stars}
+        onSubmit={addToWatched}
+      />
+      <CommentModal
+        isOpen={!!selectedFavoriteMovie}
+        onClose={() => setSelectedFavoriteMovie(null)}
+        comment={comment ?? ''}
+        onCommentChange={setComment}
+        onSubmit={addToFavorite}
+      />
     </InfiniteScroll>
   )
 }
