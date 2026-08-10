@@ -15,6 +15,7 @@ export const useUpdateSettings = () => {
     mutationFn: updateSettings,
     onSuccess: (updatedUser) => {
       queryClient.setQueryData(['settings'], updatedUser)
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
       alert('Данные успешно обновлены!')
     },
     onError: (error: any) => {
