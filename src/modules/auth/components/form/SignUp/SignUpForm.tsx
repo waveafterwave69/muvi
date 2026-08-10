@@ -32,7 +32,7 @@ export const SignUpForm = () => {
     setError(null)
     const { error } = await handleSignUp(data.username, data.email, data.password)
 
-    if (!!error) {
+    if (error) {
       setError(error)
       return
     }

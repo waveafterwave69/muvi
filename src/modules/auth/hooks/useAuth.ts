@@ -17,5 +17,21 @@ export const useAuth = () => {
     return { error, user: data.user }
   }
 
-  return { handleSignUp, handleLogin }
+  const forgotPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: process.env.NEXT_PUBLIC_REDIRECT_RESET_PASSWORD_URL,
+    })
+
+    return error
+  }
+
+  const updatePassword = async (password: string) => {
+    const { error } = await supabase.auth.updateUser({
+      password,
+    })
+
+    return { error }
+  }
+
+  return { handleSignUp, handleLogin, forgotPassword, updatePassword }
 }
