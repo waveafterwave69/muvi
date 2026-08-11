@@ -1,7 +1,7 @@
 import { LogInPage } from '@/modules/auth/pages/LogInPage/LogInPage'
 
 const Page = () => {
-    return <LogInPage />
+  return <LogInPage />
 }
 
 export default Page
