@@ -29,13 +29,9 @@ const itemVariants = {
 const HomeContent = () => {
   const router = useRouter()
 
-  const handleRedirectAuth = (type: 'register' | 'login') => {
-    if (type === 'register') {
-      router.push('/signup')
-    } else {
-      router.push('/login')
-    }
-  } // Скобка функции handleRedirectAuth
+  const handleRedirectAuth = (type: 'signup' | 'login') => {
+    router.push(type === 'login' ? '/login' : '/signup')
+  }
 
   return (
     <motion.div
@@ -61,8 +57,10 @@ const HomeContent = () => {
         >
           <LogIn size={22} /> Войти
         </Button>
-        <Button onClick={() => handleRedirectAuth('register')}>
-          Зарегистрироваться <MoveRight size={24} />
+
+        <Button onClick={() => handleRedirectAuth('signup')}>
+          Зарегистрироваться
+          <MoveRight size={24} />
         </Button>
       </motion.div>
     </motion.div>
