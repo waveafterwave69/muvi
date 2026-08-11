@@ -23,7 +23,7 @@ export const StarsModal = ({ isOpen, onClose, stars, setStars, onSubmit }: Props
     <Modal isOpen={isOpen} onClose={onClose} size="sm" ariaLabel="Оценка фильма">
       <div className={styles.container}>
         <h3 className={styles.title}>Как тебе фильм?</h3>
-        <p className={styles.description}>Поставь оценку от 1 до 10</p>
+        <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
 
         <div className={styles.stars} role="group" aria-label="Оценка от 1 до 10">
           {ratings.map((rating) => (

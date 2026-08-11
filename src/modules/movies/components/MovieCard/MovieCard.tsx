@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Check, Film, Heart, Star } from 'lucide-react'
+import { Check, Film, Heart, Plus, Star } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import type { Movie, MovieWatchStatus } from '../../api/types'
 import styles from './MovieCard.module.scss'
@@ -79,10 +79,10 @@ export function MovieCard({
         </Link>
 
         <Button
-          variant="secondary"
+          variant={isWatched ? 'primary' : 'secondary'}
           size="sm"
-          className={`${styles.watchedButton} ${isWatched ? styles.watchedButtonActive : ''}`}
-          leftIcon={<Check aria-hidden="true" />}
+          className={`${styles.watchedButton}`}
+          leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
           aria-pressed={isWatched}
           aria-disabled={isUpdating}
           disabled={isUpdating}

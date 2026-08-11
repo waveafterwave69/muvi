@@ -86,14 +86,20 @@ export const MovieList = ({
       })}
       <StarsModal
         isOpen={!!selectedWatchedMovie}
-        onClose={() => setSelectedWatchedMovie(null)}
+        onClose={() => {
+          setSelectedWatchedMovie(null)
+          setStars(null)
+        }}
         setStars={setStars}
         stars={stars}
         onSubmit={addToWatched}
       />
       <CommentModal
         isOpen={!!selectedFavoriteMovie}
-        onClose={() => setSelectedFavoriteMovie(null)}
+        onClose={() => {
+          setSelectedFavoriteMovie(null)
+          setComment(null)
+        }}
         comment={comment ?? ''}
         onCommentChange={setComment}
         onSubmit={addToFavorite}
