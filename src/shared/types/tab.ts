@@ -1,4 +1,4 @@
 export interface Tab {
-    id: number
-    label: string
+  id: number
+  label: string
 }
