@@ -1,10 +1,10 @@
 'use client'
 
-import { motion } from 'motion/react'
+import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { LogIn, MoveRight } from 'lucide-react'
 import styles from './HomeContent.module.scss'
 import { Button } from '@/shared/ui'
-import { LogIn, MoveRight } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,15 +43,12 @@ const HomeContent = () => {
       <motion.p variants={itemVariants} className={styles.brand__text}>
         Ваш маленький киноуголок
       </motion.p>
-
       <motion.h1 variants={itemVariants} className={styles.title}>
         Кино, вечер, мы.
       </motion.h1>
-
       <motion.p variants={itemVariants} className={styles.subtitle}>
         Тёплое место для любимых фильмов и общих планов.
       </motion.p>
-
       <motion.div variants={itemVariants} className={styles.buttons}>
         <Button
           onClick={() => handleRedirectAuth('login')}

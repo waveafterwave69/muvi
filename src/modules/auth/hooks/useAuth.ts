@@ -2,26 +2,19 @@ import { supabase } from '@/shared/api/supabase'
 
 export const useAuth = () => {
   const handleSignUp = async (username: string, email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          username: username,
-        },
-      },
+      options: { data: { username } },
     })
 
-    return error
+    return { error, user: data.user }
   }
 
   const handleLogin = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password })
 
-    return error
+    return { error, user: data.user }
   }
 
   const forgotPassword = async (email: string) => {

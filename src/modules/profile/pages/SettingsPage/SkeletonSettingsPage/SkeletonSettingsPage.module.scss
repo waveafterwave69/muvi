@@ -1,0 +1,103 @@
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.skeletonSurface {
+  color: transparent !important;
+  border-color: var(--card-border-color) !important;
+  background-color: var(--surface-raised) !important;
+  background-image: linear-gradient(
+    100deg,
+    var(--surface-raised) 30%,
+    var(--accent-hover) 50%,
+    var(--surface-raised) 70%
+  ) !important;
+  background-size: 220% 100% !important;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+
+  svg,
+  img,
+  span,
+  p {
+    visibility: hidden !important;
+  }
+}
+
+.settings__content {
+  margin-top: 15px;
+}
+
+.content__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.button {
+  @extend .skeletonSurface;
+  margin-top: 20px;
+  width: 100% !important;
+}
+
+.avatar__container {
+  @extend .skeletonSurface;
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border: var(--card-border-color) 1px solid;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.input {
+  @extend .skeletonSurface;
+  border-radius: 20px;
+  width: 100%;
+  height: 50px;
+  margin-top: 25px;
+}
+
+.button {
+  @extend .skeletonSurface;
+  border-radius: 20px;
+  width: 100%;
+  height: 43px;
+}
+
+@media (max-width: 768px) {
+  .content__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .button {
+    margin-top: 8px;
+  }
+
+  .avatar__container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .input {
+    height: 43px;
+    margin-top: 23px;
+  }
+
+  .button {
+    height: 37px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonSurface {
+    animation: none !important;
+  }
+}

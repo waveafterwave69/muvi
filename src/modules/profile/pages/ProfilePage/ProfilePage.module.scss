@@ -1,0 +1,27 @@
+.button__row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile__card {
+  margin-top: 15px;
+}
+
+.action__button {
+  padding: 13px !important;
+}
+
+.button__text {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .action__button {
+    padding: 10px !important;
+  }
+
+  .button__row {
+    position: static;
+  }
+}
