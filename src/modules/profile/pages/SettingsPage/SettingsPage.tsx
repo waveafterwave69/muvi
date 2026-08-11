@@ -1,5 +1,6 @@
 'use client'
-import { useEffect, useState, useRef, type FC } from 'react'
+
+import { useEffect, useState, useRef } from 'react'
 import styles from './SettingsPage.module.scss'
 import { Button, Card, Input } from '@/shared/ui'
 import { useGetSettings, useUpdateSettings } from '../../api/settings/queries'
@@ -13,6 +14,10 @@ interface ISettingsForm {
   username: string
   email: string
   password?: string
+}
+
+interface IUpdatePayload extends ISettingsForm {
+  avatarFile?: File | null
 }
 
 const SettingsPage = () => {
@@ -37,8 +42,11 @@ const SettingsPage = () => {
         email: user.email || '',
         password: '',
       })
-      setAvatarFile(null)
-      setPreviewSrc(null)
+
+      queueMicrotask(() => {
+        setAvatarFile(null)
+        setPreviewSrc(null)
+      })
     }
   }, [user, reset])
 
@@ -55,7 +63,7 @@ const SettingsPage = () => {
   }
 
   const onSubmit = (formData: ISettingsForm) => {
-    const payload: any = { ...formData }
+    const payload: IUpdatePayload = { ...formData }
 
     if (!payload.password || payload.password.trim() === '') {
       delete payload.password
