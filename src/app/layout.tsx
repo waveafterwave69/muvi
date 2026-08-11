@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '@/app/styles/index.scss'
 
 import { Roboto } from 'next/font/google'
+import { Dock } from '@/shared/ui'
 import { Providers } from '@/app/providers/queryProvider'
 
 const roboto = Roboto({
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${roboto.variable}`}>
       <body>
+        
         <Providers>
           <div className="container">{children}</div>
+          <Dock />
         </Providers>
       </body>
     </html>
