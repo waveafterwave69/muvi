@@ -17,7 +17,7 @@ const TAB_PLANNED = 1
 const TAB_WATCHED = 2
 
 const MovieList: FC<MovieListProps> = ({ movies }) => {
-  const [activeTab, setActiveTab] = useState<number>(TAB_ALL)
+  const [activeTab, setActiveTab] = useState<number | string>(TAB_ALL)
 
   const profileTabs = [
     { id: TAB_ALL, label: 'Все' },
