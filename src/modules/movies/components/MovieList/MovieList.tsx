@@ -27,8 +27,7 @@ export const MovieList = ({
   const [selectedFavoriteMovie, setSelectedFavoriteMovie] = useState<Movie | null>(null)
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
-  const { addMovieToCollection, pendingMovieIds, removeMovieFromCollection, statuses } =
-    useMovieStatus(movies)
+  const { addMovie, isPending: pendingMovieIds, removeMovie, statuses } = useMovieStatus(movies)
 
   if (isPending) {
     return (
@@ -40,7 +39,7 @@ export const MovieList = ({
 
   const addToWatched = () => {
     if (!selectedWatchedMovie) return
-    void addMovieToCollection(selectedWatchedMovie, {
+    void addMovie(selectedWatchedMovie, {
       status: 'watched',
       rating: stars,
       comment: null,
@@ -51,7 +50,7 @@ export const MovieList = ({
 
   const addToFavorite = () => {
     if (!selectedFavoriteMovie) return
-    void addMovieToCollection(selectedFavoriteMovie, {
+    void addMovie(selectedFavoriteMovie, {
       status: 'planned',
       rating: null,
       comment: comment,
@@ -73,17 +72,15 @@ export const MovieList = ({
       className={styles.grid}
     >
       {movies.map((movie) => {
-        const collectionEntry = statuses.get(movie.id)
-
         return (
           <MovieCard
             movie={movie}
             key={movie.id}
             onMarkAsWatched={setSelectedWatchedMovie}
             onMarkAsFavorite={setSelectedFavoriteMovie}
-            isUpdating={pendingMovieIds.has(movie.id)}
-            remove={removeMovieFromCollection}
-            status={collectionEntry?.status}
+            isUpdating={pendingMovieIds}
+            remove={removeMovie}
+            status={statuses.get(movie.id)}
           />
         )
       })}

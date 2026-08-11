@@ -8,18 +8,18 @@ interface MovieCardProps {
   movie: Movie
   remove: (movieId: number) => Promise<void>
   status: MovieWatchStatus | undefined
-  isUpdating: boolean
   onMarkAsWatched: (movie: Movie) => void
   onMarkAsFavorite: (movie: Movie) => void
+  isUpdating: boolean
 }
 
 export function MovieCard({
   movie,
   remove,
   status,
-  isUpdating,
   onMarkAsWatched,
   onMarkAsFavorite,
+  isUpdating,
 }: MovieCardProps) {
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
@@ -59,7 +59,7 @@ export function MovieCard({
           className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteButtonActive : ''}`}
           aria-label={isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'}
           aria-pressed={isFavorite}
-          aria-busy={isUpdating}
+          aria-disabled={isUpdating}
           disabled={isUpdating}
           onClick={() => {
             if (isFavorite) {
@@ -84,7 +84,7 @@ export function MovieCard({
           className={`${styles.watchedButton} ${isWatched ? styles.watchedButtonActive : ''}`}
           leftIcon={<Check aria-hidden="true" />}
           aria-pressed={isWatched}
-          aria-busy={isUpdating}
+          aria-disabled={isUpdating}
           disabled={isUpdating}
           aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
           onClick={() => {

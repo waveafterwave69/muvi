@@ -31,11 +31,22 @@ export interface FiltersType {
 
 export type MovieWatchStatus = 'planned' | 'watched'
 
-export interface UserMovie {
-  user_id: string
-  movie_id: number
+export interface AddMovieOptions {
   status: MovieWatchStatus
-  watched_at: string | null
-  created_at: string
-  updated_at: string
+  comment?: string | null
+  rating?: number | null
+}
+
+export type MovieStatuses = Map<number, MovieWatchStatus>
+
+export interface MovieStatusRow {
+  status: MovieWatchStatus
+  movie: {
+    external_id: number
+  }
+}
+
+export interface GetMovieStatusesParams {
+  userId: string
+  externalIds: number[]
 }
