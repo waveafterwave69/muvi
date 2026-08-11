@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import '@/app/styles/index.scss'
 
 import { Roboto } from 'next/font/google'
-import { Providers } from './providers/queryProvider'
+import { Providers } from '@/app/providers/queryProvider'
 
 const roboto = Roboto({
   variable: '--font-roboto',
