@@ -30,14 +30,14 @@ export const LogInForm = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setError(null)
-    const error = await handleLogin(data.email, data.password)
+    const { error } = await handleLogin(data.email, data.password)
 
     if (error) {
       setError(error)
       return
     }
 
-    router.push('/yes')
+    router.push('profile')
   }
 
   return (

@@ -6,13 +6,17 @@
   --bg: #080609;
   --text-primary: #fff5fa;
   --text-secondary: #000000;
-  --text-muted: #d6baca;
+  --text-muted: #b9a8b2ee;
   --surface: #120d12;
   --surface-soft: #1c141c;
   --surface-raised: #241924;
   --accent: #ff4f9e;
   --accent-soft: #ff7ab6;
   --accent-hover: #ff4f9e14;
+  --accent-hover-alt: #ff4f9e66;
+
+  --star-color: #ffc107;
+  --watch-color: #2bca53;
 
   --glow-top-color-1: rgba(22, 137, 245, 0.07);
   --glow-top-color-2: transparent;
@@ -75,6 +79,7 @@
     --accent: #1689f5;
     --accent-soft: #59b2ff;
     --accent-hover: #1689f514;
+    --accent-hover-alt: #4fb0ffc4;
 
     --card-bg: #fffffff2;
     --card-border-color: #c9e0f5;
