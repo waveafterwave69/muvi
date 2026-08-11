@@ -13,13 +13,14 @@ export const useUpdateSettings = () => {
 
   return useMutation({
     mutationFn: updateSettings,
-    onSuccess: (updatedUser) => {
-      queryClient.setQueryData(['settings'], updatedUser)
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['settings'] })
       queryClient.invalidateQueries({ queryKey: ['profile'] })
+
       alert('Данные успешно обновлены!')
     },
-    onError: (error: any) => {
-      alert(`Ошибка при обновлении: ${error.message}`)
+    onError: (error) => {
+      alert(`Ошибка при обновлении: ${error.message || 'Что-то пошло не так'}`)
     },
   })
 }

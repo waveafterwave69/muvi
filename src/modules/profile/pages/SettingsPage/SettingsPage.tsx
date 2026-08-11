@@ -31,24 +31,20 @@ const SettingsPage = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-  } = useForm<ISettingsForm>()
+  } = useForm<ISettingsForm>({
+    values: {
+      username: user?.user_metadata?.username || '',
+      email: user?.email || '',
+      password: '',
+    },
+  })
 
   useEffect(() => {
-    if (user) {
-      reset({
-        username: user.user_metadata?.username || '',
-        email: user.email || '',
-        password: '',
-      })
-
-      queueMicrotask(() => {
-        setAvatarFile(null)
-        setPreviewSrc(null)
-      })
+    return () => {
+      if (previewSrc) URL.revokeObjectURL(previewSrc)
     }
-  }, [user, reset])
+  }, [previewSrc])
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -69,7 +65,15 @@ const SettingsPage = () => {
       delete payload.password
     }
 
-    updateProfile({ ...payload, avatarFile })
+    updateProfile(
+      { ...payload, avatarFile },
+      {
+        onSuccess: () => {
+          setAvatarFile(null)
+          setPreviewSrc(null)
+        },
+      },
+    )
   }
 
   if (isUserLoading) {
