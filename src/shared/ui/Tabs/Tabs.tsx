@@ -13,7 +13,7 @@ interface TabsProps {
   size?: Size
   tabs: Tab[]
   value: number | string
-  onChange: (id: number) => void
+  onChange: (id: number | string) => void
 }
 
 const Tabs: FC<TabsProps> = ({

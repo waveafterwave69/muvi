@@ -1,0 +1,133 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  overflow-y: auto;
+  place-items: center;
+  padding: 32px;
+  background-color: var(--modal-overlay-bg);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.opened {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dialog {
+  position: relative;
+  width: 100%;
+  max-height: calc(100dvh - 64px);
+  color: var(--text-primary);
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.opened .dialog {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.sm {
+  max-width: 420px;
+}
+
+.md {
+  max-width: 600px;
+}
+
+.lg {
+  max-width: 800px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-height: calc(100dvh - 64px);
+  overflow-y: auto;
+  box-shadow: var(--modal-shadow);
+}
+
+.plain .dialog {
+  overflow-y: auto;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 50%;
+  place-items: center;
+  background-color: var(--surface-raised);
+  color: var(--text-muted);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    border-color: var(--accent-soft);
+    background-color: var(--accent-hover);
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-hover);
+    color: var(--accent-soft);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.plain .closeButton {
+  border-color: transparent;
+  background-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    padding: var(--container-padding-mobile-x);
+  }
+
+  .dialog,
+  .card {
+    max-height: calc(100dvh - var(--container-padding-mobile-x) * 2);
+  }
+
+  .closeButton {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    padding: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .dialog {
+    transition: none;
+  }
+}
