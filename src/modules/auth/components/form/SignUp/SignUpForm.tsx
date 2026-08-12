@@ -6,7 +6,6 @@ import { ArrowRight, Lock, Mail, User } from 'lucide-react'
 import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import type { AuthError } from '@supabase/auth-js'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/modules/auth/hooks/useAuth'
 
 interface FormValues {
@@ -18,7 +17,6 @@ interface FormValues {
 export const SignUpForm = () => {
   const [error, setError] = useState<AuthError | null>(null)
   const { handleSignUp } = useAuth()
-  const router = useRouter()
 
   const {
     register,
@@ -37,7 +35,7 @@ export const SignUpForm = () => {
       return
     }
 
-    router.push('/profile')
+    window.location.assign('/profile')
   }
 
   return (

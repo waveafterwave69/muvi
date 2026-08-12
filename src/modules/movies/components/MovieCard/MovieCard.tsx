@@ -3,6 +3,7 @@ import { Check, Film, Heart, Plus, Star } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import type { Movie, MovieWatchStatus } from '../../api/types'
 import styles from './MovieCard.module.scss'
+import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
 
 interface MovieCardProps {
   movie: Movie
@@ -21,8 +22,10 @@ export function MovieCard({
   onMarkAsFavorite,
   isUpdating,
 }: MovieCardProps) {
-  const isFavorite = status === 'planned'
-  const isWatched = status === 'watched'
+  const { data } = useCurrentUser();
+  const isFavorite = status === 'planned';
+  const isWatched = status === 'watched';
+  const isAuthorized = !!data;
 
   const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null
 
@@ -53,7 +56,7 @@ export function MovieCard({
           <span>{movie.vote_average.toFixed(1)}</span>
         </div>
 
-        <Button
+        {isAuthorized && <Button
           variant="secondary"
           size="sm"
           className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteButtonActive : ''}`}
@@ -70,7 +73,7 @@ export function MovieCard({
           }}
         >
           <Heart aria-hidden="true" fill={isFavorite ? 'currentColor' : 'none'} />
-        </Button>
+        </Button>}
       </div>
 
       <div className={styles.content}>
@@ -78,7 +81,7 @@ export function MovieCard({
           <h3 className={styles.title}>{movie.title}</h3>
         </Link>
 
-        <Button
+        {isAuthorized && <Button
           variant={isWatched ? 'primary' : 'secondary'}
           size="sm"
           className={`${styles.watchedButton}`}
@@ -101,7 +104,7 @@ export function MovieCard({
           <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
             {isWatched ? 'Просмотрено' : 'Добавить'}
           </span>
-        </Button>
+        </Button>}
       </div>
     </Card>
   )
