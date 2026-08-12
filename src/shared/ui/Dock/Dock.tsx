@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import Card from '../Card/Card'
 import Link from '../Link/Link'
 import styles from './Dock.module.scss'
+import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher'
 
 interface DockRoute {
   id: string
@@ -68,6 +69,7 @@ export const Dock = () => {
             </Link>
           )
         })}
+        <ThemeSwitcher/>
       </nav>
     </Card>
   )

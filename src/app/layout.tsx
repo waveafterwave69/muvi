@@ -4,6 +4,7 @@ import '@/app/styles/index.scss'
 import { Roboto } from 'next/font/google'
 import { Dock } from '@/shared/ui'
 import { Providers } from '@/app/providers/queryProvider'
+import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 
 const roboto = Roboto({
   variable: '--font-roboto',
@@ -23,11 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${roboto.variable}`}>
       <body>
-        
-        <Providers>
-          <div className="container">{children}</div>
-          <Dock />
-        </Providers>
+        <ThemeProvider>
+          <Providers>
+            <div className="container">{children}</div>
+            <Dock />
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   )
