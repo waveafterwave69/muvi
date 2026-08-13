@@ -25,9 +25,7 @@ interface FloatingIcon {
 
 const floatingIcons: FloatingIcon[] = [
   { Icon: Film, className: styles.film, rotate: 14, tone: 'accent' },
-  { Icon: Tv, className: styles.tv, rotate: -9, tone: 'muted' },
   { Icon: Heart, className: styles.heart, rotate: -9, tone: 'accent' },
-  { Icon: Star, className: styles.star, rotate: -13, tone: 'accent' },
   { Icon: Search, className: styles.search, rotate: 9, tone: 'accent' },
   { Icon: Bookmark, className: styles.bookmark, rotate: 10, tone: 'muted' },
   { Icon: Clapperboard, className: styles.clapperboard, rotate: -14, tone: 'muted' },
