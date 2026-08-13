@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import '@/app/styles/index.scss'
 
 import { Roboto } from 'next/font/google'
-import { Dock } from '@/shared/ui'
 import { Providers } from '@/app/providers/queryProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
+import { Dock } from '@/widgets'
 
 const roboto = Roboto({
   variable: '--font-roboto',

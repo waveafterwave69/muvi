@@ -3,10 +3,10 @@
 import { Bookmark, Clapperboard, House, UserRound, type LucideIcon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
-import Card from '../Card/Card'
-import Link from '../Link/Link'
+import Card from '../../shared/ui/Card/Card'
+import Link from '../../shared/ui/Link/Link'
 import styles from './Dock.module.scss'
-import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher'
+import { ThemeSwitcher } from '../../shared/ui/ThemeSwitcher/ThemeSwitcher'
 
 interface DockRoute {
   id: string
