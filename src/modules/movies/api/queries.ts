@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { addMovieToCollection, getMovies, getMovieStatuses, removeMovieFromCollection } from '.'
-import type { AddMovieOptions, Movie, MoviesCategory, MovieStatuses } from './types'
+import { addMovieToCollection, getAllUserMovies, getMovies, getMovieStatuses, removeMovieFromCollection } from '.'
+import  { AddMovieOptions, Movie, MoviesCategory, MovieStatuses, MovieWatchStatus } from './types'
 import { useMemo } from 'react'
 
 interface InfiniteMoviesQueryParams {
@@ -131,3 +131,34 @@ export const useMovieStatuses = ({
     },
   })
 }
+
+export const useInfiniteFavoriteMoviesQuery = ({
+  status,
+  search,
+}: {
+  status: MovieWatchStatus;
+  search: string;
+}) => {
+  return useInfiniteQuery({
+    queryKey: ['user-movies', status, search],
+
+    initialPageParam: 1,
+
+    queryFn: ({ pageParam }) =>
+      getAllUserMovies({
+        page: pageParam,
+        limit: 20,
+        status,
+        search,
+      }),
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.pagination.hasNextPage) {
+        return undefined;
+      }
+
+      return lastPage.pagination.page + 1;
+    },
+  });
+};
+

@@ -32,7 +32,7 @@ const routes: DockRoute[] = [
   },
   {
     id: 'favorite-movies',
-    path: '/favorite-movies',
+    path: '/favorites',
     label: 'Избранное',
     icon: Bookmark,
     isCurrent: (pathname) => pathname.startsWith('/favorite-movies'),
