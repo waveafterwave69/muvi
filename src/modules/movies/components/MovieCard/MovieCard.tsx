@@ -3,7 +3,6 @@ import { Check, Film, Heart, Plus, Star } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import type { Movie, MovieWatchStatus } from '../../api/types'
 import styles from './MovieCard.module.scss'
-import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
 
 interface MovieCardProps {
   movie: Movie
@@ -11,7 +10,8 @@ interface MovieCardProps {
   status: MovieWatchStatus | undefined
   onMarkAsWatched: (movie: Movie) => void
   onMarkAsFavorite: (movie: Movie) => void
-  isUpdating: boolean
+  isUpdating: boolean;
+  showActions: boolean;
 }
 
 export function MovieCard({
@@ -21,11 +21,10 @@ export function MovieCard({
   onMarkAsWatched,
   onMarkAsFavorite,
   isUpdating,
+  showActions
 }: MovieCardProps) {
-  const { data } = useCurrentUser();
   const isFavorite = status === 'planned';
   const isWatched = status === 'watched';
-  const isAuthorized = !!data;
 
   const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null
 
@@ -56,7 +55,7 @@ export function MovieCard({
           <span>{movie.vote_average.toFixed(1)}</span>
         </div>
 
-        {isAuthorized && <Button
+        {showActions && <Button
           variant="secondary"
           size="sm"
           className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteButtonActive : ''}`}
@@ -81,7 +80,7 @@ export function MovieCard({
           <h3 className={styles.title}>{movie.title}</h3>
         </Link>
 
-        {isAuthorized && <Button
+        {showActions && <Button
           variant={isWatched ? 'primary' : 'secondary'}
           size="sm"
           className={`${styles.watchedButton}`}

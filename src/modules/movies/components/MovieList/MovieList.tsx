@@ -7,6 +7,7 @@ import { Movie } from '../../api/types'
 import { useMovieStatus } from '../../hooks'
 import { StarsModal } from '../StarsModal/StarsModal'
 import { useState } from 'react'
+import { useCurrentUser } from '@/modules/auth'
 
 interface MovieListProps {
   movies: Movie[]
@@ -28,6 +29,7 @@ export const MovieList = ({
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
   const { addMovie, isPending: pendingMovieIds, removeMovie, statuses } = useMovieStatus(movies)
+  const { data } = useCurrentUser();
 
   if (isPending) {
     return (
@@ -81,6 +83,7 @@ export const MovieList = ({
             isUpdating={pendingMovieIds}
             remove={removeMovie}
             status={statuses.get(movie.id)}
+            showActions={!!data}
           />
         )
       })}
