@@ -1,7 +1,7 @@
 import type { AddMovieOptions, Movie } from '../api/types'
 import { useMemo } from 'react'
 import { useAddMovie, useMovieStatuses, useRemoveMovie } from '../api/queries'
-import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
+import { useCurrentUser } from '@/modules/auth'
 
 export const useMovieStatus = (movies: Movie[]) => {
   const external_ids = useMemo(() => {
