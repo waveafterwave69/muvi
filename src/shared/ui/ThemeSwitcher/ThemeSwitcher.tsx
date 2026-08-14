@@ -1,6 +1,7 @@
 import { Button } from '@/shared/ui'
 import { useTheme } from '@/shared/providers/ThemeProvider'
 import { Moon, Sun } from 'lucide-react'
+import styles from './ThemeSwitcher.module.scss'
 
 const nextTheme = {
   dark: 'light',
@@ -18,6 +19,8 @@ export const ThemeSwitcher = () => {
     <Button
       onClick={handleClick}
       aria-label={theme === 'light' ? 'Включить тёмную тему' : 'Включить светлую тему'}
+      variant={'secondary'}
+      className={styles.button}
     >
       {theme === 'light' ? <Sun aria-hidden /> : <Moon aria-hidden />}
     </Button>
