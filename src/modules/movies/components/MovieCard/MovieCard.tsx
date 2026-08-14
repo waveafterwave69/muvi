@@ -47,7 +47,6 @@ export function MovieCard({
             </div>
           )}
 
-          <div className={styles.posterOverlay} />
         </Link>
 
         <div className={styles.rating} aria-label={`Рейтинг ${movie.vote_average.toFixed(1)}`}>
