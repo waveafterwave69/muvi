@@ -1,4 +1,10 @@
 import ProfileNav from '@/modules/profile/components/ProfileNav/ProfileNav'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Профиль',
+  description: 'Просматривайте свои любимые и просмотренные фильмы, управляйте списками и следите за киноактивностью.',
+}
 
 export default function RootLayout({
   children,
