@@ -5,6 +5,7 @@ import { Roboto } from 'next/font/google'
 import { Providers } from '@/app/providers/queryProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 import { Dock } from '@/widgets'
+import { Toaster } from 'sonner'
 
 const roboto = Roboto({
   variable: '--font-roboto',
@@ -95,6 +96,19 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <Providers>
+            <Toaster
+              position="top-right"
+              closeButton
+              toastOptions={{
+                style: {
+                  background: 'var(--surface-raised)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--card-border-color)',
+                  borderRadius: '16px',
+                  boxShadow: 'var(--modal-shadow)',
+                },
+              }}
+            />
             <div className="container">{children}</div>
             <Dock />
           </Providers>

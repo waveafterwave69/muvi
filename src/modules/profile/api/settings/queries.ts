@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchSettings, updateSettings } from '.'
+import { toast } from 'sonner'
 
 export const useGetSettings = () => {
   return useQuery({
@@ -16,10 +17,10 @@ export const useUpdateSettings = () => {
     onSuccess: (updatedUser) => {
       queryClient.setQueryData(['settings'], updatedUser)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-      alert('Данные успешно обновлены!')
+      toast.success('Данные успешно обновлены!')
     },
-    onError: (error: any) => {
-      alert(`Ошибка при обновлении: ${error.message}`)
+    onError: (error) => {
+      toast.error(`Ошибка при обновлении: ${error.message}`)
     },
   })
 }
