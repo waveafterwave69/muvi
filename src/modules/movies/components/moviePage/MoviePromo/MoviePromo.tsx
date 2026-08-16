@@ -10,6 +10,7 @@ import { CommentModal } from '../../movies/CommentModal/CommentModal'
 import { useMovieStatus } from '@/modules/movies/hooks/useMovieStatus'
 import { useAddMovie } from '@/modules/movies/hooks/useAddMovie'
 import { FullMovieDetail, Genre } from '@/modules/movies/api/moviePage/types'
+import { formatRuntime } from '@/shared/helpers/formatters'
 
 interface UserMovieItem {
   status: 'watched' | 'planned' | string
@@ -119,11 +120,11 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
             {movie.release_date ? new Date(movie.release_date).getFullYear() : '----'}
           </span>
           <span className={styles.badge}>
-            <Clock2 /> {movie.runtime} мин
+            <Clock2 aria-hidden="true" /> {formatRuntime(movie.runtime)}
           </span>
         </div>
 
-        <h2 className={styles.title}>{movie.title}</h2>
+        <h3 className={styles.title}>{movie.title}</h3>
         <p className={styles.genres}>
           {movie.genres &&
             movie.genres.length > 0 &&

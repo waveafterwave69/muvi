@@ -9,7 +9,7 @@ const Page = () => {
   const { data: user, isLoading: isUserLoading, error: authError } = useCurrentUser()
 
   if (isUserLoading) {
-    return <div>Загрузка профиля...</div>
+    return <div></div>
   }
 
   if (authError) {

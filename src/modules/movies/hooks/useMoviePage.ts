@@ -45,7 +45,7 @@ export const useMoviePage = (movieId: number, currentUserId: string) => {
     externalIds: isValidId ? [parsedMovieId] : [],
   })
 
-  const { data: actors } = useMovieActorsQuery(movieId)
+  const { data: actors = [], isLoading: isActorsLoading } = useMovieActorsQuery(movieId)
 
   return {
     movie,
@@ -56,6 +56,7 @@ export const useMoviePage = (movieId: number, currentUserId: string) => {
     isMoviesLoading,
     isValidId,
     isMovieLoading,
+    isActorsLoading,
     movieError,
     isStatusesLoading,
   }

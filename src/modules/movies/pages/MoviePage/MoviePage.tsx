@@ -3,7 +3,10 @@ import styles from './MoviePage.module.scss'
 import { Card } from '@/shared/ui'
 import MoviePromo from '../../components/moviePage/MoviePromo/MoviePromo'
 import MovieActors from '../../components/moviePage/MovieActors/MovieActors'
+import MovieTrailer from '../../components/moviePage/MovieTrailer/MovieTrailer'
 import { useMoviePage } from '../../hooks/useMoviePage'
+import SkeletonMoviePage from './SkeletonMoviePage/SkeletonMoviePage'
+import type { MovieVideo } from '../../api/moviePage/types'
 
 interface MoviePageProps {
   movieId: number
@@ -19,6 +22,7 @@ const MoviePage: FC<MoviePageProps> = ({ movieId, currentUserId }) => {
     watchedMovies,
     isValidId,
     isMovieLoading,
+    isActorsLoading,
     movieError,
     isStatusesLoading,
     actors,
@@ -26,8 +30,8 @@ const MoviePage: FC<MoviePageProps> = ({ movieId, currentUserId }) => {
 
   if (!isValidId) return <div>Некорректный ID фильма</div>
 
-  if (isMovieLoading || isStatusesLoading || isUserLoading || isMoviesLoading) {
-    return <div>СКЕЛЕТОН</div>
+  if (isMovieLoading || isActorsLoading || isStatusesLoading || isUserLoading || isMoviesLoading) {
+    return <SkeletonMoviePage />
   }
 
   if (movieError || !movie) return <div>Ошибка: {movieError?.message || 'Фильм не найден'}</div>
@@ -41,6 +45,12 @@ const MoviePage: FC<MoviePageProps> = ({ movieId, currentUserId }) => {
       <Card>
         <MovieActors actors={actors} />
       </Card>
+
+      {movie.videos?.results.some((video: MovieVideo) => video.site === 'YouTube') && (
+        <Card>
+          <MovieTrailer movie={movie} />
+        </Card>
+      )}
     </div>
   )
 }
