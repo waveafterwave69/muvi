@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Profile, ProfileMovie } from '../../types/profileTypes'
 import { formatDate } from '@/shared/helpers/formatters'
 import { Clapperboard, Heart } from 'lucide-react'
-import defaultAvatar from '../../assets/default_avatar.png'
+import DefaultAvatar from '../DefaultAvatar/DefaultAvatar'
 
 interface ProfileCardProps {
   actions?: ReactNode
@@ -15,22 +15,24 @@ interface ProfileCardProps {
 }
 
 const ProfileCard: FC<ProfileCardProps> = ({ actions, profile, favMovies, watchedMovies }) => {
-  const avatarSrc = profile?.avatar_url || defaultAvatar
-
   return (
     <div>
       <Card size="lg">
         <div className={styles.profile__content}>
           <div className={styles.profile__left}>
             <div className={styles.avatar__container}>
-              <Image
-                priority
-                src={avatarSrc}
-                className={styles.left__avatar}
-                width={250}
-                height={250}
-                alt="avatar"
-              />
+              {profile?.avatar_url ? (
+                <Image
+                  priority
+                  src={profile.avatar_url}
+                  className={styles.left__avatar}
+                  width={250}
+                  height={250}
+                  alt={`Аватар пользователя ${profile.username}`}
+                />
+              ) : (
+                <DefaultAvatar className={styles.left__avatar} />
+              )}
             </div>
 
             <div className={styles.left__info}>
