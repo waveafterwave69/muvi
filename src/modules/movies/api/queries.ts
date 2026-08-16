@@ -50,8 +50,8 @@ export const useAddMovie = (userId: string) => {
     mutationFn: ({ movie, options }) => addMovieToCollection(movie, options),
     mutationKey: ['user-movies', 'add'],
     onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: movieStatusKeys.all(userId),
+      queryClient.invalidateQueries({
+        queryKey: ['user-movies'],
       })
     },
   })
@@ -64,8 +64,8 @@ export const useRemoveMovie = (userId: string) => {
     mutationFn: (movieId) => removeMovieFromCollection(movieId),
     mutationKey: ['user-movies', 'remove'],
     onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: movieStatusKeys.all(userId),
+      queryClient.invalidateQueries({
+        queryKey: ['user-movies'],
       })
     },
   })
