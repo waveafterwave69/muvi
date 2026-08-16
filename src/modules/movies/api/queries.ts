@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQueries, useQueryClient } from '@tans
 import { addMovieToCollection, getMovies, getMovieStatuses, removeMovieFromCollection } from '.'
 import type { AddMovieOptions, Movie, MoviesCategory, MovieStatuses } from './types'
 import { useMemo } from 'react'
+import { toast } from 'sonner'
 
 interface InfiniteMoviesQueryParams {
   category?: MoviesCategory
@@ -54,6 +55,9 @@ export const useAddMovie = (userId: string) => {
         queryKey: movieStatusKeys.all(userId),
       })
     },
+    onError: (error) => {
+      toast.error('Не удалось добавить фильм' + error.message)
+    }
   })
 }
 
@@ -68,6 +72,9 @@ export const useRemoveMovie = (userId: string) => {
         queryKey: movieStatusKeys.all(userId),
       })
     },
+    onError: (error) => {
+      toast.error('Не удалось удалить фильм' + error.message)
+    }
   })
 }
 
