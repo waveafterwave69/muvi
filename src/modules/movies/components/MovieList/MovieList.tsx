@@ -39,6 +39,10 @@ export const MovieList = ({
     )
   }
 
+  if (!movies.length) {
+    return <p className={styles.empty}>Фильмы не найдены</p>
+  }
+
   const addToWatched = () => {
     if (!selectedWatchedMovie) return
     void addMovie(selectedWatchedMovie, {

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import Card from '../../shared/ui/Card/Card'
 import Link from '../../shared/ui/Link/Link'
 import styles from './Dock.module.scss'
-import { ThemeSwitcher } from '../../shared/ui/ThemeSwitcher/ThemeSwitcher'
+import { ThemeSwitcher } from '@/shared/ui/ThemeSwitcher/ThemeSwitcher'
 
 interface DockRoute {
   id: string
@@ -33,7 +33,7 @@ const routes: DockRoute[] = [
   },
   {
     id: 'favorite-movies',
-    path: '/favorite-movies',
+    path: '/favorites',
     label: 'Избранное',
     icon: Bookmark,
     isCurrent: (pathname) => pathname.startsWith('/favorite-movies'),
