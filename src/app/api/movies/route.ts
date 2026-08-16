@@ -1,5 +1,5 @@
+import { MoviesCategory, MoviesResponse } from '@/modules/movies/api/movies/types'
 import { NextResponse } from 'next/server'
-import type { MoviesCategory, MoviesResponse } from '@/modules/movies/api/types'
 
 const TMDB_URL = 'https://api.themoviedb.org/3'
 const MOVIES_CATEGORIES = new Set<MoviesCategory>(['popular', 'top_rated', 'upcoming'])
