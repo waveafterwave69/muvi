@@ -55,7 +55,7 @@ export const fetchUserMovies = async (userId: string | null) => {
       comment, 
       rating, 
       watched_at, 
-      movies ( id, title, overview, poster_path, release_date, vote_average )
+      movies ( id, external_id, title, overview, poster_path, release_date, vote_average )
     `,
     )
     .eq('user_id', targetUserId)

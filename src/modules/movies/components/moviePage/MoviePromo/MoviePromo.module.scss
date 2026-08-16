@@ -1,0 +1,144 @@
+.promo {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center top;
+  min-height: 480px;
+  display: flex;
+  //   align-items: flex-end;
+  padding: 25px 35px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(11, 11, 14, 0.2) 0%, rgba(11, 11, 14, 0.95) 100%),
+      linear-gradient(90deg, rgba(11, 11, 14, 0.8) 0%, rgba(11, 11, 14, 0.3) 100%);
+    z-index: 1;
+  }
+}
+
+.promo__content {
+  position: relative;
+  z-index: 2;
+}
+
+.backlink {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.badge__row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 30px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 9999px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--base-font-size-small);
+  font-weight: 800;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-soft);
+  }
+}
+
+.title {
+  margin-top: 20px;
+  font-size: 58px;
+}
+
+.genres {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  color: var(--accent);
+  gap: 8px;
+}
+
+.genreItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.overview {
+  margin-top: 25px;
+  font-size: 16px;
+  // letter-spacing: 0.8px;
+}
+
+.actionButtons {
+  margin-top: 35px;
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .promo {
+    min-height: auto;
+    padding: 20px 16px;
+  }
+
+  .promo__content {
+    width: 100%;
+  }
+
+  .backlink {
+    font-size: 14px;
+  }
+
+  .badge__row {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .badge {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .title {
+    margin-top: 15px;
+    font-size: 32px;
+    line-height: 1.1;
+  }
+
+  .genres {
+    font-size: 14px;
+  }
+
+  .overview {
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .actionButtons {
+    margin-top: 25px;
+    flex-direction: column;
+    gap: 12px;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

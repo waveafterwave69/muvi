@@ -1,10 +1,10 @@
 'use client'
 
 import styles from './MoviesPage.module.scss'
-import { MovieList } from '../../components/MovieList/MovieList'
-import { Filters } from '../../components/filters/filters'
-import { useInfiniteMoviesQuery } from '../../api/queries'
-import type { FiltersType, Movie } from '../../api/types'
+import { MovieList } from '../../components/movies/MovieList/MovieList'
+import { Filters } from '../../components/movies/filters/filters'
+import { useInfiniteMoviesQuery } from '../../api/movies/queries'
+import type { FiltersType, Movie } from '../../api/movies/types'
 import { useMemo, useState } from 'react'
 import { useDebounce } from '../../hooks/useDebounce'
 

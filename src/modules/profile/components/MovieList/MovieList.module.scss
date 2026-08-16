@@ -10,7 +10,7 @@
 .movies__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 24px;
   width: 100%;
 }
 
@@ -21,7 +21,7 @@
   overflow: hidden;
   background: var(--card-bg);
   border: 1px solid var(--card-border-color);
-  border-radius: 12px;
+  border-radius: 24px;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -65,22 +65,26 @@
 }
 
 .user__rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
   position: absolute;
   top: 8px;
-  right: 8px;
-  background: rgba(8, 6, 9, 0.8);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--star-color);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: var(--title-font-weight);
-  font-size: var(--base-font-size-medium);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  z-index: 2;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 9999px;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  font-size: var(--base-font-size-small);
+  font-weight: 800;
+  font-size: 13px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: var(--star-color);
+  }
 }
 
 .info {
@@ -130,7 +134,7 @@
 .status {
   display: block;
   padding: 6px;
-  border-radius: 6px;
+  border-radius: 14px;
   font-size: var(--base-font-size-small);
   font-weight: 600;
   text-transform: uppercase;
@@ -159,6 +163,10 @@
 }
 
 @media (max-width: 768px) {
+  .movie__card {
+    border-radius: 16px;
+  }
+
   .movies__grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;

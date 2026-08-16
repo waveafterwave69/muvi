@@ -13,6 +13,8 @@ export const useGetUserMovies = (userId: string | null, enabled: boolean) => {
     queryFn: () => fetchUserMovies(userId),
     queryKey: ['userMovies', userId],
     enabled: enabled,
+    staleTime: 0,
+    gcTime: 0,
   })
 }
 

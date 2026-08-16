@@ -1,5 +1,5 @@
 import { Input, Tabs } from '@/shared/ui'
-import type { FiltersType } from '@/modules/movies/api/types'
+import type { FiltersType } from '@/modules/movies/api/movies/types'
 import styles from './filters.module.scss'
 
 interface FiltersProps {
