@@ -1,17 +1,11 @@
-import { useMemo } from 'react'
 import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
 import { AddMovieOptions, Movie } from '../api/movies/types'
 import { useAddMovie, useMovieStatuses, useRemoveMovie } from '../api/movies/queries'
-import { FullMovieDetail } from '../api/singleMovie/types'
+import { FullMovieDetail } from '../api/moviePage/types'
 
 export const useMovieStatus = (movies: Movie[] | Movie | FullMovieDetail | FullMovieDetail[]) => {
   const movieArray = Array.isArray(movies) ? movies : [movies]
-
-  const movieIdsKey = movieArray.map((m) => m?.id).join(',')
-
-  const external_ids = useMemo(() => {
-    return movieArray.map((movie) => movie?.id).filter(Boolean)
-  }, [movieIdsKey])
+  const external_ids = movieArray.map((movie) => movie?.id).filter(Boolean)
 
   const { data } = useCurrentUser()
   const userId = data?.id

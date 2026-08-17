@@ -4,6 +4,8 @@ import { Card } from '@/shared/ui'
 import MoviePromo from '../../components/moviePage/MoviePromo/MoviePromo'
 import MovieActors from '../../components/moviePage/MovieActors/MovieActors'
 import MovieTrailer from '../../components/moviePage/MovieTrailer/MovieTrailer'
+import SimilarMovies from '../../components/moviePage/SimilarMovies/SimilarMovies'
+import MovieSaga from '../../components/moviePage/MovieSaga/MovieSaga'
 import { useMoviePage } from '../../hooks/useMoviePage'
 import SkeletonMoviePage from './SkeletonMoviePage/SkeletonMoviePage'
 import type { MovieVideo } from '../../api/moviePage/types'
@@ -26,6 +28,9 @@ const MoviePage: FC<MoviePageProps> = ({ movieId, currentUserId }) => {
     movieError,
     isStatusesLoading,
     actors,
+    similarMovies,
+    collectionMovies,
+    isCollectionLoading,
   } = useMoviePage(movieId, currentUserId)
 
   if (!isValidId) return <div>Некорректный ID фильма</div>
@@ -51,6 +56,14 @@ const MoviePage: FC<MoviePageProps> = ({ movieId, currentUserId }) => {
           <MovieTrailer movie={movie} />
         </Card>
       )}
+
+      <Card>
+        <SimilarMovies movies={similarMovies} />
+      </Card>
+
+      <Card className={styles.saga}>
+        <MovieSaga movie={movie} movies={collectionMovies} isLoading={isCollectionLoading} />
+      </Card>
     </div>
   )
 }

@@ -1,6 +1,15 @@
+import type { Movie, MoviesResponse } from '../movies/types'
+
 export interface Genre {
   id: number
   name: string
+}
+
+export interface MovieCollection {
+  id: number
+  name: string
+  poster_path: string | null
+  backdrop_path: string | null
 }
 
 export interface CastMember {
@@ -53,6 +62,7 @@ export interface FullMovieDetail {
   overview: string
   backdrop_path: string | null
   poster_path: string | null
+  belongs_to_collection: MovieCollection | null
   release_date: string
   runtime: number
   vote_average: number
@@ -64,4 +74,10 @@ export interface FullMovieDetail {
   videos?: {
     results: MovieVideo[]
   }
+  similar?: MoviesResponse
+  external_ids?: {
+    wikidata_id?: string | null
+  }
 }
+
+export type { Movie }

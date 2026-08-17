@@ -5,7 +5,8 @@ import { useParams } from 'next/navigation'
 import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
 
 const Page = () => {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
+  const movieId = Number(id)
   const { data: user, isLoading: isUserLoading, error: authError } = useCurrentUser()
 
   if (isUserLoading) {
@@ -25,7 +26,7 @@ const Page = () => {
     )
   }
 
-  return <MoviePage movieId={id} currentUserId={user.id} />
+  return <MoviePage movieId={movieId} currentUserId={user.id} />
 }
 
 export default Page

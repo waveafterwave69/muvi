@@ -1,4 +1,8 @@
-import { useMovieActorsQuery, useMovieDetailQuery } from '../api/moviePage/queries'
+import {
+  useMovieActorsQuery,
+  useMovieCollectionQuery,
+  useMovieDetailQuery,
+} from '../api/moviePage/queries'
 import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
 import { useGetUserMovies } from '@/modules/profile/api/profile/queries'
 import { useMovieStatuses } from '../api/movies/queries'
@@ -46,6 +50,9 @@ export const useMoviePage = (movieId: number, currentUserId: string) => {
   })
 
   const { data: actors = [], isLoading: isActorsLoading } = useMovieActorsQuery(movieId)
+  const { data: collection, isLoading: isCollectionLoading } = useMovieCollectionQuery(
+    movie?.belongs_to_collection?.id,
+  )
 
   return {
     movie,
@@ -59,5 +66,8 @@ export const useMoviePage = (movieId: number, currentUserId: string) => {
     isActorsLoading,
     movieError,
     isStatusesLoading,
+    similarMovies: movie?.similar?.results ?? [],
+    collectionMovies: collection?.results ?? [],
+    isCollectionLoading,
   }
 }

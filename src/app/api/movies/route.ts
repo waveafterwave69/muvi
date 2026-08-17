@@ -1,4 +1,4 @@
-import { MoviesCategory, MoviesResponse } from '@/modules/movies/api/movies/types'
+import { Movie, MoviesCategory, MoviesResponse } from '@/modules/movies/api/movies/types'
 import { NextResponse } from 'next/server'
 
 const TMDB_URL = 'https://api.themoviedb.org/3'
@@ -6,6 +6,10 @@ const MOVIES_CATEGORIES = new Set<MoviesCategory>(['popular', 'top_rated', 'upco
 
 const isMoviesCategory = (value: string): value is MoviesCategory => {
   return MOVIES_CATEGORIES.has(value as MoviesCategory)
+}
+
+interface CollectionResponse {
+  parts: Movie[]
 }
 
 export async function GET(request: Request) {
@@ -19,6 +23,8 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const category = requestUrl.searchParams.get('category') ?? 'popular'
   const search = requestUrl.searchParams.get('search')?.trim() ?? ''
+  const collectionParam = requestUrl.searchParams.get('collection')
+  const collectionId = collectionParam ? Number(collectionParam) : undefined
   const page = Number(requestUrl.searchParams.get('page') ?? '1')
 
   if (!isMoviesCategory(category)) {
@@ -29,14 +35,25 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Некорректный номер страницы' }, { status: 400 })
   }
 
-  const endpoint = search ? `${TMDB_URL}/search/movie` : `${TMDB_URL}/movie/${category}`
+  if (collectionId !== undefined && (!Number.isInteger(collectionId) || collectionId < 1)) {
+    return NextResponse.json({ error: 'Некорректный ID коллекции' }, { status: 400 })
+  }
+
+  const endpoint = collectionId
+    ? `${TMDB_URL}/collection/${collectionId}`
+    : search
+      ? `${TMDB_URL}/search/movie`
+      : `${TMDB_URL}/movie/${category}`
   const params = new URLSearchParams({
-    page: String(page),
     language: 'ru-RU',
-    include_adult: 'false',
   })
 
-  if (search) {
+  if (!collectionId) {
+    params.set('page', String(page))
+    params.set('include_adult', 'false')
+  }
+
+  if (search && !collectionId) {
     params.set('query', search)
   }
 
@@ -53,6 +70,18 @@ export async function GET(request: Request) {
     if (!response.ok) {
       console.error(`TMDB request failed with status ${response.status}`)
       return NextResponse.json({ error: 'Не удалось загрузить фильмы' }, { status: 502 })
+    }
+
+    if (collectionId) {
+      const collection: CollectionResponse = await response.json()
+      const movies: MoviesResponse = {
+        page: 1,
+        results: collection.parts,
+        total_pages: 1,
+        total_results: collection.parts.length,
+      }
+
+      return NextResponse.json(movies)
     }
 
     const movies: MoviesResponse = await response.json()

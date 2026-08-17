@@ -1,9 +1,11 @@
 'use client'
 
 import type { FC } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import styles from './MoviePromo.module.scss'
 import { Button } from '@/shared/ui'
-import { Calendar, Check, Clock2, MoveLeft, Plus, Star } from 'lucide-react'
+import { Calendar, Check, Clock2, LibraryBig, MoveLeft, Plus, Star } from 'lucide-react'
 import { Movie } from '@/modules/movies/api/movies/types'
 import { StarsModal } from '../../movies/StarsModal/StarsModal'
 import { CommentModal } from '../../movies/CommentModal/CommentModal'
@@ -70,6 +72,17 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
   } = useAddMovie(mappedMovie)
 
   const backdropUrl = getImageUrl(movie.backdrop_path, 'original')
+  const collection = movie.belongs_to_collection
+  const collectionImageUrl = getImageUrl(
+    collection?.poster_path ?? collection?.backdrop_path,
+    'w185',
+  )
+  const collectionSearchUrl = collection
+    ? `/movies?${new URLSearchParams({
+        collection: String(collection.id),
+        search: collection.name,
+      })}`
+    : ''
 
   const isWatched = watchedMovies.some(
     (movieEl: UserMovieItem) => movieEl.movies?.external_id === movie.id,
@@ -136,10 +149,39 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
             ))}
         </p>
 
+        {collection && (
+          <div className={styles.collection}>
+            <Link
+              href={collectionSearchUrl}
+              className={styles.collectionLink}
+              aria-label={`Открыть фильмы коллекции «${collection.name}»`}
+            >
+              <span className={styles.collectionPoster}>
+                {collectionImageUrl ? (
+                  <Image
+                    src={collectionImageUrl}
+                    alt={`Постер коллекции «${collection.name}»`}
+                    fill
+                    sizes="56px"
+                  />
+                ) : (
+                  <LibraryBig aria-hidden="true" />
+                )}
+              </span>
+              <span className={styles.collectionContent}>
+                <span className={styles.collectionLabel}>Коллекция</span>
+                <span className={styles.collectionName}>{collection.name}</span>
+                <span className={styles.collectionHint}>Показать все фильмы</span>
+              </span>
+            </Link>
+          </div>
+        )}
+
         <p className={styles.overview}>{movie.overview}</p>
 
         <div className={styles.actionButtons}>
           <Button
+            size="sm"
             variant={isFavorite ? 'primary' : 'secondary'}
             className={`${styles.watchedButton}`}
             leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
@@ -153,6 +195,7 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
           </Button>
 
           <Button
+            size="sm"
             variant={isWatched ? 'primary' : 'secondary'}
             className={`${styles.watchedButton}`}
             leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}

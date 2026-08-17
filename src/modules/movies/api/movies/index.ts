@@ -13,11 +13,13 @@ export const getMovies = async ({
   page = 1,
   category = 'popular',
   search = '',
+  collectionId,
   signal,
 }: {
   page?: number
   category?: MoviesCategory
   search?: string
+  collectionId?: number
   signal?: AbortSignal
 }): Promise<MoviesResponse> => {
   const normalizedSearch = search.trim()
@@ -29,6 +31,10 @@ export const getMovies = async ({
 
   if (normalizedSearch) {
     params.set('search', normalizedSearch)
+  }
+
+  if (collectionId) {
+    params.set('collection', String(collectionId))
   }
 
   const response = await fetch(`/api/movies?${params}`, { signal })

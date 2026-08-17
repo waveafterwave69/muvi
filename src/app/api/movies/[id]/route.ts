@@ -22,7 +22,7 @@ export async function GET(
 
   const urlParams = new URLSearchParams({
     language: 'ru-RU',
-    append_to_response: 'credits,reviews,videos',
+    append_to_response: 'credits,reviews,videos,similar,external_ids',
     include_image_language: 'ru,en,null',
     include_video_language: 'ru,en,null',
   })

@@ -13,13 +13,23 @@ const initialFilters: FiltersType = {
   type: 'popular',
 }
 
-export function MoviesPage() {
-  const [filters, setFilters] = useState<FiltersType>(initialFilters)
+interface MoviesPageProps {
+  initialSearch?: string
+  initialCollectionId?: number
+}
+
+export function MoviesPage({ initialSearch = '', initialCollectionId }: MoviesPageProps) {
+  const [filters, setFilters] = useState<FiltersType>({
+    ...initialFilters,
+    search: initialSearch,
+  })
+  const [collectionId, setCollectionId] = useState(initialCollectionId)
   const debouncedSearch = useDebounce(filters.search, 400)
   const { data, error, fetchNextPage, hasNextPage, isError, isFetchingNextPage, isPending } =
     useInfiniteMoviesQuery({
       category: filters.type,
       search: debouncedSearch,
+      collectionId,
     })
 
   const movies = useMemo(() => {
@@ -35,6 +45,10 @@ export function MoviesPage() {
   }, [data])
 
   const handleChange = <K extends keyof FiltersType>(key: K, value: FiltersType[K]) => {
+    if (key === 'search') {
+      setCollectionId(undefined)
+    }
+
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
 

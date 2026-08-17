@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 interface InfiniteMoviesQueryParams {
   category?: MoviesCategory
   search?: string
+  collectionId?: number
 }
 
 interface AddMovieVariables {
@@ -16,11 +17,13 @@ interface AddMovieVariables {
 export function useInfiniteMoviesQuery({
   category = 'popular',
   search = '',
+  collectionId,
 }: InfiniteMoviesQueryParams = {}) {
   const normalizedSearch = search.trim()
+  const queryMode = collectionId ? 'collection' : normalizedSearch ? 'search' : category
 
   return useInfiniteQuery({
-    queryKey: ['media', 'movie', normalizedSearch ? 'search' : category, normalizedSearch],
+    queryKey: ['media', 'movie', queryMode, collectionId ?? normalizedSearch],
 
     initialPageParam: 1,
 
@@ -29,6 +32,7 @@ export function useInfiniteMoviesQuery({
         page: pageParam,
         category,
         search: normalizedSearch,
+        collectionId,
         signal,
       })
     },
