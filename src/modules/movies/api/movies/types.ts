@@ -83,7 +83,7 @@ export interface UserMovie {
   user_id: string;
   movie_id: number;
 
-  status: MovieStatuses;
+  status: MovieWatchStatus;
 
   rating: number | null;
   comment: string | null;

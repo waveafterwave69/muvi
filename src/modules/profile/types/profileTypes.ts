@@ -34,9 +34,19 @@ export interface Profile {
   username: string
 }
 
+interface ProfileMovieDetails {
+  id: number
+  external_id: number
+  title: string
+  overview: string
+  poster_path: string | null
+  release_date: string | null
+  vote_average: number
+}
+
 export interface ProfileMovie {
   comment: null | string
-  movies: any
+  movies: ProfileMovieDetails | null
   rating: number | null
   status: 'watched' | 'planned'
   watched_at: string | null

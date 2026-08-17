@@ -1,4 +1,5 @@
 import { supabase } from '@/shared/api/supabase'
+import type { ProfileMovie } from '../../types/profileTypes'
 
 export const fetchProfile = async (userId: string | null) => {
   try {
@@ -59,6 +60,7 @@ export const fetchUserMovies = async (userId: string | null) => {
     `,
     )
     .eq('user_id', targetUserId)
+    .overrideTypes<ProfileMovie[], { merge: false }>()
 
   if (error) {
     throw new Error(error.message)

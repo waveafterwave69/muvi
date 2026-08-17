@@ -8,8 +8,8 @@ interface MovieCardProps {
   movie: Movie
   remove: (movieId: number) => Promise<void>
   status: MovieWatchStatus | undefined
-  onMarkAsWatched: (movie: Movie) => void
-  onMarkAsFavorite: (movie: Movie) => void
+  onMarkAsWatched?: (movie: Movie) => void
+  onMarkAsFavorite?: (movie: Movie) => void
   isUpdating: boolean
   showActions: boolean
 }
@@ -66,7 +66,7 @@ export function MovieCard({
               if (isFavorite) {
                 void remove(movie.id)
               } else {
-                onMarkAsFavorite(movie)
+                onMarkAsFavorite?.(movie)
               }
             }}
           >
@@ -94,7 +94,7 @@ export function MovieCard({
               if (isWatched) {
                 void remove(movie.id)
               } else {
-                onMarkAsWatched(movie)
+                onMarkAsWatched?.(movie)
               }
             }}
           >

@@ -62,7 +62,7 @@ export const useAddMovie = (userId: string) => {
     mutationKey: ['user-movies', 'add'],
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: movieStatusKeys.all(userId),
+        queryKey: ['user-movies'],
       })
 
       void queryClient.invalidateQueries({
@@ -83,7 +83,7 @@ export const useRemoveMovie = (userId: string) => {
     mutationKey: ['user-movies', 'remove'],
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: movieStatusKeys.all(userId),
+        queryKey: ['user-movies'],
       })
 
       void queryClient.invalidateQueries({
@@ -121,9 +121,13 @@ export const useMovieStatuses = ({
   externalIds: number[]
 }) => {
   const batches = useMemo(() => {
+    if (!userId) {
+      return []
+    }
+
     const uniqueIds = Array.from(new Set(externalIds))
     return splitIntoBatches(uniqueIds, 20)
-  }, [externalIds])
+  }, [externalIds, userId])
 
   return useQueries({
     queries: batches.map((batch) => ({
