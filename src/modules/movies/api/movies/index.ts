@@ -1,11 +1,11 @@
-import type {
+import  {
   AddMovieOptions,
   GetMovieStatusesParams,
   Movie,
   MoviesCategory,
   MoviesResponse,
   MovieStatuses,
-  MovieStatusRow,
+  MovieStatusRow, MovieWatchStatus, UserMovie, UserMoviesResponse,
 } from './types'
 import { supabase } from '@/shared/api/supabase'
 
@@ -134,4 +134,75 @@ export const getMovieStatuses = async ({
   if (error) throw error
 
   return new Map(data.map((row) => [row.movie.external_id, row.status]))
+}
+
+export interface GetMoviesParams {
+  page?: number;
+  limit?: number;
+  status?: MovieWatchStatus;
+  search: string;
+}
+
+export const getAllUserMovies = async ({
+  page = 1,
+  limit = 20,
+  status,
+  search
+}: GetMoviesParams): Promise<UserMoviesResponse> => {
+
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+
+  const { data: { user }} = await supabase.auth.getUser();
+
+  let query = supabase
+    .from('user_movies')
+    .select(
+      `
+        user_id,
+        movie_id,
+        status,
+        rating,
+        comment,
+        watched_at,
+        created_at,
+        updated_at,
+        movie:movies!inner (*)
+      `,
+      {
+        count: 'exact',
+      },
+    )
+    .eq('user_id', user?.id)
+    .ilike('movies.title', `%${search}%`)
+    .order('created_at', {
+      ascending: false,
+    })
+    .range(from, to)
+
+
+  if (status) {
+    query = query.eq('status', status)
+  }
+
+
+  const { data, error, count } = await query.overrideTypes<UserMovie[], { merge: false }>()
+
+  if (error) {
+    throw error
+  }
+
+  const total = count ?? 0
+
+  return {
+    items: data ?? [],
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page * limit < total,
+      hasPreviousPage: page > 1,
+    },
+  }
 }

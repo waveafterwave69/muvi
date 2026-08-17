@@ -7,8 +7,8 @@ import { useGetSettings, useUpdateSettings } from '../../api/settings/queries'
 import { useForm } from 'react-hook-form'
 import { Lock, User, Mail, Camera } from 'lucide-react'
 import Image from 'next/image'
-import defaultAvatar from '../../assets/default_avatar.png'
 import SkeletonSettingsPage from './SkeletonSettingsPage/SkeletonSettingsPage'
+import DefaultAvatar from '../../components/DefaultAvatar/DefaultAvatar'
 
 interface ISettingsForm {
   username: string
@@ -76,7 +76,7 @@ const SettingsPage = () => {
     return <SkeletonSettingsPage />
   }
 
-  const currentAvatarSrc = previewSrc || user?.user_metadata?.avatar_url || defaultAvatar
+  const currentAvatarSrc = previewSrc || user?.user_metadata?.avatar_url
 
   return (
     <div className={styles.settings}>
@@ -91,14 +91,18 @@ const SettingsPage = () => {
           />
 
           <div className={styles.avatar__container} onClick={triggerFileInput}>
-            <Image
-              priority
-              src={currentAvatarSrc}
-              className={styles.left__avatar}
-              width={250}
-              height={250}
-              alt="avatar"
-            />
+            {currentAvatarSrc ? (
+              <Image
+                priority
+                src={currentAvatarSrc}
+                className={styles.left__avatar}
+                width={250}
+                height={250}
+                alt="Текущий аватар профиля"
+              />
+            ) : (
+              <DefaultAvatar className={styles.left__avatar} />
+            )}
             <div className={styles.avatar__overlay}>
               <Camera size={36} color="#fff" />
             </div>

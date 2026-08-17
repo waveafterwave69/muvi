@@ -1,7 +1,14 @@
 import { useInfiniteQuery, useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { addMovieToCollection, getMovies, getMovieStatuses, removeMovieFromCollection } from '.'
-import type { AddMovieOptions, Movie, MoviesCategory, MovieStatuses } from './types'
+import {
+  addMovieToCollection,
+  getAllUserMovies,
+  getMovies,
+  getMovieStatuses,
+  removeMovieFromCollection,
+} from '.'
+import { AddMovieOptions, Movie, MoviesCategory, MovieStatuses, MovieWatchStatus } from './types'
 import { useMemo } from 'react'
+import { toast } from 'sonner'
 
 interface InfiniteMoviesQueryParams {
   category?: MoviesCategory
@@ -62,6 +69,9 @@ export const useAddMovie = (userId: string) => {
         queryKey: ['userMovies', userId],
       })
     },
+    onError: (error) => {
+      toast.error('Не удалось добавить фильм' + error.message)
+    },
   })
 }
 
@@ -79,6 +89,9 @@ export const useRemoveMovie = (userId: string) => {
       void queryClient.invalidateQueries({
         queryKey: ['userMovies', userId],
       })
+    },
+    onError: (error) => {
+      toast.error('Не удалось удалить фильм' + error.message)
     },
   })
 }
@@ -140,6 +153,36 @@ export const useMovieStatuses = ({
         isFetching: results.some((result) => result.isFetching),
         error: results.find((result) => result.error)?.error ?? null,
       }
+    },
+  })
+}
+
+export const useInfiniteFavoriteMoviesQuery = ({
+  status,
+  search,
+}: {
+  status: MovieWatchStatus
+  search: string
+}) => {
+  return useInfiniteQuery({
+    queryKey: ['user-movies', status, search],
+
+    initialPageParam: 1,
+
+    queryFn: ({ pageParam }) =>
+      getAllUserMovies({
+        page: pageParam,
+        limit: 20,
+        status,
+        search,
+      }),
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.pagination.hasNextPage) {
+        return undefined
+      }
+
+      return lastPage.pagination.page + 1
     },
   })
 }

@@ -57,14 +57,6 @@
   }
 }
 
-.posterOverlay {
-  position: absolute;
-  inset: auto 0 0;
-  height: 38%;
-  pointer-events: none;
-  background: linear-gradient(to bottom, transparent, var(--card-bg));
-}
-
 .rating {
   position: absolute;
   top: 8px;
@@ -106,9 +98,6 @@
     background-color: var(--surface-raised);
   }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent-soft);
-  }
 }
 
 .favoriteButtonActive {
@@ -141,7 +130,6 @@
 .watchedButton {
   width: 100% !important;
   border: 1px solid var(--border-button-color);
-  color: var(--text-muted);
 
   svg {
     width: 18px;
@@ -153,9 +141,6 @@
     color: var(--text-primary);
   }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 2px var(--accent-soft);
-  }
 }
 
 .watchedButtonActive {

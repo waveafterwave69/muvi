@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchProfile, fetchUserMovies, logoutUser } from '.'
+import { toast } from 'sonner'
 
 export const useGetProfile = (userId: string | null) => {
   return useQuery({
@@ -28,5 +29,8 @@ export const useLogout = () => {
 
       window.location.href = '/'
     },
+    onError: (error) => {
+      toast.error('Не удалось выйти из профиля' + error.message)
+    }
   })
 }
