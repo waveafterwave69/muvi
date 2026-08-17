@@ -1,12 +1,12 @@
 'use client'
 
-import styles from './FavoritesPage.module.scss';
+import styles from './FavoritesPage.module.scss'
 import { FavoriteFilters } from '../../components/FavoriteFilters/FavoriteFilters'
-import { useInfiniteFavoriteMoviesQuery } from '../../api/queries'
 import { MovieList } from '../../components/MovieList/MovieList'
 import { useMemo, useState } from 'react'
-import { FavoriteFiltersType, Movie } from '../../api/types'
 import { useDebounce } from '@/modules/movies/hooks/useDebounce'
+import { FavoriteFiltersType, Movie } from '../../api/movies/types'
+import { useInfiniteFavoriteMoviesQuery } from '../../api/movies/queries'
 
 const initialFilters: FavoriteFiltersType = {
   status: 'planned',
@@ -17,13 +17,8 @@ export const FavoritesPage = () => {
   const [filters, setFilters] = useState<FavoriteFiltersType>(initialFilters)
   const debouncedSearch = useDebounce(filters.search, 400)
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isPending
-  } = useInfiniteFavoriteMoviesQuery({ status: filters.status, search: debouncedSearch })
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
+    useInfiniteFavoriteMoviesQuery({ status: filters.status, search: debouncedSearch })
 
   const { movies } = useMemo(() => {
     const movies: Movie[] = []
@@ -36,7 +31,7 @@ export const FavoritesPage = () => {
           ...movie,
           id: external_id,
           release_date: release_date ?? '',
-          vote_average: item.rating ?? 0
+          vote_average: item.rating ?? 0,
         })
       })
     })
@@ -44,13 +39,16 @@ export const FavoritesPage = () => {
     return { movies }
   }, [data])
 
-  const onChangeFilter = <K extends keyof FavoriteFiltersType>(key: K, value: FavoriteFiltersType[K]) => {
+  const onChangeFilter = <K extends keyof FavoriteFiltersType>(
+    key: K,
+    value: FavoriteFiltersType[K],
+  ) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
 
   return (
     <div className={styles.root}>
-      <FavoriteFilters filters={filters} onChange={onChangeFilter}/>
+      <FavoriteFilters filters={filters} onChange={onChangeFilter} />
       <MovieList
         movies={movies ?? []}
         isPending={isPending}

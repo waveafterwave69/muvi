@@ -1,9 +1,9 @@
 'use client'
 
-import styles from './FavoriteFilters.module.scss';
+import styles from './FavoriteFilters.module.scss'
 import { Input, Tabs } from '@/shared/ui'
 import { Search } from 'lucide-react'
-import type { FavoriteFiltersType } from '@/modules/movies/api/types'
+import { FavoriteFiltersType } from '../../api/movies/types'
 
 type FavoriteStatus = FavoriteFiltersType['status']
 
@@ -17,23 +17,22 @@ const isFavoriteStatus = (value: string | number): value is FavoriteStatus => {
 }
 
 interface Props {
-  filters: FavoriteFiltersType,
+  filters: FavoriteFiltersType
   onChange: <K extends keyof FavoriteFiltersType>(key: K, value: FavoriteFiltersType[K]) => void
 }
 
 export const FavoriteFilters = ({ filters, onChange }: Props) => {
-
-  return(
+  return (
     <div className={styles.header}>
       <div className={styles.container}>
         <h3>Моя полка</h3>
         <Input
-          size='sm'
+          size="sm"
           rootClassName={styles.search}
           placeholder={'Найти в своих фильмах...'}
-          icon={<Search/>}
+          icon={<Search />}
           value={filters.search}
-          onChange={(e)=> onChange('search', e.target.value)}
+          onChange={(e) => onChange('search', e.target.value)}
         />
       </div>
 
@@ -47,7 +46,7 @@ export const FavoriteFilters = ({ filters, onChange }: Props) => {
           }
         }}
         variant="secondary"
-        size='sm'
+        size="sm"
       />
     </div>
   )

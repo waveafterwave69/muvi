@@ -36,7 +36,7 @@ const routes: DockRoute[] = [
     path: '/favorites',
     label: 'Избранное',
     icon: Bookmark,
-    isCurrent: (pathname) => pathname.startsWith('/favorite-movies'),
+    isCurrent: (pathname) => pathname.startsWith('/favorite'),
   },
   {
     id: 'profile',
@@ -69,7 +69,7 @@ export const Dock = () => {
             </Link>
           )
         })}
-        <ThemeSwitcher/>
+        <ThemeSwitcher />
       </nav>
     </Card>
   )
