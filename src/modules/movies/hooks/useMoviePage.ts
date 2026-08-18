@@ -1,39 +1,8 @@
-import {
-  useMovieActorsQuery,
-  useMovieCollectionQuery,
-  useMovieDetailQuery,
-} from '../api/moviePage/queries'
+import { useMovieCollectionQuery, useMovieDetailQuery } from '../api/moviePage/queries'
 import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
-import { useGetUserMovies } from '@/modules/profile/api/profile/queries'
-import { useMovieStatuses } from '../api/movies/queries'
 
-interface MoviePageUserMovie {
-  status: 'watched' | 'planned' | string
-  comment: string | null
-  rating: number | null
-  watched_at: string | null
-  movies: {
-    id: number
-    external_id: number
-    title: string
-    overview: string
-  }
-}
-
-export const useMoviePage = (movieId: number, currentUserId: string) => {
+export const useMoviePage = (movieId: number) => {
   const { data: currentUser, isLoading: isUserLoading } = useCurrentUser()
-
-  const { data: userMoviesData = [], isLoading: isMoviesLoading } = useGetUserMovies(
-    currentUser?.id ?? '',
-    !!currentUser?.id,
-  )
-  const userMovies = userMoviesData as unknown as MoviePageUserMovie[]
-  const favMovies = userMovies.filter((movie) => {
-    return movie.status === 'planned'
-  })
-  const watchedMovies = userMovies.filter((movie) => {
-    return movie.status === 'watched'
-  })
 
   const parsedMovieId = Array.isArray(movieId) ? Number(movieId[0]) : Number(movieId)
   const isValidId = !isNaN(parsedMovieId) && parsedMovieId > 0
@@ -44,12 +13,8 @@ export const useMoviePage = (movieId: number, currentUserId: string) => {
     error: movieError,
   } = useMovieDetailQuery(parsedMovieId)
 
-  const { isPending: isStatusesLoading } = useMovieStatuses({
-    userId: currentUserId,
-    externalIds: isValidId ? [parsedMovieId] : [],
-  })
+  const actors = movie?.credits?.cast || []
 
-  const { data: actors = [], isLoading: isActorsLoading } = useMovieActorsQuery(movieId)
   const { data: collection, isLoading: isCollectionLoading } = useMovieCollectionQuery(
     movie?.belongs_to_collection?.id,
   )
@@ -57,17 +22,13 @@ export const useMoviePage = (movieId: number, currentUserId: string) => {
   return {
     movie,
     actors,
-    favMovies,
-    watchedMovies,
     isUserLoading,
-    isMoviesLoading,
     isValidId,
     isMovieLoading,
-    isActorsLoading,
     movieError,
-    isStatusesLoading,
     similarMovies: movie?.similar?.results ?? [],
     collectionMovies: collection?.results ?? [],
     isCollectionLoading,
+    currentUser,
   }
 }

@@ -31,6 +31,6 @@ export const useLogout = () => {
     },
     onError: (error) => {
       toast.error('Не удалось выйти из профиля' + error.message)
-    }
+    },
   })
 }

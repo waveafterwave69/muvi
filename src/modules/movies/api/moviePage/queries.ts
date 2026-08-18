@@ -18,16 +18,6 @@ export const useMovieDetailQuery = (movieId: number) => {
   })
 }
 
-export const useMovieActorsQuery = (movieId: number) => {
-  return useQuery({
-    queryKey: movieKeys.actors(movieId),
-    queryFn: ({ signal }) => getMovieById(movieId, signal),
-    enabled: !isNaN(movieId) && movieId > 0,
-    staleTime: 5 * 60 * 1000,
-    select: (data) => data?.credits?.cast ?? [],
-  })
-}
-
 export const useMovieCollectionQuery = (collectionId?: number) => {
   return useQuery({
     queryKey: movieKeys.collection(collectionId ?? 0),

@@ -1,30 +1,62 @@
+'use client'
+
 import Image from 'next/image'
 import { Check, Film, Heart, Plus, Star } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MovieCard.module.scss'
 import { Movie, MovieWatchStatus } from '@/modules/movies/api/movies/types'
+import { type AddMovieHandler, useAddMovie } from '@/modules/movies/hooks/useAddMovie'
+import { StarsModal } from '../StarsModal/StarsModal'
+import { CommentModal } from '../CommentModal/CommentModal'
 
 interface MovieCardProps {
   movie: Movie
-  remove: (movieId: number) => Promise<void>
   status: MovieWatchStatus | undefined
-  onMarkAsWatched?: (movie: Movie) => void
-  onMarkAsFavorite?: (movie: Movie) => void
   isUpdating: boolean
   showActions: boolean
+  addMovie: AddMovieHandler
+  removeMovie: (id: number) => Promise<void>
 }
 
 export function MovieCard({
   movie,
-  remove,
   status,
-  onMarkAsWatched,
-  onMarkAsFavorite,
+  addMovie,
+  removeMovie,
   isUpdating,
   showActions,
 }: MovieCardProps) {
+  const {
+    addToFavorite,
+    addToWatched,
+    isCommentModalOpen,
+    isStarsModalOpen,
+    setIsStarsModalOpen,
+    setIsCommentModalOpen,
+    setComment,
+    setStars,
+    stars,
+    comment,
+  } = useAddMovie(movie, addMovie)
+
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
+
+  const handleFavoriteClick = () => {
+    if (isFavorite) {
+      void removeMovie(movie.id)
+    } else {
+      setIsCommentModalOpen(true)
+    }
+  }
+
+  const handleWatchedClick = () => {
+    if (isWatched) {
+      void removeMovie(movie.id)
+    } else {
+      setIsStarsModalOpen(true)
+    }
+  }
 
   const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null
 
@@ -62,13 +94,7 @@ export function MovieCard({
             aria-pressed={isFavorite}
             aria-disabled={isUpdating}
             disabled={isUpdating}
-            onClick={() => {
-              if (isFavorite) {
-                void remove(movie.id)
-              } else {
-                onMarkAsFavorite?.(movie)
-              }
-            }}
+            onClick={handleFavoriteClick}
           >
             <Heart aria-hidden="true" fill={isFavorite ? 'currentColor' : 'none'} />
           </Button>
@@ -90,13 +116,7 @@ export function MovieCard({
             aria-disabled={isUpdating}
             disabled={isUpdating}
             aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
-            onClick={() => {
-              if (isWatched) {
-                void remove(movie.id)
-              } else {
-                onMarkAsWatched?.(movie)
-              }
-            }}
+            onClick={handleWatchedClick}
           >
             <span className={styles.watchedButtonLabel}>
               {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
@@ -107,6 +127,30 @@ export function MovieCard({
           </Button>
         )}
       </div>
+
+      <StarsModal
+        isOpen={isStarsModalOpen}
+        onClose={() => {
+          setIsStarsModalOpen(false)
+          setStars(null)
+        }}
+        setStars={setStars}
+        stars={stars}
+        onSubmit={addToWatched}
+        isSubmitting={isUpdating}
+      />
+
+      <CommentModal
+        isOpen={isCommentModalOpen}
+        onClose={() => {
+          setIsCommentModalOpen(false)
+          setComment(null)
+        }}
+        comment={comment ?? ''}
+        onCommentChange={setComment}
+        onSubmit={addToFavorite}
+        isSubmitting={isUpdating}
+      />
     </Card>
   )
 }

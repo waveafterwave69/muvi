@@ -1,33 +1,44 @@
 import { useState } from 'react'
-import { Movie } from '../api/movies/types'
-import { useMovieStatus } from './useMovieStatus'
+import { AddMovieOptions, Movie } from '../api/movies/types'
 
-export const useAddMovie = (movie: Movie) => {
+export type AddMovieHandler = (movie: Movie, options: AddMovieOptions) => Promise<void>
+
+export const useAddMovie = (movie: Movie, addMovie: AddMovieHandler) => {
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
   const [isStarsModalOpen, setIsStarsModalOpen] = useState(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false)
 
-  const { addMovie } = useMovieStatus(movie)
+  const addToWatched = async () => {
+    if (stars === null) return
 
-  const addToWatched = () => {
-    void addMovie(movie, {
-      status: 'watched',
-      rating: stars,
-      comment: null,
-    })
-    setStars(null)
-    setIsStarsModalOpen(false)
+    try {
+      await addMovie(movie, {
+        status: 'watched',
+        rating: stars,
+        comment: null,
+      })
+
+      setStars(null)
+      setIsStarsModalOpen(false)
+    } catch {
+      return
+    }
   }
 
-  const addToFavorite = () => {
-    void addMovie(movie, {
-      status: 'planned',
-      rating: null,
-      comment: comment,
-    })
-    setComment(null)
-    setIsCommentModalOpen(false)
+  const addToFavorite = async () => {
+    try {
+      await addMovie(movie, {
+        status: 'planned',
+        rating: null,
+        comment,
+      })
+
+      setComment(null)
+      setIsCommentModalOpen(false)
+    } catch {
+      return
+    }
   }
 
   return {

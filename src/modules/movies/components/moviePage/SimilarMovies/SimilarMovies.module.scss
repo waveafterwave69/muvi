@@ -65,7 +65,7 @@
 
 .list {
   display: grid;
-  grid-auto-columns: calc((100% - 60px) / 6);
+  grid-auto-columns: calc((100% - 70px) / 4);
   grid-auto-flow: column;
   gap: 12px;
   overflow-x: auto;

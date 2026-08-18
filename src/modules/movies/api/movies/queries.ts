@@ -21,6 +21,11 @@ interface AddMovieVariables {
   options: AddMovieOptions
 }
 
+const infiniteMovieKeys = {
+  catalog: (mode: MoviesCategory | 'collection' | 'search', identifier: number | string) =>
+    ['media', 'movie', 'infinite', mode, identifier] as const,
+}
+
 export function useInfiniteMoviesQuery({
   category = 'popular',
   search = '',
@@ -29,11 +34,11 @@ export function useInfiniteMoviesQuery({
   const normalizedSearch = search.trim()
   const queryMode = collectionId ? 'collection' : normalizedSearch ? 'search' : category
 
+  const queryIdentifier = collectionId ?? (normalizedSearch || 'all')
+
   return useInfiniteQuery({
-    queryKey: ['media', 'movie', queryMode, collectionId ?? normalizedSearch],
-
+    queryKey: infiniteMovieKeys.catalog(queryMode, queryIdentifier),
     initialPageParam: 1,
-
     queryFn: ({ pageParam, signal }) => {
       return getMovies({
         page: pageParam,
@@ -43,12 +48,10 @@ export function useInfiniteMoviesQuery({
         signal,
       })
     },
-
     getNextPageParam: (lastPage) => {
       if (lastPage.page >= lastPage.total_pages) {
         return undefined
       }
-
       return lastPage.page + 1
     },
   })
@@ -60,17 +63,18 @@ export const useAddMovie = (userId: string) => {
   return useMutation<void, Error, AddMovieVariables>({
     mutationFn: ({ movie, options }) => addMovieToCollection(movie, options),
     mutationKey: ['user-movies', 'add'],
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ['user-movies'],
-      })
-
-      void queryClient.invalidateQueries({
-        queryKey: ['userMovies', userId],
-      })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['user-movies'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['userMovies', userId],
+        }),
+      ])
     },
     onError: (error) => {
-      toast.error('Не удалось добавить фильм' + error.message)
+      toast.error(error.message)
     },
   })
 }
@@ -81,17 +85,18 @@ export const useRemoveMovie = (userId: string) => {
   return useMutation<void, Error, number>({
     mutationFn: (movieId) => removeMovieFromCollection(movieId),
     mutationKey: ['user-movies', 'remove'],
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ['user-movies'],
-      })
-
-      void queryClient.invalidateQueries({
-        queryKey: ['userMovies', userId],
-      })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['user-movies'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['userMovies', userId],
+        }),
+      ])
     },
     onError: (error) => {
-      toast.error('Не удалось удалить фильм' + error.message)
+      toast.error(error.message)
     },
   })
 }

@@ -29,8 +29,7 @@ interface UserMovieItem {
 
 interface MoviePromoProps {
   movie: FullMovieDetail
-  favMovies: UserMovieItem[]
-  watchedMovies: UserMovieItem[]
+  isAuthenticated: boolean
 }
 
 const getImageUrl = (path: string | null | undefined, size: string = 'original'): string => {
@@ -38,8 +37,12 @@ const getImageUrl = (path: string | null | undefined, size: string = 'original')
   return `https://image.tmdb.org/t/p/${size}${path}`
 }
 
-const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) => {
-  const { removeMovie, isPending: pendingMovieIds } = useMovieStatus(movie)
+const MoviePromo: FC<MoviePromoProps> = ({ movie, isAuthenticated }) => {
+  const { addMovie, removeMovie, isUpdating, statuses } = useMovieStatus(movie)
+
+  const status = statuses.get(movie.id)
+  const isFavorite = status === 'planned'
+  const isWatched = status === 'watched'
 
   const mappedMovie: Movie = {
     id: movie.id,
@@ -69,7 +72,7 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
     setStars,
     stars,
     comment,
-  } = useAddMovie(mappedMovie)
+  } = useAddMovie(mappedMovie, addMovie)
 
   const backdropUrl = getImageUrl(movie.backdrop_path, 'original')
   const collection = movie.belongs_to_collection
@@ -83,13 +86,6 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
         search: collection.name,
       })}`
     : ''
-
-  const isWatched = watchedMovies.some(
-    (movieEl: UserMovieItem) => movieEl.movies?.external_id === movie.id,
-  )
-  const isFavorite = favMovies.some(
-    (movieEl: UserMovieItem) => movieEl.movies?.external_id === movie.id,
-  )
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -179,35 +175,37 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
 
         <p className={styles.overview}>{movie.overview}</p>
 
-        <div className={styles.actionButtons}>
-          <Button
-            size="sm"
-            variant={isFavorite ? 'primary' : 'secondary'}
-            className={`${styles.watchedButton}`}
-            leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
-            aria-label={isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
-            disabled={pendingMovieIds}
-            onClick={handleFavoriteClick}
-          >
-            <span className={styles.watchedButtonLabel}>
-              {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
-            </span>
-          </Button>
+        {isAuthenticated && (
+          <div className={styles.actionButtons}>
+            <Button
+              size="sm"
+              variant={isFavorite ? 'primary' : 'secondary'}
+              className={`${styles.watchedButton}`}
+              leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
+              aria-label={isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+              disabled={isUpdating}
+              onClick={handleFavoriteClick}
+            >
+              <span className={styles.watchedButtonLabel}>
+                {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+              </span>
+            </Button>
 
-          <Button
-            size="sm"
-            variant={isWatched ? 'primary' : 'secondary'}
-            className={`${styles.watchedButton}`}
-            leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
-            aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
-            disabled={pendingMovieIds}
-            onClick={handleWatchedClick}
-          >
-            <span className={styles.watchedButtonLabel}>
-              {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
-            </span>
-          </Button>
-        </div>
+            <Button
+              size="sm"
+              variant={isWatched ? 'primary' : 'secondary'}
+              className={`${styles.watchedButton}`}
+              leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
+              aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
+              disabled={isUpdating}
+              onClick={handleWatchedClick}
+            >
+              <span className={styles.watchedButtonLabel}>
+                {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
+              </span>
+            </Button>
+          </div>
+        )}
       </div>
 
       <StarsModal
@@ -219,6 +217,7 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
         setStars={setStars}
         stars={stars}
         onSubmit={addToWatched}
+        isSubmitting={isUpdating}
       />
 
       <CommentModal
@@ -230,6 +229,7 @@ const MoviePromo: FC<MoviePromoProps> = ({ movie, favMovies, watchedMovies }) =>
         comment={comment ?? ''}
         onCommentChange={setComment}
         onSubmit={addToFavorite}
+        isSubmitting={isUpdating}
       />
     </section>
   )

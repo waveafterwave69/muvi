@@ -2,11 +2,11 @@
 
 import styles from './FavoritesPage.module.scss'
 import { FavoriteFilters } from '../../components/FavoriteFilters/FavoriteFilters'
-import { MovieList } from '../../components/MovieList/MovieList'
 import { useMemo, useState } from 'react'
 import { useDebounce } from '@/modules/movies/hooks/useDebounce'
 import { FavoriteFiltersType, Movie } from '../../api/movies/types'
 import { useInfiniteFavoriteMoviesQuery } from '../../api/movies/queries'
+import { MovieList } from '../../components/movies/MovieList/MovieList'
 
 const initialFilters: FavoriteFiltersType = {
   status: 'planned',

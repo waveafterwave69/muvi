@@ -12,26 +12,34 @@ export const useMovieStatus = (movies: Movie[] | Movie | FullMovieDetail | FullM
   const addMovieToCollection = useAddMovie(userId ?? '')
   const removeMovieFromCollection = useRemoveMovie(userId ?? '')
 
-  const { statuses, isPending } = useMovieStatuses({
+  const {
+    statuses,
+    isPending: isStatusesPending,
+    isFetching: isStatusesFetching,
+  } = useMovieStatuses({
     userId: userId ?? '',
     externalIds: external_ids,
   })
 
-  const addMovie = async (movie: Movie, options: AddMovieOptions) => {
-    addMovieToCollection.mutate({
+  const addMovie = (movie: Movie, options: AddMovieOptions) => {
+    return addMovieToCollection.mutateAsync({
       movie,
       options,
     })
   }
 
-  const removeMovie = async (externalMovieId: number): Promise<void> => {
-    removeMovieFromCollection.mutate(externalMovieId)
+  const removeMovie = (externalMovieId: number) => {
+    return removeMovieFromCollection.mutateAsync(externalMovieId)
   }
 
   return {
     addMovie,
     removeMovie,
     statuses,
-    isPending,
+    isUpdating:
+      addMovieToCollection.isPending ||
+      removeMovieFromCollection.isPending ||
+      isStatusesPending ||
+      isStatusesFetching,
   }
 }

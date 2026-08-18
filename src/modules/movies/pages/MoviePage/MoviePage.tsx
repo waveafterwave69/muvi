@@ -1,4 +1,5 @@
-import type { FC } from 'react'
+'use client'
+
 import styles from './MoviePage.module.scss'
 import { Card } from '@/shared/ui'
 import MoviePromo from '../../components/moviePage/MoviePromo/MoviePromo'
@@ -9,58 +10,49 @@ import MovieSaga from '../../components/moviePage/MovieSaga/MovieSaga'
 import { useMoviePage } from '../../hooks/useMoviePage'
 import SkeletonMoviePage from './SkeletonMoviePage/SkeletonMoviePage'
 import type { MovieVideo } from '../../api/moviePage/types'
+import { useParams } from 'next/navigation'
 
-interface MoviePageProps {
-  movieId: number
-  currentUserId: string
-}
+const MoviePage = () => {
+  const { id: movieId } = useParams<{ id: string }>()
 
-const MoviePage: FC<MoviePageProps> = ({ movieId, currentUserId }) => {
   const {
-    favMovies,
-    isMoviesLoading,
     isUserLoading,
     movie,
-    watchedMovies,
     isValidId,
     isMovieLoading,
-    isActorsLoading,
     movieError,
-    isStatusesLoading,
     actors,
     similarMovies,
     collectionMovies,
     isCollectionLoading,
-  } = useMoviePage(movieId, currentUserId)
+    currentUser,
+  } = useMoviePage(Number(movieId))
 
   if (!isValidId) return <div>Некорректный ID фильма</div>
 
-  if (isMovieLoading || isActorsLoading || isStatusesLoading || isUserLoading || isMoviesLoading) {
+  if (isMovieLoading || isUserLoading) {
     return <SkeletonMoviePage />
   }
 
-  if (movieError || !movie) return <div>Ошибка: {movieError?.message || 'Фильм не найден'}</div>
+  if (movieError || !movie)
+    return <div className={styles.error}>Ошибка: {movieError?.message || 'Фильм не найден'}</div>
 
   return (
     <div className={styles.movie}>
       <Card className={styles.movie__promo}>
-        <MoviePromo movie={movie} favMovies={favMovies} watchedMovies={watchedMovies} />
+        <MoviePromo movie={movie} isAuthenticated={Boolean(currentUser)} />
       </Card>
-
       <Card>
         <MovieActors actors={actors} />
       </Card>
-
       {movie.videos?.results.some((video: MovieVideo) => video.site === 'YouTube') && (
         <Card>
           <MovieTrailer movie={movie} />
         </Card>
       )}
-
       <Card>
         <SimilarMovies movies={similarMovies} />
       </Card>
-
       <Card className={styles.saga}>
         <MovieSaga movie={movie} movies={collectionMovies} isLoading={isCollectionLoading} />
       </Card>
