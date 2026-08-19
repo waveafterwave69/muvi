@@ -11,11 +11,19 @@ interface Props {
   setStars: (value: number) => void
   stars: number | null
   onSubmit: () => void
+  isSubmitting?: boolean
 }
 
 const ratings = Array.from({ length: 10 }, (_, index) => index + 1)
 
-export const StarsModal = ({ isOpen, onClose, stars, setStars, onSubmit }: Props) => {
+export const StarsModal = ({
+  isOpen,
+  onClose,
+  stars,
+  setStars,
+  onSubmit,
+  isSubmitting = false,
+}: Props) => {
   const [hover, setHover] = useState(0)
   const activeRating = hover || stars || 0
 
@@ -44,8 +52,13 @@ export const StarsModal = ({ isOpen, onClose, stars, setStars, onSubmit }: Props
           ))}
         </div>
 
-        <Button className={styles.button} onClick={onSubmit}>
-          Сохранить
+        <Button
+          className={styles.button}
+          onClick={onSubmit}
+          disabled={stars === null || isSubmitting}
+          aria-busy={isSubmitting}
+        >
+          {isSubmitting ? 'Сохраняем...' : 'Сохранить'}
         </Button>
       </div>
     </Modal>

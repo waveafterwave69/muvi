@@ -14,6 +14,8 @@ export const useGetUserMovies = (userId: string | null, enabled: boolean) => {
     queryFn: () => fetchUserMovies(userId),
     queryKey: ['userMovies', userId],
     enabled: enabled,
+    staleTime: 0,
+    gcTime: 0,
   })
 }
 
@@ -29,6 +31,6 @@ export const useLogout = () => {
     },
     onError: (error) => {
       toast.error('Не удалось выйти из профиля' + error.message)
-    }
+    },
   })
 }

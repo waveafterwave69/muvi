@@ -1,7 +1,17 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PUBLIC_ROUTES = new Set(['/', '/login', '/signup', '/forgot-password', '/reset-password', '/movies', '/api/movies'])
+const PUBLIC_ROUTES = new Set([
+  '/',
+  '/login',
+  '/signup',
+  '/forgot-password',
+  '/reset-password',
+  '/movies',
+  '/api/movies',
+])
+
+const PUBLIC_MOVIE_API_ROUTE = /^\/api\/movies\/\d+$/
 
 const PUBLIC_PROFILE_ROUTE =
   /^\/profile\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -15,7 +25,8 @@ const isPublicRoute = (pathname: string) => {
   return (
     PUBLIC_ROUTES.has(normalizedPathname) ||
     PUBLIC_PROFILE_ROUTE.test(normalizedPathname) ||
-    PUBLIC_MOVIE_ROUTE.test(normalizedPathname)
+    PUBLIC_MOVIE_ROUTE.test(normalizedPathname) ||
+    PUBLIC_MOVIE_API_ROUTE.test(normalizedPathname)
   )
 }
 
@@ -70,7 +81,6 @@ export const updateSession = async (request: NextRequest) => {
   const pathname = request.nextUrl.pathname
 
   if (!isAuthenticated && !isPublicRoute(pathname)) {
-
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/'
     redirectUrl.search = ''

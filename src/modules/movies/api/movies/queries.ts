@@ -1,12 +1,19 @@
 import { useInfiniteQuery, useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
-import { addMovieToCollection, getAllUserMovies, getMovies, getMovieStatuses, removeMovieFromCollection } from '.'
-import  { AddMovieOptions, Movie, MoviesCategory, MovieStatuses, MovieWatchStatus } from './types'
+import {
+  addMovieToCollection,
+  getAllUserMovies,
+  getMovies,
+  getMovieStatuses,
+  removeMovieFromCollection,
+} from '.'
+import { AddMovieOptions, Movie, MoviesCategory, MovieStatuses, MovieWatchStatus } from './types'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
 
 interface InfiniteMoviesQueryParams {
   category?: MoviesCategory
   search?: string
+  collectionId?: number
 }
 
 interface AddMovieVariables {
@@ -14,31 +21,37 @@ interface AddMovieVariables {
   options: AddMovieOptions
 }
 
+const infiniteMovieKeys = {
+  catalog: (mode: MoviesCategory | 'collection' | 'search', identifier: number | string) =>
+    ['media', 'movie', 'infinite', mode, identifier] as const,
+}
+
 export function useInfiniteMoviesQuery({
   category = 'popular',
   search = '',
+  collectionId,
 }: InfiniteMoviesQueryParams = {}) {
   const normalizedSearch = search.trim()
+  const queryMode = collectionId ? 'collection' : normalizedSearch ? 'search' : category
+
+  const queryIdentifier = collectionId ?? (normalizedSearch || 'all')
 
   return useInfiniteQuery({
-    queryKey: ['media', 'movie', normalizedSearch ? 'search' : category, normalizedSearch],
-
+    queryKey: infiniteMovieKeys.catalog(queryMode, queryIdentifier),
     initialPageParam: 1,
-
     queryFn: ({ pageParam, signal }) => {
       return getMovies({
         page: pageParam,
         category,
         search: normalizedSearch,
+        collectionId,
         signal,
       })
     },
-
     getNextPageParam: (lastPage) => {
       if (lastPage.page >= lastPage.total_pages) {
         return undefined
       }
-
       return lastPage.page + 1
     },
   })
@@ -50,14 +63,19 @@ export const useAddMovie = (userId: string) => {
   return useMutation<void, Error, AddMovieVariables>({
     mutationFn: ({ movie, options }) => addMovieToCollection(movie, options),
     mutationKey: ['user-movies', 'add'],
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['user-movies'],
-      })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['user-movies'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['userMovies', userId],
+        }),
+      ])
     },
     onError: (error) => {
-      toast.error('Не удалось добавить фильм' + error.message)
-    }
+      toast.error(error.message)
+    },
   })
 }
 
@@ -67,14 +85,19 @@ export const useRemoveMovie = (userId: string) => {
   return useMutation<void, Error, number>({
     mutationFn: (movieId) => removeMovieFromCollection(movieId),
     mutationKey: ['user-movies', 'remove'],
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['user-movies'],
-      })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['user-movies'],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['userMovies', userId],
+        }),
+      ])
     },
     onError: (error) => {
-      toast.error('Не удалось удалить фильм' + error.message)
-    }
+      toast.error(error.message)
+    },
   })
 }
 
@@ -103,9 +126,13 @@ export const useMovieStatuses = ({
   externalIds: number[]
 }) => {
   const batches = useMemo(() => {
+    if (!userId) {
+      return []
+    }
+
     const uniqueIds = Array.from(new Set(externalIds))
     return splitIntoBatches(uniqueIds, 20)
-  }, [externalIds])
+  }, [externalIds, userId])
 
   return useQueries({
     queries: batches.map((batch) => ({
@@ -143,8 +170,8 @@ export const useInfiniteFavoriteMoviesQuery = ({
   status,
   search,
 }: {
-  status: MovieWatchStatus;
-  search: string;
+  status: MovieWatchStatus
+  search: string
 }) => {
   return useInfiniteQuery({
     queryKey: ['user-movies', status, search],
@@ -161,11 +188,10 @@ export const useInfiniteFavoriteMoviesQuery = ({
 
     getNextPageParam: (lastPage) => {
       if (!lastPage.pagination.hasNextPage) {
-        return undefined;
+        return undefined
       }
 
-      return lastPage.pagination.page + 1;
+      return lastPage.pagination.page + 1
     },
-  });
-};
-
+  })
+}

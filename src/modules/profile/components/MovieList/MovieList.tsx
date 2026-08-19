@@ -7,6 +7,7 @@ import { Card } from '@/shared/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import Tabs from '@/shared/ui/Tabs/Tabs'
+import { Star } from 'lucide-react'
 
 interface MovieListProps {
   movies: ProfileMovie[]
@@ -70,7 +71,7 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
 
             return (
               <div key={movie.id}>
-                <Link href={`/movie/${movie.id}`} className={styles.movie__card}>
+                <Link href={`/movies/${movie.external_id}`} className={styles.movie__card}>
                   <div className={styles.poster__wrapper}>
                     {posterUrl ? (
                       <Image
@@ -87,9 +88,9 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
                       </div>
                     )}
 
-                    {item.rating && (
+                    {item.status === 'watched' && item.rating && (
                       <div className={styles.user__rating}>
-                        ★ <span>{item.rating}</span>
+                        <Star aria-hidden="true" /> <span>{item.rating}</span>
                       </div>
                     )}
                   </div>
@@ -101,7 +102,7 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
                       </h4>
                     </div>
 
-                    {item.comment && (
+                    {item.status === 'planned' && item.comment && (
                       <p className={styles.comment} title={item.comment}>
                         {item.comment}
                       </p>

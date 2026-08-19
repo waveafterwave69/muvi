@@ -1,8 +1,8 @@
-import type { FC, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 import styles from './Card.module.scss'
 import { Size } from '@/shared/types/size'
 
-interface CardProps {
+interface CardProps extends ComponentPropsWithoutRef<'div'> {
   className?: string
   size?: Size
   children: ReactNode

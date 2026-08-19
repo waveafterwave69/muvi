@@ -1,16 +1,10 @@
 import { supabase } from '@/shared/api/supabase'
-
-interface IUpdateSettingsArgs {
-  username: string
-  email: string
-  password?: string
-}
+import type { UserAttributes } from '@supabase/supabase-js'
 
 export const fetchSettings = async () => {
   try {
     const {
       data: { user },
-      error,
     } = await supabase.auth.getUser()
 
     return user
@@ -60,10 +54,10 @@ export const updateSettings = async ({
     avatarUrl = publicUrl
   }
 
-  const updateData: any = {
-    email: email,
+  const updateData: UserAttributes = {
+    email,
     data: {
-      username: username,
+      username,
       ...(avatarUrl && { avatar_url: avatarUrl }),
     },
   }
