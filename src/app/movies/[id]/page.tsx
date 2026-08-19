@@ -1,7 +1,10 @@
-import { MoviePage } from '@/modules/movies'
+import { redirect } from 'next/navigation'
 
-const Page = () => {
-  return <MoviePage />
+interface LegacyMovieRouteProps {
+  params: Promise<{ id: string }>
 }
 
-export default Page
+export default async function Page({ params }: LegacyMovieRouteProps) {
+  const { id } = await params
+  redirect(`/media/movie/${id}`)
+}

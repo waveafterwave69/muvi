@@ -1,19 +1,19 @@
-import { MoviesPage } from '@/modules/movies'
+import { MediaPage } from '@/modules/media'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Фильмы',
-  description: 'Исследуйте каталог фильмов, находите интересные картины и добавляйте их в свои списки.',
+  title: 'Фильмы и сериалы',
+  description: 'Исследуйте каталог фильмов и сериалов и добавляйте их в свои списки.',
 }
 
-interface MoviesRouteProps {
+interface MediaRouteProps {
   searchParams: Promise<{
     search?: string | string[]
     collection?: string | string[]
   }>
 }
 
-export default async function Page({ searchParams }: MoviesRouteProps) {
+export default async function Page({ searchParams }: MediaRouteProps) {
   const params = await searchParams
   const search = Array.isArray(params.search) ? params.search[0] : params.search
   const collectionParam = Array.isArray(params.collection)
@@ -24,13 +24,7 @@ export default async function Page({ searchParams }: MoviesRouteProps) {
     parsedCollectionId && Number.isInteger(parsedCollectionId) && parsedCollectionId > 0
       ? parsedCollectionId
       : undefined
-  const pageKey = collectionId ? `collection-${collectionId}` : `movies-${search ?? 'all'}`
+  const pageKey = collectionId ? `collection-${collectionId}` : `media-${search ?? 'all'}`
 
-  return (
-    <MoviesPage
-      key={pageKey}
-      initialSearch={search}
-      initialCollectionId={collectionId}
-    />
-  )
+  return <MediaPage key={pageKey} initialSearch={search} initialCollectionId={collectionId} />
 }

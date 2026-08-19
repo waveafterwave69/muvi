@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Авторизация',
-  description: 'Войди в muvi и следи за своими просмотрами',
+  description: 'Войдите в MUVI и отслеживайте новинки, любимые и желаемые к просмотру фильмы',
 }
 
 const Page = () => {
