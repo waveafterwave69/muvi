@@ -1,0 +1,83 @@
+.emptyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  border-radius: 30px;
+  text-align: center;
+  padding: 52px;
+  margin: 0 auto;
+}
+
+.emptyIcon {
+  display: flex;
+  width: 76px;
+  height: 76px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--card-border-color));
+  border-radius: 26px;
+  background: var(--accent-hover);
+  color: var(--accent-soft);
+
+  svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.emptyCopy {
+  h2 {
+    font-size: 30px;
+    margin-top: 24px;
+  }
+
+  p {
+    max-width: 560px;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 14px auto 0;
+  }
+}
+
+.primaryAction {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 28px;
+}
+
+.helperText {
+  display: block;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 14px;
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .emptyCard {
+    border-radius: 24px;
+    padding: 36px 18px;
+  }
+
+  .emptyCopy h2 {
+    font-size: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}

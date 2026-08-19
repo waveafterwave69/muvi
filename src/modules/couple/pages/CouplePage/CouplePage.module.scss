@@ -1,0 +1,18 @@
+.root {
+  width: 100%;
+  max-width: 1080px;
+  min-height: 100dvh;
+  padding: 64px 0 130px;
+  margin: 0 auto;
+
+  button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+    outline-offset: 3px;
+  }
+}
+
+@media (max-width: 768px) {
+  .root {
+    padding: 36px 0 112px;
+  }
+}

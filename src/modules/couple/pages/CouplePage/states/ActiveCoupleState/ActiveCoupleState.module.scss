@@ -1,0 +1,87 @@
+.coupleCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activeCard {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  border-radius: 30px;
+  padding: 32px;
+}
+
+.activeCopy {
+  min-width: 0;
+
+  h1 {
+    overflow: hidden;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.4;
+    margin-top: 12px;
+  }
+}
+
+.activeMood {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 999px;
+  padding: 9px 14px;
+  margin-top: 14px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+  color: var(--text-primary);
+  font-size: 14px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    color: var(--accent-soft);
+  }
+}
+
+@media (max-width: 768px) {
+  .activeCard {
+    min-height: auto;
+    align-items: center;
+    flex-direction: column;
+    gap: 22px;
+    border-radius: 24px;
+    padding: 28px 20px;
+    text-align: center;
+  }
+
+  .activeCopy {
+    width: 100%;
+
+    h1 {
+      font-size: 34px;
+      white-space: normal;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 12px;
+    }
+  }
+
+  .activeMood {
+    justify-content: center;
+    font-size: 14px;
+    padding: 10px 14px;
+    margin-top: 16px;
+  }
+}

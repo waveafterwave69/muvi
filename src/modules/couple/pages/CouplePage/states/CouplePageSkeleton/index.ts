@@ -1,0 +1,1 @@
+export { CouplePageSkeleton } from './CouplePageSkeleton'

@@ -1,0 +1,194 @@
+.outgoingCard {
+  width: min(100%, 780px);
+  box-sizing: border-box;
+  border-radius: 32px;
+  padding: clamp(28px, 4vw, 48px);
+  margin: 0 auto;
+  box-shadow: 0 30px 100px rgb(0 0 0 / 22%);
+}
+
+.outgoingTopline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--accent-soft);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.outgoingStatus {
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--card-border-color));
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: lowercase;
+}
+
+.outgoingCopy {
+  text-align: center;
+
+  h1 {
+    max-width: 620px;
+    font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    margin: 0 auto;
+  }
+
+  p {
+    max-width: 620px;
+    color: var(--text-muted);
+    font-size: 17px;
+    line-height: 1.55;
+    margin: 22px auto 0;
+  }
+}
+
+.outgoingCodeRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 86px;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 22px;
+  padding: 14px 20px;
+  margin-top: 32px;
+  background: color-mix(in srgb, var(--surface) 74%, transparent);
+
+  > svg {
+    width: 25px;
+    height: 25px;
+    color: var(--accent-soft);
+  }
+
+  > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  span {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  strong {
+    font-size: 20px;
+  }
+}
+
+.outgoingLifetime {
+  color: var(--accent-soft);
+  font-size: 15px !important;
+}
+
+.outgoingActions {
+  display: grid;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.outgoingPrimaryButton,
+.outgoingSecondaryButton {
+  width: 100%;
+}
+
+.outgoingSecondaryButton {
+  border: 1px solid var(--card-border-color);
+  background: transparent;
+}
+
+.outgoingNotice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 20px;
+  padding: 17px 18px;
+  margin-top: 24px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-soft);
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+}
+
+.outgoingCancel {
+  display: block;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px;
+  margin: 14px auto -10px;
+
+  &:hover:not(:disabled) {
+    color: var(--accent-soft);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 768px) {
+  .outgoingCard {
+    border-radius: 24px;
+    padding: 24px 18px;
+  }
+
+  .outgoingTopline {
+    font-size: 13px;
+  }
+
+  .outgoingStatus {
+    padding: 8px 11px;
+    font-size: 10px;
+  }
+
+  .outgoingCopy {
+    h1 {
+      font-size: 30px;
+    }
+
+    p {
+      font-size: 14px;
+      margin-top: 16px;
+    }
+  }
+
+  .outgoingCodeRow {
+    min-height: 74px;
+    border-radius: 18px;
+    padding: 12px 14px;
+    margin-top: 24px;
+  }
+
+  .outgoingNotice {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .outgoingCodeRow {
+    grid-template-columns: auto minmax(0, 1fr);
+
+    .outgoingLifetime {
+      grid-column: 1 / -1;
+      padding-left: 41px;
+    }
+  }
+}
