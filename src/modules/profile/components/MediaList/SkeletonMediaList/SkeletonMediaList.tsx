@@ -1,15 +1,15 @@
-import styles from './SkeletonMovieList.module.scss'
+import styles from './SkeletonMediaList.module.scss'
 import { Card } from '@/shared/ui'
 
-const SkeletonMovieList = () => {
+const SkeletonMediaList = () => {
   const skeletonItems = Array.from({ length: 8 })
 
   return (
     <Card className={styles.wrapper_card}>
       <div className={styles.tabs} />
-      <div className={styles.movies__grid}>
+      <div className={styles.media__grid}>
         {skeletonItems.map((_, index) => (
-          <div key={index} className={styles.movie__card}>
+          <div key={index} className={styles.media__card}>
             <div className={styles.poster__wrapper} />
 
             <div className={styles.info}>
@@ -29,4 +29,4 @@ const SkeletonMovieList = () => {
   )
 }
 
-export default SkeletonMovieList
+export default SkeletonMediaList

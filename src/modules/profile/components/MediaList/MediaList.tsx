@@ -1,33 +1,32 @@
 'use client'
 
 import { FC, useState, useMemo } from 'react'
-import styles from './MovieList.module.scss'
-import { ProfileMovie } from '../../types/profileTypes'
+import styles from './MediaList.module.scss'
+import { ProfileMedia } from '../../types/profileTypes'
 import { Card } from '@/shared/ui'
 import Image from 'next/image'
 import Link from 'next/link'
 import Tabs from '@/shared/ui/Tabs/Tabs'
 import { Star } from 'lucide-react'
+import { getMediaHref } from '@/modules/media/api/media/types'
 
-interface MovieListProps {
-  movies: ProfileMovie[]
+interface MediaListProps {
+  media: ProfileMedia[]
 }
 
-const TAB_ALL = 0
 const TAB_PLANNED = 1
 const TAB_WATCHED = 2
 
-const MovieList: FC<MovieListProps> = ({ movies }) => {
-  const [activeTab, setActiveTab] = useState<number | string>(TAB_ALL)
+const MediaList: FC<MediaListProps> = ({ media }) => {
+  const [activeTab, setActiveTab] = useState<number | string>(TAB_PLANNED)
 
   const profileTabs = [
-    { id: TAB_ALL, label: 'Все' },
     { id: TAB_PLANNED, label: 'В планах' },
     { id: TAB_WATCHED, label: 'Просмотрено' },
   ]
 
-  const filteredMovies = useMemo(() => {
-    return movies.filter((item) => {
+  const filteredMedia = useMemo(() => {
+    return media.filter((item) => {
       if (activeTab === TAB_PLANNED) {
         return item.status === 'planned'
       }
@@ -36,10 +35,10 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
       }
       return true
     })
-  }, [movies, activeTab])
+  }, [media, activeTab])
 
-  if (!movies.length) {
-    return <Card className={styles.empty}>Список фильмов пуст :(</Card>
+  if (!media.length) {
+    return <Card className={styles.empty}>Список пока пуст :(</Card>
   }
 
   return (
@@ -54,29 +53,32 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
         />
       </div>
 
-      {!filteredMovies.length ? (
+      {!filteredMedia.length ? (
         <div className={styles.empty_tab}>
           {activeTab === TAB_PLANNED && 'Нет запланированных фильмов'}
           {activeTab === TAB_WATCHED && 'Нет просмотренных фильмов'}
         </div>
       ) : (
-        <div className={styles.movies__grid}>
-          {filteredMovies.map((item) => {
-            const movie = item.movies
-            if (!movie) return null
+        <div className={styles.media__grid}>
+          {filteredMedia.map((item) => {
+            const mediaItem = item.media
+            if (!mediaItem) return null
 
-            const posterUrl = movie.poster_path
-              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+            const posterUrl = mediaItem.poster_path
+              ? `https://image.tmdb.org/t/p/w500${mediaItem.poster_path}`
               : null
 
             return (
-              <div key={movie.id}>
-                <Link href={`/movies/${movie.external_id}`} className={styles.movie__card}>
+              <div key={mediaItem.id}>
+                <Link
+                  href={getMediaHref({ id: mediaItem.external_id, type: mediaItem.type })}
+                  className={styles.media__card}
+                >
                   <div className={styles.poster__wrapper}>
                     {posterUrl ? (
                       <Image
                         src={posterUrl}
-                        alt={movie.title}
+                        alt={mediaItem.title}
                         className={styles.poster}
                         fill
                         sizes="(max-width: 768px) 50vw, 25vw"
@@ -97,8 +99,8 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
 
                   <div className={styles.info}>
                     <div className={styles.title_row}>
-                      <h4 className={styles.title} title={movie.title}>
-                        {movie.title}
+                      <h4 className={styles.title} title={mediaItem.title}>
+                        {mediaItem.title}
                       </h4>
                     </div>
 
@@ -124,4 +126,4 @@ const MovieList: FC<MovieListProps> = ({ movies }) => {
   )
 }
 
-export default MovieList
+export default MediaList

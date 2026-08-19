@@ -7,16 +7,20 @@ const PUBLIC_ROUTES = new Set([
   '/signup',
   '/forgot-password',
   '/reset-password',
+  '/media',
+  '/api/media',
   '/movies',
   '/api/movies',
 ])
 
-const PUBLIC_MOVIE_API_ROUTE = /^\/api\/movies\/\d+$/
+const PUBLIC_MEDIA_API_ROUTE = /^\/api\/media\/(movie|tv)\/\d+$/
+const PUBLIC_LEGACY_MOVIE_API_ROUTE = /^\/api\/movies\/\d+$/
 
 const PUBLIC_PROFILE_ROUTE =
   /^\/profile\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-const PUBLIC_MOVIE_ROUTE = /^\/movies\/\d+$/
+const PUBLIC_MEDIA_ROUTE = /^\/media\/(movie|tv)\/\d+$/
+const PUBLIC_LEGACY_MEDIA_ROUTE = /^\/(movies|series)\/\d+$/
 
 const isPublicRoute = (pathname: string) => {
   const normalizedPathname =
@@ -25,8 +29,10 @@ const isPublicRoute = (pathname: string) => {
   return (
     PUBLIC_ROUTES.has(normalizedPathname) ||
     PUBLIC_PROFILE_ROUTE.test(normalizedPathname) ||
-    PUBLIC_MOVIE_ROUTE.test(normalizedPathname) ||
-    PUBLIC_MOVIE_API_ROUTE.test(normalizedPathname)
+    PUBLIC_MEDIA_ROUTE.test(normalizedPathname) ||
+    PUBLIC_MEDIA_API_ROUTE.test(normalizedPathname) ||
+    PUBLIC_LEGACY_MEDIA_ROUTE.test(normalizedPathname) ||
+    PUBLIC_LEGACY_MOVIE_API_ROUTE.test(normalizedPathname)
   )
 }
 

@@ -26,14 +26,14 @@
   margin-top: 15px;
 }
 
-.movies__grid {
+.media__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   width: 100%;
 }
 
-.movie__card {
+.media__card {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -102,7 +102,7 @@
 }
 
 @media (max-width: 768px) {
-  .movie__card {
+  .media__card {
     border-radius: 16px;
   }
 
@@ -110,7 +110,7 @@
     height: 38px;
   }
 
-  .movies__grid {
+  .media__grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
