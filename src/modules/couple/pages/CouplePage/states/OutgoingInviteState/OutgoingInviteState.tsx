@@ -26,7 +26,6 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
   const hasCopiedRef = useRef(false)
 
   const handleCopy = useCallback(async () => {
-    console.log(123)
     try {
       await navigator.clipboard.writeText(inviteUrl)
       toast.success('Ссылка скопирована')
@@ -84,8 +83,10 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
       </div>
 
       <div className={styles.outgoingCodeRow}>
-        <KeyRound aria-hidden />
-        <div>
+        <span className={styles.outgoingCodeIcon} aria-hidden="true">
+          <KeyRound />
+        </span>
+        <div className={styles.outgoingCodeValue}>
           <span>Код приглашения</span>
           <strong>{shortCode}</strong>
         </div>

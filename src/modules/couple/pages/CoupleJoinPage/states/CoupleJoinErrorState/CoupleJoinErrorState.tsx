@@ -1,6 +1,6 @@
 'use client'
 
-import { Link2, LoaderCircle, RefreshCw } from 'lucide-react'
+import { Link2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button, Card } from '@/shared/ui'
 import styles from './CoupleJoinErrorState.module.scss'
