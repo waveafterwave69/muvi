@@ -19,7 +19,6 @@ export const EmptyCoupleState = () => {
       </div>
       <Button
         className={styles.primaryAction}
-        size="lg"
         leftIcon={
           createInvite.isPending ? (
             <LoaderCircle className={styles.spinner} aria-hidden />

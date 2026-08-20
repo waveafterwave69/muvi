@@ -25,13 +25,6 @@ export const CoupleJoinErrorState = ({
       <p>Возможно, ссылка устарела, была отменена или пару уже создал другой пользователь.</p>
       <div className={styles.actions}>
         <Button
-          leftIcon={
-            isFetching ? (
-              <LoaderCircle className={styles.spinner} aria-hidden />
-            ) : (
-              <RefreshCw aria-hidden />
-            )
-          }
           disabled={isFetching}
           onClick={onRetry}
         >

@@ -7,27 +7,12 @@ import type { CoupleInvitePreview } from '@/modules/couple/api/types'
 import { ProfilePreview } from '@/modules/couple/components/ProfilePreview'
 import { Button, Card } from '@/shared/ui'
 import styles from './CoupleJoinInviteState.module.scss'
+import { getDaysLeft } from '../../../../lib/getDaysLeft'
 
 interface CoupleJoinInviteStateProps {
   invite: CoupleInvitePreview
   inviteId: string
   onResponseError: () => void
-}
-
-const getDaysLeft = (expiresAt: string) => {
-  const remaining = new Date(expiresAt).getTime() - Date.now()
-  const days = Math.max(0, Math.ceil(remaining / 86_400_000))
-  const rule = new Intl.PluralRules('ru-RU').select(days)
-  const labels: Record<Intl.LDMLPluralRule, string> = {
-    zero: 'дней',
-    one: 'день',
-    two: 'дня',
-    few: 'дня',
-    many: 'дней',
-    other: 'дня',
-  }
-
-  return days === 0 ? 'Истекает сегодня' : `${days} ${labels[rule]}`
 }
 
 export const CoupleJoinInviteState = ({
@@ -75,7 +60,6 @@ export const CoupleJoinInviteState = ({
       <div className={styles.actions}>
         <Button
           className={styles.acceptButton}
-          size="lg"
           disabled={responseMutation.isPending}
           leftIcon={
             pendingResponse === 'accept' ? (
@@ -88,7 +72,6 @@ export const CoupleJoinInviteState = ({
         </Button>
         <Button
           className={styles.declineButton}
-          size="lg"
           variant="secondary"
           disabled={responseMutation.isPending}
           leftIcon={

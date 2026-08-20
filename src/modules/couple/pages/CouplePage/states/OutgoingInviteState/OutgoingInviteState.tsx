@@ -10,28 +10,11 @@ import { getInviteLifetime } from '@/modules/couple/lib/getInviteLifetime'
 import { useGetProfile } from '@/modules/profile/api/profile/queries'
 import { Button, Card } from '@/shared/ui'
 import styles from './OutgoingInviteState.module.scss'
+import { getDaysLeft } from '../../../../lib/getDaysLeft'
+import { useCallback, useEffect, useRef } from 'react'
 
 interface OutgoingInviteStateProps {
   invite: NonNullable<CouplePageData['outgoing_invite']>
-}
-
-const getCompactLifetime = (expiresAt: string) => {
-  const expiresAtTime = new Date(expiresAt).getTime()
-
-  if (Number.isNaN(expiresAtTime)) return '7 дней'
-
-  const days = Math.max(0, Math.ceil((expiresAtTime - Date.now()) / 86_400_000))
-  const rule = new Intl.PluralRules('ru-RU').select(days)
-  const labels: Record<Intl.LDMLPluralRule, string> = {
-    zero: 'дней',
-    one: 'день',
-    two: 'дня',
-    few: 'дня',
-    many: 'дней',
-    other: 'дня',
-  }
-
-  return days === 0 ? 'сегодня' : `${days} ${labels[rule]}`
 }
 
 export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
@@ -40,15 +23,27 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
   const cancelInvite = useCancelCoupleInvite()
   const shortCode = invite.id.split('-')[0].toUpperCase()
   const isLinkInvite = invite.type === 'link'
+  const hasCopiedRef = useRef(false)
 
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
+    console.log(123)
     try {
       await navigator.clipboard.writeText(inviteUrl)
       toast.success('Ссылка скопирована')
     } catch {
       toast.error('Не удалось скопировать ссылку')
     }
-  }
+  }, [inviteUrl])
+
+  useEffect(() => {
+    if (!inviteUrl || hasCopiedRef.current) return
+
+    hasCopiedRef.current = true
+
+    navigator.clipboard.writeText(inviteUrl)
+      .then(() => toast.success('Ссылка скопирована'))
+      .catch(() => toast.error('Не удалось скопировать ссылку'))
+  }, [inviteUrl])
 
   const handleShare = async () => {
     if (!navigator.share) {
@@ -80,7 +75,7 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
       <ProfilePreview profiles={profile ? [profile] : []} />
 
       <div className={styles.outgoingCopy}>
-        <h1>{isLinkInvite ? 'Ссылка в ваш киноуголок готова' : 'Приглашение отправлено'}</h1>
+        <h3>{isLinkInvite ? 'Ссылка в ваш киноуголок готова' : 'Приглашение отправлено'}</h3>
         <p>
           {isLinkInvite
             ? 'Отправьте ссылку человеку, с которым хотите собирать общую коллекцию фильмов.'
@@ -95,7 +90,7 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
           <strong>{shortCode}</strong>
         </div>
         <strong className={styles.outgoingLifetime}>
-          {getCompactLifetime(invite.expires_at)}
+          {getDaysLeft(invite.expires_at)}
         </strong>
       </div>
 
@@ -103,7 +98,6 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
         <div className={styles.outgoingActions}>
           <Button
             className={styles.outgoingPrimaryButton}
-            size="lg"
             leftIcon={<Copy aria-hidden />}
             onClick={handleCopy}
           >
@@ -111,7 +105,6 @@ export const OutgoingInviteState = ({ invite }: OutgoingInviteStateProps) => {
           </Button>
           <Button
             className={styles.outgoingSecondaryButton}
-            size="lg"
             variant="secondary"
             leftIcon={<Share2 aria-hidden />}
             onClick={handleShare}
