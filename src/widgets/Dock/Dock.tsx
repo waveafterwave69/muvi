@@ -1,6 +1,13 @@
 'use client'
 
-import { Bookmark, Clapperboard, House, UserRound, type LucideIcon } from 'lucide-react'
+import {
+  Bookmark,
+  Clapperboard,
+  HeartHandshake,
+  House,
+  UserRound,
+  type LucideIcon,
+} from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 import Card from '../../shared/ui/Card/Card'
@@ -37,6 +44,13 @@ const routes: DockRoute[] = [
     label: 'Избранное',
     icon: Bookmark,
     isCurrent: (pathname) => pathname.startsWith('/favorite'),
+  },
+  {
+    id: 'couple',
+    path: '/couple',
+    label: 'Пара',
+    icon: HeartHandshake,
+    isCurrent: (pathname) => pathname.startsWith('/couple'),
   },
   {
     id: 'profile',

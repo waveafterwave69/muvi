@@ -1,0 +1,92 @@
+.skeleton {
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-soft) 25%,
+    var(--surface-raised) 45%,
+    var(--surface-soft) 65%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 760px;
+  border-radius: 30px;
+  padding: 52px;
+  margin: 0 auto;
+}
+
+.skeletonIcon {
+  width: 76px;
+  height: 76px;
+  border-radius: 26px;
+}
+
+.skeletonCopy {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.skeletonTitle {
+  width: 190px;
+  height: 30px;
+  margin-top: 24px;
+}
+
+.skeletonText,
+.skeletonTextShort {
+  height: 16px;
+}
+
+.skeletonText {
+  width: min(520px, 92%);
+  margin-top: 16px;
+}
+
+.skeletonTextShort {
+  width: min(390px, 72%);
+  margin-top: 8px;
+}
+
+.skeletonButton {
+  width: min(500px, 100%);
+  height: 54px;
+  margin-top: 28px;
+}
+
+.skeletonHelper {
+  width: 190px;
+  height: 14px;
+  margin-top: 14px;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .skeletonCard {
+    border-radius: 24px;
+    padding: 36px 18px;
+  }
+
+  .skeletonTitle {
+    width: 160px;
+    height: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

@@ -1,0 +1,253 @@
+.card {
+  display: block;
+  width: min(100%, 680px);
+  box-sizing: border-box;
+  border-radius: 32px;
+  padding: clamp(28px, 3vw, 42px);
+  box-shadow: 0 30px 100px rgb(0 0 0 / 22%);
+}
+
+.skeleton {
+  display: block;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-soft) 25%,
+    var(--surface-raised) 45%,
+    var(--surface-soft) 65%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.topline {
+  display: flex;
+  min-height: 35px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.eyebrow {
+  width: 148px;
+  height: 16px;
+}
+
+.status {
+  width: 112px;
+  height: 35px;
+}
+
+.inviteVisual {
+  position: relative;
+  width: 186px;
+  height: 112px;
+  margin: 34px auto 26px;
+}
+
+.circleLeft,
+.circleRight {
+  position: absolute;
+  top: 0;
+  width: 112px;
+  height: 112px;
+}
+
+.circleLeft {
+  left: 0;
+}
+
+.circleRight {
+  right: 0;
+}
+
+.link {
+  position: absolute;
+  top: 36px;
+  left: 72px;
+  z-index: 2;
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--surface);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titleWide,
+.titleNarrow {
+  height: 37px;
+}
+
+.titleWide {
+  width: min(100%, 520px);
+}
+
+.titleNarrow {
+  width: min(72%, 390px);
+  margin-top: 7px;
+}
+
+.textWide,
+.textNarrow {
+  height: 16px;
+}
+
+.textWide {
+  width: min(92%, 540px);
+  margin-top: 24px;
+}
+
+.textNarrow {
+  width: min(68%, 390px);
+  margin-top: 8px;
+}
+
+.codeRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-height: 80px;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 20px;
+  padding: 14px 18px;
+  margin-top: 28px;
+  background: color-mix(in srgb, var(--surface) 74%, transparent);
+
+  > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+  }
+}
+
+.codeIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.codeLabel {
+  width: 112px;
+  height: 11px;
+}
+
+.codeValue {
+  width: 96px;
+  height: 18px;
+}
+
+.expiry {
+  width: 64px;
+  height: 14px;
+}
+
+.actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.action {
+  width: 100%;
+  height: 57px;
+}
+
+.notice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 20px;
+  padding: 16px;
+  margin-top: 24px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+
+  > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 2px;
+  }
+}
+
+.noticeIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.noticeLine,
+.noticeLineShort {
+  height: 12px;
+}
+
+.noticeLine {
+  width: 100%;
+}
+
+.noticeLineShort {
+  width: 72%;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    border-radius: 24px;
+    padding: 22px 18px;
+  }
+
+  .inviteVisual {
+    transform: scale(0.85);
+    margin-top: 22px;
+    margin-bottom: 12px;
+  }
+
+  .titleWide,
+  .titleNarrow {
+    height: 28px;
+  }
+
+  .textWide {
+    margin-top: 18px;
+  }
+
+  .codeRow {
+    min-height: 72px;
+    padding: 12px 14px;
+    margin-top: 22px;
+  }
+
+  .actions,
+  .notice {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .codeRow {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .expiry {
+    grid-column: 1 / -1;
+    width: 76px;
+    margin-left: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

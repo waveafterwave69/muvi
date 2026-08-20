@@ -1,0 +1,1 @@
+export { CouplePageError } from './CouplePageError'
