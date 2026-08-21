@@ -25,10 +25,23 @@ export const MediaList = ({
   fetchNextPage,
   isPending,
 }: MediaListProps) => {
-  const { addMedia, coupleStatuses, isUpdating, removeMedia, statuses } = useMediaStatus(media)
+  const {
+    addMedia,
+    coupleMediaIds,
+    coupleStatuses,
+    isUpdating,
+    removeCoupleMedia,
+    removeMedia,
+    statuses,
+  } = useMediaStatus(media)
   const { data: user } = useCurrentUser()
-  const { handleFavoriteClick, handleWatchedClick, handleOpenTVModal, modalProps } =
-    useAddMedia({ addMedia, removeMedia, isUpdating })
+  const {
+    handleFavoriteClick,
+    handleWatchedClick,
+    handleOpenTVModal,
+    handleRemoveCoupleMedia,
+    modalProps,
+  } = useAddMedia({ addMedia, removeMedia, removeCoupleMedia, isUpdating })
 
   if (isPending) {
     return (
@@ -58,6 +71,7 @@ export const MediaList = ({
         {media.map((item) => {
           const mediaKey = getMediaKey(item)
           const status = statuses.get(mediaKey)
+          const coupleMediaId = coupleMediaIds.get(mediaKey)
 
           return (
             <MediaCard
@@ -67,6 +81,13 @@ export const MediaList = ({
               handleFavorite={() => handleFavoriteClick(item, status)}
               handleWatched={() => handleWatchedClick(item, status)}
               handleToggleTVModal={() => handleOpenTVModal(item, status)}
+              handleRemoveFromCouple={
+                coupleMediaId !== undefined
+                  ? () => {
+                      void handleRemoveCoupleMedia(coupleMediaId)
+                    }
+                  : undefined
+              }
               isUpdating={isUpdating}
               status={status}
               showActions={!!user}

@@ -19,10 +19,22 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
   const visibleMedia = media.slice(0, 30)
   const mediaLabel = mediaType === 'tv' ? 'сериалы' : 'фильмы'
   const { data: user } = useCurrentUser()
-  const { addMedia, coupleStatuses, isUpdating, removeMedia, statuses } =
-    useMediaStatus(visibleMedia)
-  const { handleFavoriteClick, handleWatchedClick, handleOpenTVModal, modalProps } =
-    useAddMedia({ addMedia, removeMedia, isUpdating })
+  const {
+    addMedia,
+    coupleMediaIds,
+    coupleStatuses,
+    isUpdating,
+    removeCoupleMedia,
+    removeMedia,
+    statuses,
+  } = useMediaStatus(visibleMedia)
+  const {
+    handleFavoriteClick,
+    handleWatchedClick,
+    handleOpenTVModal,
+    handleRemoveCoupleMedia,
+    modalProps,
+  } = useAddMedia({ addMedia, removeMedia, removeCoupleMedia, isUpdating })
   const { listRef, canScrollBack, canScrollForward, scroll } = useHorizontalSlider(
     visibleMedia.length,
   )
@@ -65,6 +77,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
           {visibleMedia.map((item) => {
             const mediaKey = getMediaKey(item)
             const status = statuses.get(mediaKey)
+            const coupleMediaId = coupleMediaIds.get(mediaKey)
 
             return (
               <li className={styles.mediaItem} key={mediaKey}>
@@ -77,6 +90,13 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
                   handleFavorite={() => handleFavoriteClick(item, status)}
                   handleWatched={() => handleWatchedClick(item, status)}
                   handleToggleTVModal={() => handleOpenTVModal(item, status)}
+                  handleRemoveFromCouple={
+                    coupleMediaId !== undefined
+                      ? () => {
+                          void handleRemoveCoupleMedia(coupleMediaId)
+                        }
+                      : undefined
+                  }
                 />
               </li>
             )

@@ -25,7 +25,7 @@ const getImageUrl = (path: string | null | undefined, size: string = 'original')
 }
 
 const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
-  const { addMedia, removeMedia, isUpdating, statuses } = useMediaStatus(media)
+  const { addMedia, removeCoupleMedia, removeMedia, isUpdating, statuses } = useMediaStatus(media)
 
   const status = statuses.get(getMediaKey(media))
   const isFavorite = status === 'planned'
@@ -52,6 +52,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
   const { handleFavoriteClick, handleWatchedClick, modalProps } = useAddMedia({
     addMedia,
     removeMedia,
+    removeCoupleMedia,
     isUpdating,
   })
 

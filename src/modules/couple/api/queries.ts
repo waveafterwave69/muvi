@@ -1,19 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
   cancelCoupleInvite,
   createCoupleInvite,
   getCoupleInvitePreview,
+  getCoupleMedia,
   getCouplePageData,
   leaveCouple,
   respondToCoupleInvite,
 } from '.'
-import type { CoupleInviteResponse } from './types'
+import type { CoupleInviteResponse, CoupleMediaFilters } from './types'
 
 export const coupleKeys = {
   all: ['couple'] as const,
   page: ['couple', 'page'] as const,
   invite: (inviteId: string) => ['couple', 'invite', inviteId] as const,
+  media: (coupleId: string, filters: CoupleMediaFilters) =>
+    ['couple', coupleId, 'media', filters.mediaType, filters.status, filters.search] as const,
 }
 
 export const useCouplePageData = () =>
@@ -28,6 +31,37 @@ export const useCoupleInvitePreview = (inviteId: string) =>
     queryFn: () => getCoupleInvitePreview(inviteId),
     retry: false,
   })
+
+export const useInfiniteCoupleMediaQuery = ({
+  coupleId,
+  mediaType,
+  status,
+  search,
+}: CoupleMediaFilters & { coupleId: string }) => {
+  const normalizedSearch = search.trim()
+
+  return useInfiniteQuery({
+    queryKey: coupleKeys.media(coupleId, {
+      mediaType,
+      status,
+      search: normalizedSearch,
+    }),
+    initialPageParam: 1,
+    queryFn: ({ pageParam, signal }) =>
+      getCoupleMedia({
+        coupleId,
+        page: pageParam,
+        limit: 20,
+        mediaType,
+        status,
+        search: normalizedSearch,
+        signal,
+      }),
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.hasNextPage ? lastPage.pagination.page + 1 : undefined,
+    enabled: Boolean(coupleId),
+  })
+}
 
 const useRefreshCouplePage = () => {
   const queryClient = useQueryClient()

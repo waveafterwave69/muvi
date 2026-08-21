@@ -1,4 +1,10 @@
 import type { Profile } from '@/modules/profile/types/profileTypes'
+import type {
+  DbMedia,
+  MediaType,
+  MediaWatchStatus,
+  Pagination,
+} from '@/modules/media/api/media/types'
 
 export interface CoupleData {
   id: string
@@ -45,3 +51,22 @@ export interface CoupleInvitePreview {
 }
 
 export type CoupleInviteResponse = 'accept' | 'decline'
+
+export interface CoupleMediaFilters {
+  mediaType: MediaType
+  status: MediaWatchStatus
+  search: string
+}
+
+export interface CoupleMediaItem {
+  couple_id: string
+  media_id: number
+  status: MediaWatchStatus
+  created_at: string
+  media: DbMedia
+}
+
+export interface CoupleMediaResponse {
+  items: CoupleMediaItem[]
+  pagination: Pagination
+}
