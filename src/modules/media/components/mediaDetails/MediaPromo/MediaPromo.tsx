@@ -7,8 +7,7 @@ import styles from './MediaPromo.module.scss'
 import { Button } from '@/shared/ui'
 import { Calendar, Check, Clock2, LibraryBig, MoveLeft, Plus, Star } from 'lucide-react'
 import { getMediaKey, Media, MediaType } from '@/modules/media/api/media/types'
-import { StarsModal } from '../../media/StarsModal/StarsModal'
-import { CommentModal } from '../../media/CommentModal/CommentModal'
+import { MediaActionModals } from '../../media/MediaActionModals/MediaActionModals'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { MediaDetails, Genre } from '@/modules/media/api/mediaDetails/types'
@@ -50,18 +49,11 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
     vote_count: 0,
   }
 
-  const {
-    addToFavorite,
-    addToWatched,
-    isCommentModalOpen,
-    isStarsModalOpen,
-    setIsStarsModalOpen,
-    setIsCommentModalOpen,
-    setComment,
-    setStars,
-    stars,
-    comment,
-  } = useAddMedia(mappedMedia, addMedia)
+  const { handleFavoriteClick, handleWatchedClick, modalProps } = useAddMedia({
+    addMedia,
+    removeMedia,
+    isUpdating,
+  })
 
   const backdropUrl = getImageUrl(media.backdrop_path, 'original')
   const collection = media.belongs_to_collection
@@ -75,22 +67,6 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
         search: collection.name,
       })}`
     : ''
-
-  const handleFavoriteClick = () => {
-    if (isFavorite) {
-      void removeMedia(media)
-    } else {
-      setIsCommentModalOpen(true)
-    }
-  }
-
-  const handleWatchedClick = () => {
-    if (isWatched) {
-      void removeMedia(media)
-    } else {
-      setIsStarsModalOpen(true)
-    }
-  }
 
   return (
     <section
@@ -174,7 +150,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
                 leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
                 aria-label={isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
                 disabled={isUpdating}
-                onClick={handleFavoriteClick}
+                onClick={() => handleFavoriteClick(mappedMedia, status)}
               >
                 <span className={styles.watchedButtonLabel}>
                   {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
@@ -188,7 +164,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
                 leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
                 aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
                 disabled={isUpdating}
-                onClick={handleWatchedClick}
+                onClick={() => handleWatchedClick(mappedMedia, status)}
               >
                 <span className={styles.watchedButtonLabel}>
                   {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
@@ -200,29 +176,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
           ))}
       </div>
 
-      <StarsModal
-        isOpen={isStarsModalOpen}
-        onClose={() => {
-          setIsStarsModalOpen(false)
-          setStars(null)
-        }}
-        setStars={setStars}
-        stars={stars}
-        onSubmit={addToWatched}
-        isSubmitting={isUpdating}
-      />
-
-      <CommentModal
-        isOpen={isCommentModalOpen}
-        onClose={() => {
-          setIsCommentModalOpen(false)
-          setComment(null)
-        }}
-        comment={comment ?? ''}
-        onCommentChange={setComment}
-        onSubmit={addToFavorite}
-        isSubmitting={isUpdating}
-      />
+      <MediaActionModals {...modalProps} />
     </section>
   )
 }

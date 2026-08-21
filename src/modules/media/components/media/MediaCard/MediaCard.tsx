@@ -1,23 +1,20 @@
 'use client'
 
 import Image from 'next/image'
-import { Check, CircleX, Film, Heart, Play, Plus, Star } from 'lucide-react'
+import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
-import { type AddMediaHandler, useAddMedia } from '@/modules/media/hooks/useAddMedia'
-import { StarsModal } from '../StarsModal/StarsModal'
-import { CommentModal } from '../CommentModal/CommentModal'
-import { useState } from 'react'
-import TVModal from '../../tv/TVModal'
 
 interface MediaCardProps {
   media: Media
   status: MediaWatchStatus | undefined
+  coupleStatus: MediaWatchStatus | undefined
   isUpdating: boolean
   showActions: boolean
-  addMedia: AddMediaHandler
-  removeMedia: (media: Pick<Media, 'id' | 'type'>) => Promise<void>
+  handleFavorite: () => void
+  handleWatched: () => void
+  handleToggleTVModal: () => void
 }
 
 const TV_STATUS_LABELS: Partial<Record<MediaWatchStatus, string>> = {
@@ -29,25 +26,14 @@ const TV_STATUS_LABELS: Partial<Record<MediaWatchStatus, string>> = {
 export const MediaCard = ({
   media,
   status,
-  addMedia,
-  removeMedia,
+  coupleStatus,
+  handleFavorite,
+  handleWatched,
+  handleToggleTVModal,
   isUpdating,
   showActions,
 }: MediaCardProps) => {
-  const {
-    addToFavorite,
-    addToWatched,
-    isCommentModalOpen,
-    isStarsModalOpen,
-    setIsStarsModalOpen,
-    setIsCommentModalOpen,
-    setComment,
-    setStars,
-    stars,
-    comment,
-  } = useAddMedia(media, addMedia)
-
-  const [isOpenModalTV, setIsOpenModalTV] = useState<boolean>(false)
+  const posterUrl = media.poster_path ? `https://image.tmdb.org/t/p/w500${media.poster_path}` : null
 
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
@@ -62,65 +48,6 @@ export const MediaCard = ({
     ) : (
       <Plus aria-hidden="true" />
     )
-
-  const handleFavoriteClick = () => {
-    if (isFavorite) {
-      void removeMedia(media)
-    } else {
-      setIsCommentModalOpen(true)
-    }
-  }
-
-  const handleWatchedClick = () => {
-    if (isWatched) {
-      void removeMedia(media)
-    } else {
-      setIsStarsModalOpen(true)
-    }
-  }
-
-  const handleToggleTVModal = () => {
-    setIsOpenModalTV((prev) => !prev)
-  }
-
-  const posterUrl = media.poster_path ? `https://image.tmdb.org/t/p/w500${media.poster_path}` : null
-
-  const handleTVClick = async (status: MediaWatchStatus) => {
-    if (status === 'watched') {
-      setIsOpenModalTV(false)
-      setIsStarsModalOpen(true)
-      return
-    }
-
-    try {
-      switch (status) {
-        case 'dropped':
-          await addMedia(media, {
-            status: 'dropped',
-            rating: stars,
-            comment: null,
-          })
-          break
-
-        case 'watching':
-          await addMedia(media, {
-            status: 'watching',
-            rating: stars,
-            comment: null,
-          })
-          break
-
-        default:
-          break
-      }
-
-      setStars(null)
-      setIsOpenModalTV(false)
-    } catch {
-      return
-    }
-  }
-
   return (
     <Card className={styles.card}>
       <div className={styles.posterContainer}>
@@ -146,6 +73,13 @@ export const MediaCard = ({
           <span>{media.vote_average.toFixed(1)}</span>
         </div>
 
+        {coupleStatus && (
+          <div className={styles.coupleBadge} aria-label="Добавлено в коллекцию пары">
+            <HeartHandshake aria-hidden="true" />
+            <span>В паре</span>
+          </div>
+        )}
+
         {showActions && (
           <Button
             variant="secondary"
@@ -155,7 +89,7 @@ export const MediaCard = ({
             aria-pressed={isFavorite}
             aria-disabled={isUpdating}
             disabled={isUpdating}
-            onClick={handleFavoriteClick}
+            onClick={handleFavorite}
           >
             <Heart aria-hidden="true" fill={isFavorite ? 'currentColor' : 'none'} />
           </Button>
@@ -178,7 +112,7 @@ export const MediaCard = ({
               aria-disabled={isUpdating}
               disabled={isUpdating}
               aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
-              onClick={handleWatchedClick}
+              onClick={handleWatched}
             >
               <span className={styles.watchedButtonLabel}>
                 {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
@@ -208,37 +142,6 @@ export const MediaCard = ({
             </Button>
           ))}
       </div>
-
-      <StarsModal
-        isOpen={isStarsModalOpen}
-        onClose={() => {
-          setIsStarsModalOpen(false)
-          setStars(null)
-        }}
-        setStars={setStars}
-        stars={stars}
-        onSubmit={addToWatched}
-        isSubmitting={isUpdating}
-      />
-
-      <CommentModal
-        isOpen={isCommentModalOpen}
-        onClose={() => {
-          setIsCommentModalOpen(false)
-          setComment(null)
-        }}
-        comment={comment ?? ''}
-        onCommentChange={setComment}
-        onSubmit={addToFavorite}
-        isSubmitting={isUpdating}
-      />
-
-      <TVModal
-        currentStatus={status}
-        onClick={handleTVClick}
-        isOpen={isOpenModalTV}
-        onClose={handleToggleTVModal}
-      />
     </Card>
   )
 }

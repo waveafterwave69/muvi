@@ -1,56 +1,184 @@
 import { useState } from 'react'
-import { AddMediaOptions, Media } from '../api/media/types'
+import type { AddMediaOptions, Media, MediaWatchStatus } from '../api/media/types'
+import type { Variant } from '../api/couple/types'
 
-export type AddMediaHandler = (media: Media, options: AddMediaOptions) => Promise<void>
+export type AddMediaHandler = (
+  media: Media,
+  options: AddMediaOptions,
+  variant: Variant,
+) => Promise<void>
 
-export const useAddMedia = (media: Media, addMedia: AddMediaHandler) => {
+export type RemoveMediaHandler = (media: Pick<Media, 'id' | 'type'>) => Promise<void>
+
+interface UseAddMediaParams {
+  addMedia: AddMediaHandler
+  removeMedia: RemoveMediaHandler
+  isUpdating: boolean
+}
+
+interface MediaAction {
+  type: 'planned' | 'watched' | 'tv-status'
+  media: Media
+  status?: MediaWatchStatus
+}
+
+export const useAddMedia = ({ addMedia, removeMedia, isUpdating }: UseAddMediaParams) => {
+  const [variant, setVariant] = useState<Variant>('solo')
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
   const [isStarsModalOpen, setIsStarsModalOpen] = useState(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false)
+  const [isTVModalOpen, setIsTVModalOpen] = useState(false)
+  const [activeMedia, setActiveMedia] = useState<MediaAction | null>(null)
+
+  const resetActiveMedia = () => {
+    setActiveMedia(null)
+  }
+
+  const closeStarsModal = () => {
+    setIsStarsModalOpen(false)
+    setStars(null)
+    resetActiveMedia()
+  }
+
+  const closeCommentModal = () => {
+    setIsCommentModalOpen(false)
+    setComment(null)
+    resetActiveMedia()
+  }
+
+  const closeTVModal = () => {
+    setIsTVModalOpen(false)
+    resetActiveMedia()
+  }
+
+  const handleFavoriteClick = (media: Media, status?: MediaWatchStatus) => {
+    if (status === 'planned') {
+      void removeMedia(media)
+      return
+    }
+
+    setActiveMedia({ type: 'planned', media, status })
+    setIsCommentModalOpen(true)
+  }
+
+  const handleWatchedClick = (media: Media, status?: MediaWatchStatus) => {
+    if (status === 'watched') {
+      void removeMedia(media)
+      return
+    }
+
+    setActiveMedia({ type: 'watched', media, status })
+    setIsStarsModalOpen(true)
+  }
+
+  const handleOpenTVModal = (media: Media, status?: MediaWatchStatus) => {
+    setActiveMedia({ type: 'tv-status', media, status })
+    setIsTVModalOpen(true)
+  }
 
   const addToWatched = async () => {
-    if (stars === null) return
+    if (!activeMedia || stars === null) return
 
     try {
-      await addMedia(media, {
-        status: 'watched',
-        rating: stars,
-        comment: null,
-      })
+      await addMedia(
+        activeMedia.media,
+        {
+          status: 'watched',
+          rating: stars,
+          comment: null,
+        },
+        variant,
+      )
 
-      setStars(null)
-      setIsStarsModalOpen(false)
+      closeStarsModal()
     } catch {
       return
     }
   }
 
   const addToFavorite = async () => {
-    try {
-      await addMedia(media, {
-        status: 'planned',
-        rating: null,
-        comment,
-      })
+    if (!activeMedia) return
 
-      setComment(null)
-      setIsCommentModalOpen(false)
+    try {
+      await addMedia(
+        activeMedia.media,
+        {
+          status: 'planned',
+          rating: null,
+          comment,
+        },
+        variant,
+      )
+
+      closeCommentModal()
+    } catch {
+      return
+    }
+  }
+
+  const handleTVStatusChange = async (status: MediaWatchStatus) => {
+    if (!activeMedia || status === 'planned') return
+
+    if (status === 'watched') {
+      setIsTVModalOpen(false)
+      setActiveMedia({
+        type: 'watched',
+        media: activeMedia.media,
+        status,
+      })
+      setIsStarsModalOpen(true)
+      return
+    }
+
+    try {
+      await addMedia(
+        activeMedia.media,
+        {
+          status,
+          rating: null,
+          comment: null,
+        },
+        variant,
+      )
+
+      closeTVModal()
     } catch {
       return
     }
   }
 
   return {
-    addToWatched,
-    addToFavorite,
-    isCommentModalOpen,
-    isStarsModalOpen,
-    setIsCommentModalOpen,
-    setIsStarsModalOpen,
-    setComment,
-    setStars,
-    stars,
-    comment,
+    handleFavoriteClick,
+    handleWatchedClick,
+    handleOpenTVModal,
+    modalProps: {
+      stars: {
+        isOpen: isStarsModalOpen,
+        onClose: closeStarsModal,
+        setStars,
+        stars,
+        onSubmit: addToWatched,
+        isSubmitting: isUpdating,
+        variant,
+        setVariant,
+      },
+      comment: {
+        isOpen: isCommentModalOpen,
+        onClose: closeCommentModal,
+        comment: comment ?? '',
+        onCommentChange: setComment,
+        onSubmit: addToFavorite,
+        isSubmitting: isUpdating,
+        variant,
+        setVariant,
+      },
+      tv: {
+        currentStatus: activeMedia?.status,
+        onClick: handleTVStatusChange,
+        isOpen: isTVModalOpen,
+        onClose: closeTVModal,
+      },
+    },
   }
 }

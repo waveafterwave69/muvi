@@ -7,6 +7,8 @@ import { getMediaKey, Media } from '@/modules/media/api/media/types'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { MediaCardSkeleton } from '../MediaCardSkeleton/MediaCardSkeleton'
 import { MediaCard } from '../MediaCard/MediaCard'
+import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
+import { MediaActionModals } from '../MediaActionModals/MediaActionModals'
 
 interface MediaListProps {
   media: Media[]
@@ -23,8 +25,10 @@ export const MediaList = ({
   fetchNextPage,
   isPending,
 }: MediaListProps) => {
-  const { addMedia, isUpdating, removeMedia, statuses } = useMediaStatus(media)
+  const { addMedia, coupleStatuses, isUpdating, removeMedia, statuses } = useMediaStatus(media)
   const { data: user } = useCurrentUser()
+  const { handleFavoriteClick, handleWatchedClick, handleOpenTVModal, modalProps } =
+    useAddMedia({ addMedia, removeMedia, isUpdating })
 
   if (isPending) {
     return (
@@ -39,30 +43,38 @@ export const MediaList = ({
   }
 
   return (
-    <InfiniteScroll
-      dataLength={media.length}
-      hasMore={hasNextPage}
-      next={() => {
-        if (hasNextPage && !isFetchingNextPage) {
-          void fetchNextPage()
-        }
-      }}
-      loader={isFetchingNextPage ? <MediaCardSkeleton count={4} /> : null}
-      className={styles.grid}
-    >
-      {media.map((item) => {
-        return (
-          <MediaCard
-            media={item}
-            key={getMediaKey(item)}
-            addMedia={addMedia}
-            removeMedia={removeMedia}
-            isUpdating={isUpdating}
-            status={statuses.get(getMediaKey(item))}
-            showActions={!!user}
-          />
-        )
-      })}
-    </InfiniteScroll>
+    <>
+      <InfiniteScroll
+        dataLength={media.length}
+        hasMore={hasNextPage}
+        next={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            void fetchNextPage()
+          }
+        }}
+        loader={isFetchingNextPage ? <MediaCardSkeleton count={4} /> : null}
+        className={styles.grid}
+      >
+        {media.map((item) => {
+          const mediaKey = getMediaKey(item)
+          const status = statuses.get(mediaKey)
+
+          return (
+            <MediaCard
+              media={item}
+              key={mediaKey}
+              coupleStatus={coupleStatuses.get(mediaKey)}
+              handleFavorite={() => handleFavoriteClick(item, status)}
+              handleWatched={() => handleWatchedClick(item, status)}
+              handleToggleTVModal={() => handleOpenTVModal(item, status)}
+              isUpdating={isUpdating}
+              status={status}
+              showActions={!!user}
+            />
+          )
+        })}
+      </InfiniteScroll>
+      <MediaActionModals {...modalProps} />
+    </>
   )
 }
