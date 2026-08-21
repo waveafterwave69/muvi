@@ -1,13 +1,15 @@
 'use client'
 
 import Image from 'next/image'
-import { Check, Film, Heart, Plus, Star } from 'lucide-react'
+import { Check, CircleX, Film, Heart, Play, Plus, Star } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
 import { type AddMediaHandler, useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { StarsModal } from '../StarsModal/StarsModal'
 import { CommentModal } from '../CommentModal/CommentModal'
+import { useState } from 'react'
+import TVModal from '../../tv/TVModal'
 
 interface MediaCardProps {
   media: Media
@@ -16,6 +18,12 @@ interface MediaCardProps {
   showActions: boolean
   addMedia: AddMediaHandler
   removeMedia: (media: Pick<Media, 'id' | 'type'>) => Promise<void>
+}
+
+const TV_STATUS_LABELS: Partial<Record<MediaWatchStatus, string>> = {
+  watched: 'Просмотрено',
+  watching: 'В процессе',
+  dropped: 'Заброшено',
 }
 
 export const MediaCard = ({
@@ -39,8 +47,21 @@ export const MediaCard = ({
     comment,
   } = useAddMedia(media, addMedia)
 
+  const [isOpenModalTV, setIsOpenModalTV] = useState<boolean>(false)
+
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
+  const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
+  const tvStatusIcon =
+    status === 'watched' ? (
+      <Check aria-hidden="true" />
+    ) : status === 'watching' ? (
+      <Play aria-hidden="true" />
+    ) : status === 'dropped' ? (
+      <CircleX aria-hidden="true" />
+    ) : (
+      <Plus aria-hidden="true" />
+    )
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -58,7 +79,47 @@ export const MediaCard = ({
     }
   }
 
+  const handleToggleTVModal = () => {
+    setIsOpenModalTV((prev) => !prev)
+  }
+
   const posterUrl = media.poster_path ? `https://image.tmdb.org/t/p/w500${media.poster_path}` : null
+
+  const handleTVClick = async (status: MediaWatchStatus) => {
+    if (status === 'watched') {
+      setIsOpenModalTV(false)
+      setIsStarsModalOpen(true)
+      return
+    }
+
+    try {
+      switch (status) {
+        case 'dropped':
+          await addMedia(media, {
+            status: 'dropped',
+            rating: stars,
+            comment: null,
+          })
+          break
+
+        case 'watching':
+          await addMedia(media, {
+            status: 'watching',
+            rating: stars,
+            comment: null,
+          })
+          break
+
+        default:
+          break
+      }
+
+      setStars(null)
+      setIsOpenModalTV(false)
+    } catch {
+      return
+    }
+  }
 
   return (
     <Card className={styles.card}>
@@ -106,26 +167,46 @@ export const MediaCard = ({
           <h3 className={styles.title}>{media.title}</h3>
         </Link>
 
-        {showActions && (
-          <Button
-            variant={isWatched ? 'primary' : 'secondary'}
-            size="sm"
-            className={`${styles.watchedButton}`}
-            leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
-            aria-pressed={isWatched}
-            aria-disabled={isUpdating}
-            disabled={isUpdating}
-            aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
-            onClick={handleWatchedClick}
-          >
-            <span className={styles.watchedButtonLabel}>
-              {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
-            </span>
-            <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
-              {isWatched ? 'Просмотрено' : 'В просмотренное'}
-            </span>
-          </Button>
-        )}
+        {showActions &&
+          (media.type === 'movie' ? (
+            <Button
+              variant={isWatched ? 'primary' : 'secondary'}
+              size="sm"
+              className={styles.watchedButton}
+              leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
+              aria-pressed={isWatched}
+              aria-disabled={isUpdating}
+              disabled={isUpdating}
+              aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
+              onClick={handleWatchedClick}
+            >
+              <span className={styles.watchedButtonLabel}>
+                {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
+              </span>
+              <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
+                {isWatched ? 'Просмотрено' : 'В просмотренное'}
+              </span>
+            </Button>
+          ) : (
+            <Button
+              variant={tvStatusText ? 'primary' : 'secondary'}
+              size="sm"
+              className={styles.watchedButton}
+              leftIcon={tvStatusIcon}
+              aria-pressed={Boolean(tvStatusText)}
+              aria-disabled={isUpdating}
+              disabled={isUpdating}
+              aria-label={tvStatusText ? `Текущий статус: ${tvStatusText}` : 'Выбрать статус'}
+              onClick={handleToggleTVModal}
+            >
+              <span className={styles.watchedButtonLabel}>
+                {tvStatusText ?? 'Выбрать статус'}
+              </span>
+              <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
+                {tvStatusText ?? 'Выбрать статус'}
+              </span>
+            </Button>
+          ))}
       </div>
 
       <StarsModal
@@ -150,6 +231,13 @@ export const MediaCard = ({
         onCommentChange={setComment}
         onSubmit={addToFavorite}
         isSubmitting={isUpdating}
+      />
+
+      <TVModal
+        currentStatus={status}
+        onClick={handleTVClick}
+        isOpen={isOpenModalTV}
+        onClose={handleToggleTVModal}
       />
     </Card>
   )

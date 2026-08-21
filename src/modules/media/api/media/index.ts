@@ -141,7 +141,10 @@ export const getMediaStatuses = async ({
 
   return new Map(
     data
-      .map((row) => [getMediaKey({ id: row.media.external_id, type: row.media.type }), row.status] as const)
+      .map(
+        (row) =>
+          [getMediaKey({ id: row.media.external_id, type: row.media.type }), row.status] as const,
+      )
       .filter(([key]) => requestedKeys.has(key)),
   )
 }
@@ -149,6 +152,7 @@ export const getMediaStatuses = async ({
 export interface GetMediaParams {
   page?: number
   limit?: number
+  mediaType?: MediaType
   status?: MediaWatchStatus
   search: string
 }
@@ -156,6 +160,7 @@ export interface GetMediaParams {
 export const getAllUserMedia = async ({
   page = 1,
   limit = 20,
+  mediaType,
   status,
   search,
 }: GetMediaParams): Promise<UserMediaResponse> => {
@@ -193,6 +198,10 @@ export const getAllUserMedia = async ({
 
   if (status) {
     query = query.eq('status', status)
+  }
+
+  if (mediaType) {
+    query = query.eq('media.type', mediaType)
   }
 
   const { data, error, count } = await query.overrideTypes<UserMedia[], { merge: false }>()

@@ -7,8 +7,7 @@ export interface MediaIdentity {
 
 export const getMediaKey = ({ id, type }: MediaIdentity): string => `${type}:${id}`
 
-export const getMediaHref = ({ id, type }: MediaIdentity): string =>
-  `/media/${type}/${id}`
+export const getMediaHref = ({ id, type }: MediaIdentity): string => `/media/${type}/${id}`
 
 export type MediaCategory = 'popular' | 'top_rated' | 'upcoming'
 
@@ -73,7 +72,7 @@ export interface FiltersType {
   mediaType: MediaType
 }
 
-export type MediaWatchStatus = 'planned' | 'watched'
+export type MediaWatchStatus = 'planned' | 'watched' | 'watching' | 'dropped'
 
 export interface AddMediaOptions {
   status: MediaWatchStatus
@@ -127,6 +126,7 @@ export interface UserMediaResponse {
 }
 
 export interface FavoriteFiltersType {
-  status: 'planned' | 'watched'
+  mediaType: MediaType
+  status: MediaWatchStatus
   search: string
 }

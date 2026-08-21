@@ -32,12 +32,15 @@ export const MediaFilters = ({ filters, handleChange }: FiltersProps) => {
 
   return (
     <div className={styles.root}>
-      <Input
-        placeholder="Поиск..."
-        value={filters.search}
-        size={'sm'}
-        onChange={(e) => handleChange('search', e.target.value)}
-      />
+      <div className={styles.input}>
+        <Input
+          placeholder="Поиск..."
+          value={filters.search}
+          size={'sm'}
+          onChange={(e) => handleChange('search', e.target.value)}
+        />
+      </div>
+
       <Tabs
         tabs={mediaTypeTabs}
         value={filters.mediaType}

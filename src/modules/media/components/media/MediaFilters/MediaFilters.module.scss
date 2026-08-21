@@ -1,7 +1,11 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
+}
+
+.input {
+  margin-bottom: 5px;
 }
 
 .title {

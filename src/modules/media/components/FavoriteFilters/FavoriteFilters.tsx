@@ -3,17 +3,28 @@
 import styles from './FavoriteFilters.module.scss'
 import { Input, Tabs } from '@/shared/ui'
 import { Search } from 'lucide-react'
-import { FavoriteFiltersType } from '../../api/media/types'
+import { FavoriteFiltersType, MediaType } from '../../api/media/types'
 
 type FavoriteStatus = FavoriteFiltersType['status']
 
-const tabs: Array<{ label: string; id: FavoriteStatus }> = [
-  { label: 'ИЗБРАННОЕ', id: 'planned' },
-  { label: 'ПРОСМОТРЕННОЕ', id: 'watched' },
+const mediaTypeTabs: Array<{ label: string; id: MediaType }> = [
+  { label: 'ФИЛЬМЫ', id: 'movie' },
+  { label: 'СЕРИАЛЫ', id: 'tv' },
 ]
 
+const statusTabs: Array<{ label: string; id: FavoriteStatus }> = [
+  { label: 'ИЗБРАННОЕ', id: 'planned' },
+  { label: 'ПРОСМОТРЕННОЕ', id: 'watched' },
+  { label: 'В ПРОЦЕССЕ', id: 'watching' },
+  { label: 'ЗАБРОШЕННОЕ', id: 'dropped' },
+]
+
+const isMediaType = (value: string | number): value is MediaType => {
+  return mediaTypeTabs.some((tab) => tab.id === value)
+}
+
 const isFavoriteStatus = (value: string | number): value is FavoriteStatus => {
-  return tabs.some((tab) => tab.id === value)
+  return statusTabs.some((tab) => tab.id === value)
 }
 
 interface FavoriteFiltersProps {
@@ -22,6 +33,11 @@ interface FavoriteFiltersProps {
 }
 
 export const FavoriteFilters = ({ filters, onChange }: FavoriteFiltersProps) => {
+  const visibleStatusTabs =
+    filters.mediaType === 'movie'
+      ? statusTabs.filter((tab) => tab.id === 'planned' || tab.id === 'watched')
+      : statusTabs
+
   return (
     <div className={styles.header}>
       <div className={styles.container}>
@@ -36,18 +52,37 @@ export const FavoriteFilters = ({ filters, onChange }: FavoriteFiltersProps) => 
         />
       </div>
 
-      <Tabs
-        className={styles.tabs}
-        tabs={tabs}
-        value={filters.status}
-        onChange={(value) => {
-          if (isFavoriteStatus(value)) {
-            onChange('status', value)
-          }
-        }}
-        variant="secondary"
-        size="sm"
-      />
+      <div className={styles.filters}>
+        <Tabs
+          className={styles.mediaTypeTabs}
+          tabs={mediaTypeTabs}
+          variant="secondary"
+          value={filters.mediaType}
+          onChange={(value) => {
+            if (isMediaType(value)) {
+              onChange('mediaType', value)
+
+              if (value === 'movie' && !['planned', 'watched'].includes(filters.status)) {
+                onChange('status', 'planned')
+              }
+            }
+          }}
+          size="sm"
+        />
+
+        <Tabs
+          className={`${styles.tabs} ${filters.mediaType === 'tv' ? styles.tvStatusTabs : ''}`}
+          tabs={visibleStatusTabs}
+          value={filters.status}
+          onChange={(value) => {
+            if (isFavoriteStatus(value)) {
+              onChange('status', value)
+            }
+          }}
+          variant="secondary"
+          size="sm"
+        />
+      </div>
     </div>
   )
 }

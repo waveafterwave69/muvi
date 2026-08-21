@@ -133,13 +133,7 @@ const splitIntoBatches = <T>(items: T[], batchSize: number): T[][] => {
   return batches
 }
 
-export const useMediaStatuses = ({
-  userId,
-  media,
-}: {
-  userId: string
-  media: MediaIdentity[]
-}) => {
+export const useMediaStatuses = ({ userId, media }: { userId: string; media: MediaIdentity[] }) => {
   const batches = useMemo(() => {
     if (!userId) {
       return []
@@ -182,14 +176,16 @@ export const useMediaStatuses = ({
 }
 
 export const useInfiniteFavoriteMediaQuery = ({
+  mediaType,
   status,
   search,
 }: {
+  mediaType: MediaType
   status: MediaWatchStatus
   search: string
 }) => {
   return useInfiniteQuery({
-    queryKey: ['user-media', status, search],
+    queryKey: ['user-media', mediaType, status, search],
 
     initialPageParam: 1,
 
@@ -197,6 +193,7 @@ export const useInfiniteFavoriteMediaQuery = ({
       getAllUserMedia({
         page: pageParam,
         limit: 20,
+        mediaType,
         status,
         search,
       }),

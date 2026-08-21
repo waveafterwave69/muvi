@@ -6,7 +6,7 @@ import Link from 'next/link'
 import styles from './MediaPromo.module.scss'
 import { Button } from '@/shared/ui'
 import { Calendar, Check, Clock2, LibraryBig, MoveLeft, Plus, Star } from 'lucide-react'
-import { getMediaKey, Media } from '@/modules/media/api/media/types'
+import { getMediaKey, Media, MediaType } from '@/modules/media/api/media/types'
 import { StarsModal } from '../../media/StarsModal/StarsModal'
 import { CommentModal } from '../../media/CommentModal/CommentModal'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
@@ -17,6 +17,7 @@ import { formatRuntime } from '@/shared/helpers/formatters'
 interface MediaPromoProps {
   media: MediaDetails
   isAuthenticated: boolean
+  type: MediaType
 }
 
 const getImageUrl = (path: string | null | undefined, size: string = 'original'): string => {
@@ -24,7 +25,7 @@ const getImageUrl = (path: string | null | undefined, size: string = 'original')
   return `https://image.tmdb.org/t/p/${size}${path}`
 }
 
-const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated }) => {
+const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
   const { addMedia, removeMedia, isUpdating, statuses } = useMediaStatus(media)
 
   const status = statuses.get(getMediaKey(media))
@@ -163,37 +164,40 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated }) => {
 
         <p className={styles.overview}>{media.overview}</p>
 
-        {isAuthenticated && (
-          <div className={styles.actionButtons}>
-            <Button
-              size="sm"
-              variant={isFavorite ? 'primary' : 'secondary'}
-              className={`${styles.watchedButton}`}
-              leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
-              aria-label={isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
-              disabled={isUpdating}
-              onClick={handleFavoriteClick}
-            >
-              <span className={styles.watchedButtonLabel}>
-                {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
-              </span>
-            </Button>
+        {isAuthenticated &&
+          (type === 'movie' ? (
+            <div className={styles.actionButtons}>
+              <Button
+                size="sm"
+                variant={isFavorite ? 'primary' : 'secondary'}
+                className={`${styles.watchedButton}`}
+                leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
+                aria-label={isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+                disabled={isUpdating}
+                onClick={handleFavoriteClick}
+              >
+                <span className={styles.watchedButtonLabel}>
+                  {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+                </span>
+              </Button>
 
-            <Button
-              size="sm"
-              variant={isWatched ? 'primary' : 'secondary'}
-              className={`${styles.watchedButton}`}
-              leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
-              aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
-              disabled={isUpdating}
-              onClick={handleWatchedClick}
-            >
-              <span className={styles.watchedButtonLabel}>
-                {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
-              </span>
-            </Button>
-          </div>
-        )}
+              <Button
+                size="sm"
+                variant={isWatched ? 'primary' : 'secondary'}
+                className={`${styles.watchedButton}`}
+                leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
+                aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
+                disabled={isUpdating}
+                onClick={handleWatchedClick}
+              >
+                <span className={styles.watchedButtonLabel}>
+                  {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
+                </span>
+              </Button>
+            </div>
+          ) : (
+            <div>TV</div>
+          ))}
       </div>
 
       <StarsModal

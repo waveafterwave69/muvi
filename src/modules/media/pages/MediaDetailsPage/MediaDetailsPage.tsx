@@ -45,7 +45,7 @@ const MediaDetailsPage = ({ mediaType = 'movie' }: MediaDetailsPageProps) => {
   return (
     <div className={styles.media}>
       <Card className={styles.media__promo}>
-        <MediaPromo media={media} isAuthenticated={Boolean(currentUser)} />
+        <MediaPromo type="tv" media={media} isAuthenticated={Boolean(currentUser)} />
       </Card>
       <Card>
         <MediaActors actors={actors} />

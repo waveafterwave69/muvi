@@ -9,6 +9,7 @@ import { useInfiniteFavoriteMediaQuery } from '../../api/media/queries'
 import { MediaList } from '../../components/media/MediaList/MediaList'
 
 const initialFilters: FavoriteFiltersType = {
+  mediaType: 'movie',
   status: 'planned',
   search: '',
 }
@@ -18,7 +19,11 @@ export const FavoritesPage = () => {
   const debouncedSearch = useDebounce(filters.search, 400)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
-    useInfiniteFavoriteMediaQuery({ status: filters.status, search: debouncedSearch })
+    useInfiniteFavoriteMediaQuery({
+      mediaType: filters.mediaType,
+      status: filters.status,
+      search: debouncedSearch,
+    })
 
   const media = useMemo(() => {
     const mediaItems: Media[] = []
