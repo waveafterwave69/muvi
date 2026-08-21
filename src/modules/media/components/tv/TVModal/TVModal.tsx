@@ -3,7 +3,7 @@ import styles from './TVModal.module.scss'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import { Tab } from '@/shared/types/tab'
 import { Check, Trash2 } from 'lucide-react'
-import { MediaWatchStatus } from '../../api/media/types'
+import { MediaWatchStatus } from '../../../api/media/types'
 
 interface TVModalProps {
   isOpen: boolean

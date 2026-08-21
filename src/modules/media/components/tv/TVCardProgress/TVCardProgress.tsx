@@ -1,6 +1,6 @@
 'use client'
 
-import { useEpisodeProgress, useTVEpisodeCount } from '../../api/episodeProgress/queries'
+import { useEpisodeProgress, useTVEpisodeCount } from '../../../api/episodeProgress/queries'
 import styles from './TVCardProgress.module.scss'
 
 interface TVCardProgressProps {

@@ -12,10 +12,10 @@ import SkeletonMediaPage from './SkeletonMediaPage/SkeletonMediaPage'
 import type { MediaVideo } from '../../api/mediaDetails/types'
 import { useParams } from 'next/navigation'
 import type { MediaType } from '../../api/media/types'
-import EpisodeTracker from '../../components/tv/EpisodeTracker'
 import type { MediaDetails } from '../../api/mediaDetails/types'
 import { getMediaKey } from '../../api/media/types'
 import { useMediaStatus } from '../../hooks/useMediaStatus'
+import EpisodeTracker from '../../components/tv/EpisodeTracker/EpisodeTracker'
 
 interface MediaDetailsPageProps {
   mediaType?: MediaType

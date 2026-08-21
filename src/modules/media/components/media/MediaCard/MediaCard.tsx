@@ -5,7 +5,7 @@ import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star } from 'l
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
-import TVCardProgress from '../../tv/TVCardProgress'
+import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
 
 interface MediaCardProps {
   media: Media
