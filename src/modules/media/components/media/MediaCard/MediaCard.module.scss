@@ -79,6 +79,28 @@
   }
 }
 
+.coupleBadge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  pointer-events: none;
+  border: 1px solid var(--accent-soft);
+  border-radius: 9999px;
+  background-color: var(--surface);
+  color: var(--accent-soft);
+  font-size: var(--base-font-size-small);
+  font-weight: 700;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .favoriteButton {
   position: absolute;
   top: 8px;
@@ -159,6 +181,18 @@
   .rating,
   .favoriteButton {
     top: 8px;
+  }
+
+  .coupleBadge {
+    bottom: 8px;
+    left: 8px;
+    gap: 4px;
+    padding: 5px 8px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 
   .rating {

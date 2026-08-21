@@ -2,6 +2,11 @@ import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
 import { AddMediaOptions, Media } from '../api/media/types'
 import { useAddMedia, useMediaStatuses, useRemoveMedia } from '../api/media/queries'
 import { MediaDetails } from '../api/mediaDetails/types'
+import {
+  useAddMediaToCoupleCollection,
+  useCoupleMediaStatuses,
+} from '@/modules/media/api/couple/queries'
+import type { Variant } from '../api/couple/types'
 
 export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDetails[]) => {
   const mediaArray = Array.isArray(items) ? items : [items]
@@ -13,6 +18,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
   const userId = data?.id
   const addMediaToCollection = useAddMedia(userId ?? '')
   const removeMediaFromCollection = useRemoveMedia(userId ?? '')
+  const addMediaToCouple = useAddMediaToCoupleCollection()
 
   const {
     statuses,
@@ -23,7 +29,23 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     media,
   })
 
-  const addMedia = (media: Media, options: AddMediaOptions) => {
+  const {
+    statuses: coupleStatuses,
+    isPending: isCoupleStatusesPending,
+    isFetching: isCoupleStatusesFetching,
+  } = useCoupleMediaStatuses({
+    userId: userId ?? '',
+    media,
+  })
+
+  const addMedia = (media: Media, options: AddMediaOptions, variant: Variant) => {
+    if (variant === 'couple') {
+      return addMediaToCouple.mutateAsync({
+        media,
+        options,
+      })
+    }
+
     return addMediaToCollection.mutateAsync({
       media,
       options,
@@ -38,10 +60,14 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     addMedia,
     removeMedia,
     statuses,
+    coupleStatuses,
     isUpdating:
       addMediaToCollection.isPending ||
+      addMediaToCouple.isPending ||
       removeMediaFromCollection.isPending ||
       isStatusesPending ||
-      isStatusesFetching,
+      isStatusesFetching ||
+      isCoupleStatusesPending ||
+      isCoupleStatusesFetching,
   }
 }

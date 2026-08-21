@@ -2,7 +2,8 @@
 
 import { Star } from 'lucide-react'
 import { useState } from 'react'
-import { Button, Modal } from '@/shared/ui'
+import type { Variant } from '@/modules/media/api/couple/types'
+import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './StarsModal.module.scss'
 
 interface Props {
@@ -12,9 +13,15 @@ interface Props {
   stars: number | null
   onSubmit: () => void
   isSubmitting?: boolean
+  variant: Variant
+  setVariant: (variant: Variant) => void
 }
 
 const ratings = Array.from({ length: 10 }, (_, index) => index + 1)
+const viewingModes = [
+  { id: 'solo', label: 'Соло' },
+  { id: 'couple', label: 'Пара' },
+]
 
 export const StarsModal = ({
   isOpen,
@@ -23,6 +30,8 @@ export const StarsModal = ({
   setStars,
   onSubmit,
   isSubmitting = false,
+  variant,
+  setVariant,
 }: Props) => {
   const [hover, setHover] = useState(0)
   const activeRating = hover || stars || 0
@@ -32,6 +41,18 @@ export const StarsModal = ({
       <div className={styles.container}>
         <h3 className={styles.title}>Как тебе?</h3>
         <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
+
+        <Tabs
+          tabs={viewingModes}
+          value={variant}
+          variant="primary"
+          size="sm"
+          onChange={(value) => {
+            if (value === 'solo' || value === 'couple') {
+              setVariant(value)
+            }
+          }}
+        />
 
         <div className={styles.stars} role="group" aria-label="Оценка от 1 до 10">
           {ratings.map((rating) => (

@@ -4,9 +4,11 @@ import { ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { getMediaKey, type Media, type MediaType } from '@/modules/media/api/media/types'
 import { useHorizontalSlider } from '@/modules/media/hooks/useHorizontalSlider'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
+import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { useCurrentUser } from '@/modules/auth'
 import styles from './SimilarMedia.module.scss'
 import { MediaCard } from '../../media/MediaCard/MediaCard'
+import { MediaActionModals } from '../../media/MediaActionModals/MediaActionModals'
 
 interface SimilarMediaProps {
   media: Media[]
@@ -17,7 +19,10 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
   const visibleMedia = media.slice(0, 30)
   const mediaLabel = mediaType === 'tv' ? 'сериалы' : 'фильмы'
   const { data: user } = useCurrentUser()
-  const { addMedia, isUpdating, removeMedia, statuses } = useMediaStatus(visibleMedia)
+  const { addMedia, coupleStatuses, isUpdating, removeMedia, statuses } =
+    useMediaStatus(visibleMedia)
+  const { handleFavoriteClick, handleWatchedClick, handleOpenTVModal, modalProps } =
+    useAddMedia({ addMedia, removeMedia, isUpdating })
   const { listRef, canScrollBack, canScrollForward, scroll } = useHorizontalSlider(
     visibleMedia.length,
   )
@@ -58,15 +63,20 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
       {visibleMedia.length ? (
         <ul ref={listRef} className={styles.list}>
           {visibleMedia.map((item) => {
+            const mediaKey = getMediaKey(item)
+            const status = statuses.get(mediaKey)
+
             return (
-              <li className={styles.mediaItem} key={getMediaKey(item)}>
+              <li className={styles.mediaItem} key={mediaKey}>
                 <MediaCard
                   media={item}
-                  status={statuses.get(getMediaKey(item))}
+                  status={status}
+                  coupleStatus={coupleStatuses.get(mediaKey)}
                   isUpdating={isUpdating}
                   showActions={Boolean(user)}
-                  addMedia={addMedia}
-                  removeMedia={removeMedia}
+                  handleFavorite={() => handleFavoriteClick(item, status)}
+                  handleWatched={() => handleWatchedClick(item, status)}
+                  handleToggleTVModal={() => handleOpenTVModal(item, status)}
                 />
               </li>
             )
@@ -81,6 +91,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
           </div>
         </div>
       )}
+      <MediaActionModals {...modalProps} />
     </section>
   )
 }

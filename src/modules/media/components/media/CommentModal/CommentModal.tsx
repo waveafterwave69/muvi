@@ -12,11 +12,13 @@ export interface CommentModalProps {
   onCommentChange: (comment: string) => void
   onSubmit: () => void
   isSubmitting?: boolean
+  variant: 'couple' | 'solo';
+  setVariant: (variant: 'couple' | 'solo') => void;
 }
 
 const viewingModes = [
   { id: 'solo', label: 'Соло' },
-  { id: 'pair', label: 'Пара' },
+  { id: 'couple', label: 'Пара' },
 ]
 
 const MAX_COMMENT_LENGTH = 600
@@ -28,6 +30,8 @@ export const CommentModal = ({
   onCommentChange,
   onSubmit,
   isSubmitting = false,
+  variant,
+  setVariant,
 }: CommentModalProps) => {
   const titleId = useId()
   const textareaId = useId()
@@ -56,10 +60,14 @@ export const CommentModal = ({
         <Tabs
           className={styles.tabs}
           tabs={viewingModes}
-          value="solo"
+          value={variant}
           variant="primary"
           size="sm"
-          onChange={() => undefined}
+          onChange={(v) => {
+            if(v === 'solo' || v === 'couple') {
+              setVariant(v)
+            }
+          }}
         />
 
         <div className={styles.field}>
