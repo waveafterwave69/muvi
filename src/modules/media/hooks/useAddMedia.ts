@@ -148,6 +148,17 @@ export const useAddMedia = ({ addMedia, removeMedia, isUpdating }: UseAddMediaPa
     }
   }
 
+  const handleRemoveTVStatus = async () => {
+    if (!activeMedia) return
+
+    try {
+      await removeMedia(activeMedia.media)
+      closeTVModal()
+    } catch {
+      return
+    }
+  }
+
   return {
     handleFavoriteClick,
     handleWatchedClick,
@@ -176,8 +187,10 @@ export const useAddMedia = ({ addMedia, removeMedia, isUpdating }: UseAddMediaPa
       tv: {
         currentStatus: activeMedia?.status,
         onClick: handleTVStatusChange,
+        onRemove: handleRemoveTVStatus,
         isOpen: isTVModalOpen,
         onClose: closeTVModal,
+        isSubmitting: isUpdating,
       },
     },
   }

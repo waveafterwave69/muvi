@@ -7,6 +7,7 @@ import {
   useCoupleMediaStatuses,
 } from '@/modules/media/api/couple/queries'
 import type { Variant } from '../api/couple/types'
+import { useMarkAllTVEpisodesWatched } from '../api/episodeProgress/queries'
 
 export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDetails[]) => {
   const mediaArray = Array.isArray(items) ? items : [items]
@@ -19,6 +20,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
   const addMediaToCollection = useAddMedia(userId ?? '')
   const removeMediaFromCollection = useRemoveMedia(userId ?? '')
   const addMediaToCouple = useAddMediaToCoupleCollection()
+  const markAllTVEpisodesWatched = useMarkAllTVEpisodesWatched(userId ?? '')
 
   const {
     statuses,
@@ -38,18 +40,23 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     media,
   })
 
-  const addMedia = (media: Media, options: AddMediaOptions, variant: Variant) => {
+  const addMedia = async (media: Media, options: AddMediaOptions, variant: Variant) => {
     if (variant === 'couple') {
-      return addMediaToCouple.mutateAsync({
+      await addMediaToCouple.mutateAsync({
         media,
         options,
       })
+      return
     }
 
-    return addMediaToCollection.mutateAsync({
+    await addMediaToCollection.mutateAsync({
       media,
       options,
     })
+
+    if (media.type === 'tv' && options.status === 'watched') {
+      await markAllTVEpisodesWatched.mutateAsync(media.id)
+    }
   }
 
   const removeMedia = (media: Pick<Media, 'id' | 'type'>) => {
@@ -64,6 +71,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     isUpdating:
       addMediaToCollection.isPending ||
       addMediaToCouple.isPending ||
+      markAllTVEpisodesWatched.isPending ||
       removeMediaFromCollection.isPending ||
       isStatusesPending ||
       isStatusesFetching ||

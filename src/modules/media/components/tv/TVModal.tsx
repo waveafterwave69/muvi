@@ -2,22 +2,24 @@ import { FC, useState } from 'react'
 import styles from './TVModal.module.scss'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import { Tab } from '@/shared/types/tab'
-import { Check } from 'lucide-react'
+import { Check, Trash2 } from 'lucide-react'
 import { MediaWatchStatus } from '../../api/media/types'
 
 interface TVModalProps {
   isOpen: boolean
   onClose: () => void
   onClick: (type: MediaWatchStatus) => void
+  onRemove: () => void
   currentStatus?: MediaWatchStatus
+  isSubmitting?: boolean
 }
 
 type TVWatchStatus = Exclude<MediaWatchStatus, 'planned'>
 
 const TVTabs: Tab[] = [
-  { id: 'watched', label: 'Просмотренно' },
+  { id: 'watched', label: 'Просмотрен' },
   { id: 'watching', label: 'Смотрю сейчас' },
-  { id: 'dropped', label: 'Заброшенно' },
+  { id: 'dropped', label: 'Заброшено' },
 ]
 
 const isTVWatchStatus = (status: number | string | undefined): status is TVWatchStatus =>
@@ -26,7 +28,14 @@ const isTVWatchStatus = (status: number | string | undefined): status is TVWatch
 const getTVWatchStatus = (status?: MediaWatchStatus): TVWatchStatus =>
   isTVWatchStatus(status) ? status : 'watched'
 
-const TVModal: FC<TVModalProps> = ({ isOpen, onClose, onClick, currentStatus }) => {
+const TVModal: FC<TVModalProps> = ({
+  isOpen,
+  onClose,
+  onClick,
+  onRemove,
+  currentStatus,
+  isSubmitting = false,
+}) => {
   const [selectedTab, setSelectedTab] = useState<TVWatchStatus | null>(null)
   const currentTab = selectedTab ?? getTVWatchStatus(currentStatus)
 
@@ -37,6 +46,11 @@ const TVModal: FC<TVModalProps> = ({ isOpen, onClose, onClick, currentStatus }) 
 
   const handleTVModal = () => {
     onClick(currentTab)
+  }
+
+  const handleRemove = () => {
+    setSelectedTab(null)
+    onRemove()
   }
 
   return (
@@ -56,9 +70,29 @@ const TVModal: FC<TVModalProps> = ({ isOpen, onClose, onClick, currentStatus }) 
           }
         }}
       />
-      <Button onClick={handleTVModal} leftIcon={<Check />} className={styles.button}>
-        Выбрать
-      </Button>
+      <div className={styles.actions}>
+        <Button
+          onClick={handleTVModal}
+          leftIcon={<Check />}
+          className={styles.button}
+          disabled={isSubmitting}
+          size="sm"
+        >
+          Выбрать
+        </Button>
+        {currentStatus && (
+          <Button
+            onClick={handleRemove}
+            leftIcon={<Trash2 />}
+            variant="outline"
+            className={styles.removeButton}
+            disabled={isSubmitting}
+            size="sm"
+          >
+            Убрать статус
+          </Button>
+        )}
+      </div>
     </Modal>
   )
 }

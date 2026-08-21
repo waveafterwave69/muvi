@@ -3,7 +3,7 @@
 import styles from './MediaList.module.scss'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useCurrentUser } from '@/modules/auth'
-import { getMediaKey, Media } from '@/modules/media/api/media/types'
+import { getMediaKey, Media, type MediaType } from '@/modules/media/api/media/types'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { MediaCardSkeleton } from '../MediaCardSkeleton/MediaCardSkeleton'
 import { MediaCard } from '../MediaCard/MediaCard'
@@ -16,6 +16,7 @@ interface MediaListProps {
   fetchNextPage: () => void
   hasNextPage: boolean
   isFetchingNextPage: boolean
+  mediaType?: MediaType
 }
 
 export const MediaList = ({
@@ -24,6 +25,7 @@ export const MediaList = ({
   isFetchingNextPage,
   fetchNextPage,
   isPending,
+  mediaType,
 }: MediaListProps) => {
   const { addMedia, coupleStatuses, isUpdating, removeMedia, statuses } = useMediaStatus(media)
   const { data: user } = useCurrentUser()
@@ -33,7 +35,7 @@ export const MediaList = ({
   if (isPending) {
     return (
       <div className={styles.grid}>
-        <MediaCardSkeleton />
+        <MediaCardSkeleton mediaType={mediaType} />
       </div>
     )
   }
@@ -52,7 +54,11 @@ export const MediaList = ({
             void fetchNextPage()
           }
         }}
-        loader={isFetchingNextPage ? <MediaCardSkeleton count={4} /> : null}
+        loader={
+          isFetchingNextPage ? (
+            <MediaCardSkeleton count={4} mediaType={mediaType ?? media[0]?.type} />
+          ) : null
+        }
         className={styles.grid}
       >
         {media.map((item) => {
@@ -70,6 +76,7 @@ export const MediaList = ({
               isUpdating={isUpdating}
               status={status}
               showActions={!!user}
+              userId={user?.id}
             />
           )
         })}

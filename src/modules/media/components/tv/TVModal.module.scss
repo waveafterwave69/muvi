@@ -12,7 +12,23 @@
   margin-top: 20px;
 }
 
-.button {
-  width: 100%;
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
   margin-top: 20px;
+}
+
+.button,
+.removeButton {
+  width: 100% !important;
+}
+
+.removeButton {
+  color: var(--text-muted);
+
+  &:not(:disabled):hover {
+    border-color: #ff5c72;
+    color: #ff5c72;
+  }
 }

@@ -74,6 +74,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
                   coupleStatus={coupleStatuses.get(mediaKey)}
                   isUpdating={isUpdating}
                   showActions={Boolean(user)}
+                  userId={user?.id}
                   handleFavorite={() => handleFavoriteClick(item, status)}
                   handleWatched={() => handleWatchedClick(item, status)}
                   handleToggleTVModal={() => handleOpenTVModal(item, status)}
