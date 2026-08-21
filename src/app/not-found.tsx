@@ -9,8 +9,6 @@ import {
   Heart,
   ListVideo,
   Search,
-  Star,
-  Tv,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -92,7 +90,7 @@ export default function NotFound() {
             Проверь ссылку или вернись к своим фильмам.
           </motion.p>
           <motion.div variants={itemVariants}>
-            <Link className={styles.homeLink} href="/movies">
+            <Link className={styles.homeLink} href="/media">
               К фильмам
               <Film aria-hidden="true" strokeWidth={2.5} />
             </Link>

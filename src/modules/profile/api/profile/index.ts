@@ -1,5 +1,5 @@
 import { supabase } from '@/shared/api/supabase'
-import type { ProfileMovie } from '../../types/profileTypes'
+import type { ProfileMedia } from '../../types/profileTypes'
 
 export const fetchProfile = async (userId: string | null) => {
   try {
@@ -36,7 +36,7 @@ export const logoutUser = async () => {
   return true
 }
 
-export const fetchUserMovies = async (userId: string | null) => {
+export const fetchUserMedia = async (userId: string | null) => {
   let targetUserId = userId
 
   if (!targetUserId) {
@@ -49,18 +49,18 @@ export const fetchUserMovies = async (userId: string | null) => {
   if (!targetUserId) return []
 
   const { data, error } = await supabase
-    .from('user_movies')
+    .from('user_media')
     .select(
       `
       status, 
       comment, 
       rating, 
       watched_at, 
-      movies ( id, external_id, title, overview, poster_path, release_date, vote_average )
+      media ( id, external_id, type, title, overview, poster_path, release_date, vote_average )
     `,
     )
     .eq('user_id', targetUserId)
-    .overrideTypes<ProfileMovie[], { merge: false }>()
+    .overrideTypes<ProfileMedia[], { merge: false }>()
 
   if (error) {
     throw new Error(error.message)

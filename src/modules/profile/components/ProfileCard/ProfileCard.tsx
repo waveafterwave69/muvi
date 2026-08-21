@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react'
 import styles from './ProfileCard.module.scss'
 import { Card } from '@/shared/ui'
 import Image from 'next/image'
-import { Profile, ProfileMovie } from '../../types/profileTypes'
+import { Profile, ProfileMedia } from '../../types/profileTypes'
 import { formatDate } from '@/shared/helpers/formatters'
 import { Clapperboard, Heart } from 'lucide-react'
 import DefaultAvatar from '../DefaultAvatar/DefaultAvatar'
@@ -10,11 +10,11 @@ import DefaultAvatar from '../DefaultAvatar/DefaultAvatar'
 interface ProfileCardProps {
   actions?: ReactNode
   profile: Profile
-  watchedMovies: ProfileMovie[]
-  favMovies: ProfileMovie[]
+  watchedMedia: ProfileMedia[]
+  favoriteMedia: ProfileMedia[]
 }
 
-const ProfileCard: FC<ProfileCardProps> = ({ actions, profile, favMovies, watchedMovies }) => {
+const ProfileCard: FC<ProfileCardProps> = ({ actions, profile, favoriteMedia, watchedMedia }) => {
   return (
     <div>
       <Card size="lg">
@@ -48,13 +48,13 @@ const ProfileCard: FC<ProfileCardProps> = ({ actions, profile, favMovies, watche
           <div className={styles.profile__right}>
             <div className={`${styles.right__item} ${styles.right__fav}`}>
               <Heart size={30} color="var(--accent)" />
-              <span>{favMovies.length}</span>
+              <span>{favoriteMedia.length}</span>
               <p>в избранном</p>
             </div>
             <div className={styles.bar}></div>
             <div className={`${styles.right__item} ${styles.right__watch}`}>
               <Clapperboard size={30} color="var(--accent)" />
-              <span>{watchedMovies.length}</span>
+              <span>{watchedMedia.length}</span>
               <p>просмотрено</p>
             </div>
           </div>

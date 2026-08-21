@@ -1,0 +1,263 @@
+.section {
+  min-width: 0;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.title {
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.control {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--card-border-color);
+  border-radius: 50%;
+  background-color: var(--surface-soft);
+  color: var(--text-primary);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:not(:disabled):hover {
+    border-color: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  &:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
+}
+
+.list {
+  display: grid;
+  grid-auto-columns: calc((100% - 70px) / 4);
+  grid-auto-flow: column;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  margin: 0;
+  padding: 0 0 4px;
+  scroll-behavior: smooth;
+  scroll-snap-type: inline mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  list-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.mediaItem {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.link {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  color: var(--text-primary);
+  text-decoration: none;
+
+  &:focus-visible {
+    border-radius: 14px;
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 3px;
+  }
+
+  &:hover .poster {
+    transform: scale(1.035);
+  }
+
+  &:hover .mediaTitle {
+    color: var(--accent-soft);
+  }
+}
+
+.posterWrapper {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  aspect-ratio: 2 / 3;
+  border: 1px solid var(--card-border-color);
+  border-radius: 14px;
+  background-color: var(--surface-soft);
+}
+
+.poster {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.posterFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-align: center;
+
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.rating {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--card-border-color);
+  border-radius: 999px;
+  background-color: rgba(8, 6, 9, 0.84);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 800;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    color: var(--star-color);
+    fill: currentColor;
+  }
+}
+
+.mediaTitle {
+  overflow: hidden;
+  margin-top: 9px;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.mediaMeta {
+  overflow: hidden;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 100px;
+  padding: 18px;
+  border: 1px dashed var(--card-border-color);
+  border-radius: 16px;
+  color: var(--text-muted);
+
+  > svg {
+    width: 34px;
+    height: 34px;
+    color: var(--accent-soft);
+  }
+
+  h4 {
+    color: var(--text-primary);
+  }
+
+  p {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 900px) {
+  .list {
+    grid-auto-columns: calc((100% - 36px) / 4);
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .controls {
+    gap: 6px;
+  }
+
+  .control {
+    width: 32px;
+    height: 32px;
+  }
+
+  .list {
+    grid-auto-columns: calc((100% - 0px) / 2.3);
+    gap: 10px;
+  }
+
+  .posterWrapper {
+    border-radius: 12px;
+  }
+
+  .mediaTitle {
+    font-size: 13px;
+  }
+
+  .mediaMeta {
+    font-size: 11px;
+  }
+}
