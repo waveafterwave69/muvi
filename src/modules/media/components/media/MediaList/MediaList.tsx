@@ -29,6 +29,7 @@ export const MediaList = ({
 }: MediaListProps) => {
   const {
     addMedia,
+    coupleComments,
     coupleMediaIds,
     coupleStatuses,
     isUpdating,
@@ -82,7 +83,7 @@ export const MediaList = ({
           return (
             <MediaCard
               media={item}
-              comment={item.comment}
+              comment={coupleComments.get(mediaKey) ?? item.comment}
               key={mediaKey}
               coupleStatus={coupleStatuses.get(mediaKey)}
               handleFavorite={() => handleFavoriteClick(item, status)}

@@ -67,17 +67,20 @@ export const useCoupleMediaStatuses = ({
     combine: (results) => {
       const statuses: MediaStatuses = new Map()
       const mediaIds = new Map<string, number>()
+      const comments = new Map<string, string | null>()
 
       results.forEach((result) => {
         result.data?.forEach((item, mediaKey) => {
           statuses.set(mediaKey, item.status)
           mediaIds.set(mediaKey, item.mediaId)
+          comments.set(mediaKey, item.comment)
         })
       })
 
       return {
         statuses,
         mediaIds,
+        comments,
         isPending: results.some((result) => result.isPending),
         isFetching: results.some((result) => result.isFetching),
         error: results.find((result) => result.error)?.error ?? null,

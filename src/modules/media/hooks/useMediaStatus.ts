@@ -35,6 +35,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
   })
 
   const {
+    comments: coupleComments,
     mediaIds: coupleMediaIds,
     statuses: coupleStatuses,
     isPending: isCoupleStatusesPending,
@@ -78,6 +79,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     statuses,
     coupleStatuses,
     coupleMediaIds,
+    coupleComments,
     isUpdating:
       addMediaToCollection.isPending ||
       addMediaToCouple.isPending ||

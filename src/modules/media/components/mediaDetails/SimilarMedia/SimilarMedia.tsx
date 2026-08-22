@@ -21,6 +21,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
   const { data: user } = useCurrentUser()
   const {
     addMedia,
+    coupleComments,
     coupleMediaIds,
     coupleStatuses,
     isUpdating,
@@ -83,6 +84,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
               <li className={styles.mediaItem} key={mediaKey}>
                 <MediaCard
                   media={item}
+                  comment={coupleComments.get(mediaKey)}
                   status={status}
                   coupleStatus={coupleStatuses.get(mediaKey)}
                   isUpdating={isUpdating}

@@ -78,11 +78,14 @@ export const getCoupleMediaStatuses = async (
       `
         media_id,
         status,
+        comment,
         media:media!inner(external_id, type)
       `,
     )
     .in('media.external_id', externalIds)
-    .overrideTypes<Array<MediaStatusRow & { media_id: number }>, { merge: false }>()
+    .overrideTypes<Array<MediaStatusRow & { media_id: number; comment: string | null }>, {
+      merge: false
+    }>()
 
   if (error) {
     throw new Error(`Не удалось получить статусы медиа пары: ${error.message}`, {
@@ -96,7 +99,7 @@ export const getCoupleMediaStatuses = async (
         (row) =>
           [
             getMediaKey({ id: row.media.external_id, type: row.media.type }),
-            { mediaId: row.media_id, status: row.status },
+            { mediaId: row.media_id, status: row.status, comment: row.comment },
           ] as const,
       )
       .filter(([key]) => requestedKeys.has(key)),
