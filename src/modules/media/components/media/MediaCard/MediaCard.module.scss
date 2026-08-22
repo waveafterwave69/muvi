@@ -79,6 +79,13 @@
   }
 }
 
+.my__rating {
+  svg {
+    color: var(--star-color);
+    fill: var(--star-color);
+  }
+}
+
 .coupleBadge {
   position: absolute;
   bottom: 8px;

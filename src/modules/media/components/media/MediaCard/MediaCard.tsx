@@ -78,10 +78,22 @@ export const MediaCard = ({
           )}
         </Link>
 
-        <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
-          <Star aria-hidden="true" />
-          <span>{media.vote_average.toFixed(1)}</span>
-        </div>
+        {isWatched ? (
+          <div
+            className={`${styles.rating} ${styles.my__rating}`}
+            aria-label={`Рейтинг ${media.rating}`}
+          >
+            <Star aria-hidden="true" />
+
+            <span> {media.rating}</span>
+          </div>
+        ) : (
+          <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
+            <Star aria-hidden="true" />
+
+            <span> {media.vote_average.toFixed(1)}</span>
+          </div>
+        )}
 
         {coupleStatus && (
           <div
@@ -157,9 +169,7 @@ export const MediaCard = ({
               aria-label={tvStatusText ? `Текущий статус: ${tvStatusText}` : 'Выбрать статус'}
               onClick={handleToggleTVModal}
             >
-              <span className={styles.watchedButtonLabel}>
-                {tvStatusText ?? 'Выбрать статус'}
-              </span>
+              <span className={styles.watchedButtonLabel}>{tvStatusText ?? 'Выбрать статус'}</span>
               <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
                 {tvStatusText ?? 'Выбрать статус'}
               </span>

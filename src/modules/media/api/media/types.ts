@@ -22,6 +22,7 @@ export interface Media {
   type: MediaType
   adult: boolean
   backdrop_path: string | null
+  rating: number
   genre_ids: number[]
   id: number
   original_language: string
