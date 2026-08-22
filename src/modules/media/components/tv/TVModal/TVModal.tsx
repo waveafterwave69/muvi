@@ -14,8 +14,8 @@ interface TVModalProps {
   onRemove: () => void
   currentStatus?: MediaWatchStatus
   isSubmitting?: boolean
-  variant: Variant,
-  setVariant: Dispatch<SetStateAction<Variant>>,
+  variant: Variant
+  setVariant: Dispatch<SetStateAction<Variant>>
 }
 
 type TVWatchStatus = Exclude<MediaWatchStatus, 'planned'>
@@ -45,7 +45,7 @@ const TVModal: FC<TVModalProps> = ({
   currentStatus,
   isSubmitting = false,
   variant,
-  setVariant
+  setVariant,
 }) => {
   const [selectedTab, setSelectedTab] = useState<TVWatchStatus | null>(null)
   const currentTab = selectedTab ?? getTVWatchStatus(currentStatus)
@@ -71,17 +71,19 @@ const TVModal: FC<TVModalProps> = ({
       <p className={styles.subtitle}>
         Статус сериала, который будет отображаться в вашей коллекции
       </p>
-      {data?.in_couple && <Tabs
-        tabs={viewingModes}
-        value={variant}
-        variant="primary"
-        size="sm"
-        onChange={(value) => {
-          if (value === 'solo' || value === 'couple') {
-            setVariant(value)
-          }
-        }}
-      />}
+      {data?.in_couple && (
+        <Tabs
+          tabs={viewingModes}
+          value={variant}
+          variant="primary"
+          size="sm"
+          onChange={(value) => {
+            if (value === 'solo' || value === 'couple') {
+              setVariant(value)
+            }
+          }}
+        />
+      )}
       <Tabs
         className={styles.tabs}
         tabs={TVTabs}

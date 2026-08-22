@@ -6,10 +6,7 @@
   color: var(--text-muted);
   font-size: 15px;
   margin-top: 15px;
-}
-
-.tabs {
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .actions {
@@ -31,4 +28,8 @@
     border-color: #ff5c72;
     color: #ff5c72;
   }
+}
+
+.tabs {
+  margin-top: 5px;
 }
