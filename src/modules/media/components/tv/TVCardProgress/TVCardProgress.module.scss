@@ -1,9 +1,6 @@
 .progress {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  left: 8px;
-  z-index: 2;
+  position: relative;
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 5px 8px;
@@ -14,10 +11,6 @@
   background: color-mix(in srgb, var(--surface) 88%, transparent);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(10px);
-}
-
-.withCoupleBadge {
-  bottom: 48px;
 }
 
 .label {
@@ -60,14 +53,10 @@
 
 @media (max-width: 768px) {
   .progress {
-    right: 6px;
-    bottom: 6px;
-    left: 6px;
     padding: 7px 8px;
     border-radius: 10px;
   }
 
-  .withCoupleBadge { bottom: 43px; }
   .label span { font-size: 10px; }
   .count { display: none; }
   .track { grid-column: 1 / -1; }

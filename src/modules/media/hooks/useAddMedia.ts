@@ -207,6 +207,8 @@ export const useAddMedia = ({
         isOpen: isTVModalOpen,
         onClose: closeTVModal,
         isSubmitting: isUpdating,
+        variant,
+        setVariant,
       },
     },
   }
