@@ -5,6 +5,7 @@ import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import { MEDIA_COMMENT_MAX_LENGTH } from '@/modules/media/lib/mediaComment'
 import styles from './CommentModal.module.scss'
+import { useCurrentProfile } from '@/modules/auth'
 
 export interface CommentModalProps {
   isOpen: boolean
@@ -35,7 +36,7 @@ export const CommentModal = ({
   const titleId = useId()
   const textareaId = useId()
   const hintId = useId()
-
+  const { data } = useCurrentProfile()
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSubmit()
@@ -56,7 +57,7 @@ export const CommentModal = ({
           </div>
         </header>
 
-        <Tabs
+        {data?.in_couple && <Tabs
           className={styles.tabs}
           tabs={viewingModes}
           value={variant}
@@ -67,7 +68,7 @@ export const CommentModal = ({
               setVariant(v)
             }
           }}
-        />
+        />}
 
         <div className={styles.field}>
           <div className={styles.labelRow}>

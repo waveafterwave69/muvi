@@ -115,26 +115,28 @@ export const MediaCard = ({
           </div>
         )}
 
-        {coupleStatus && (
-          <div
-            className={styles.coupleBadge}
-            aria-label={`Статус в коллекции пары: ${coupleStatusText}`}
-          >
-            <HeartHandshake aria-hidden="true" />
-            <span className={styles.coupleStatusText}>{coupleStatusText}</span>
-            {handleRemoveFromCouple && (
-              <button
-                className={styles.coupleRemoveButton}
-                type="button"
-                aria-label={`Удалить «${media.title}» из коллекции пары`}
-                disabled={isUpdating}
-                onClick={handleRemoveFromCouple}
+        {(coupleStatus || (media.type === 'tv' && hasStatus && userId)) && (
+          <div className={styles.posterMeta}>
+            {coupleStatus && (
+              <div
+                className={styles.coupleBadge}
+                aria-label={`Статус в коллекции пары: ${coupleStatusText}`}
               >
-                <X aria-hidden="true" />
-              </button>
+                <HeartHandshake aria-hidden="true" />
+                <span className={styles.coupleStatusText}>{coupleStatusText}</span>
+                {handleRemoveFromCouple && (
+                  <button
+                    className={styles.coupleRemoveButton}
+                    type="button"
+                    aria-label={`Удалить «${media.title}» из коллекции пары`}
+                    disabled={isUpdating}
+                    onClick={handleRemoveFromCouple}
+                  >
+                    <X aria-hidden="true" />
+                  </button>
+                )}
+              </div>
             )}
-          </div>
-        )}
 
         {visibleComment && (
           <blockquote

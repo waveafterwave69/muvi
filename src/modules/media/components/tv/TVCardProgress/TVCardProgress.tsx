@@ -6,10 +6,9 @@ import styles from './TVCardProgress.module.scss'
 interface TVCardProgressProps {
   mediaId: number
   userId: string
-  hasCoupleBadge?: boolean
 }
 
-const TVCardProgress = ({ mediaId, userId, hasCoupleBadge = false }: TVCardProgressProps) => {
+const TVCardProgress = ({ mediaId, userId }: TVCardProgressProps) => {
   const { data: episodeCount } = useTVEpisodeCount(mediaId, true)
   const { data: progress } = useEpisodeProgress(userId, mediaId, true)
   const total = episodeCount?.total ?? 0
@@ -21,7 +20,7 @@ const TVCardProgress = ({ mediaId, userId, hasCoupleBadge = false }: TVCardProgr
 
   return (
     <div
-      className={`${styles.progress} ${hasCoupleBadge ? styles.withCoupleBadge : ''}`}
+      className={styles.progress}
       aria-label={`Сериал просмотрен на ${percent} процентов: ${watched} из ${total} серий`}
     >
       <div className={styles.label}>
