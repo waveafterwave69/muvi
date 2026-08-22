@@ -64,7 +64,6 @@ export const MediaCard = ({
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
   const hasStatus = status !== undefined
-  const hasTVProgress = media.type === 'tv' && hasStatus && Boolean(userId)
   const visibleComment = comment ? formatMediaComment(comment) : ''
   const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
   const coupleStatusText = coupleStatus ? COUPLE_STATUS_LABELS[coupleStatus] : undefined
@@ -115,7 +114,7 @@ export const MediaCard = ({
           </div>
         )}
 
-        {(coupleStatus || (media.type === 'tv' && hasStatus && userId)) && (
+        {(coupleStatus || visibleComment || (media.type === 'tv' && hasStatus && userId)) && (
           <div className={styles.posterMeta}>
             {coupleStatus && (
               <div
@@ -138,22 +137,17 @@ export const MediaCard = ({
               </div>
             )}
 
-        {visibleComment && (
-          <blockquote
-            className={`${styles.comment} ${hasTVProgress ? styles.commentWithProgress : ''} ${coupleStatus ? styles.commentWithCoupleBadge : ''}`}
-            aria-label="Комментарий пользователя"
-          >
-            <Quote aria-hidden="true" />
-            <p>{visibleComment}</p>
-          </blockquote>
-        )}
+            {visibleComment && (
+              <blockquote className={styles.comment} aria-label="Комментарий пользователя">
+                <Quote aria-hidden="true" />
+                <p>{visibleComment}</p>
+              </blockquote>
+            )}
 
-        {media.type === 'tv' && hasStatus && userId && (
-          <TVCardProgress
-            mediaId={media.id}
-            userId={userId}
-            hasCoupleBadge={Boolean(coupleStatus)}
-          />
+            {media.type === 'tv' && hasStatus && userId && (
+              <TVCardProgress mediaId={media.id} userId={userId} />
+            )}
+          </div>
         )}
 
         {showActions && (

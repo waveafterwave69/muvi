@@ -224,11 +224,7 @@
 }
 
 .comment {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  left: 8px;
-  z-index: 2;
+  position: relative;
   display: flex;
   min-width: 0;
   gap: 8px;
@@ -268,18 +264,6 @@
     min-width: 0;
     overflow-wrap: anywhere;
   }
-}
-
-.commentWithCoupleBadge {
-  bottom: 48px;
-}
-
-.commentWithProgress {
-  bottom: 76px;
-}
-
-.commentWithProgress.commentWithCoupleBadge {
-  bottom: 116px;
 }
 
 .watchedButton {
@@ -369,9 +353,6 @@
   }
 
   .comment {
-    right: 6px;
-    bottom: 6px;
-    left: 6px;
     gap: 6px;
     padding: 8px 9px;
     border-radius: 10px;
@@ -382,18 +363,6 @@
       height: 13px;
       flex-basis: 13px;
     }
-  }
-
-  .commentWithCoupleBadge {
-    bottom: 43px;
-  }
-
-  .commentWithProgress {
-    bottom: 51px;
-  }
-
-  .commentWithProgress.commentWithCoupleBadge {
-    bottom: 88px;
   }
 
   .watchedButton {
