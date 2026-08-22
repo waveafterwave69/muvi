@@ -1,4 +1,4 @@
-import type { CastMember, MediaDetails } from './types'
+import type { CastMember, MediaDetails, TVSeasonDetails } from './types'
 import type { MediaResponse, MediaType } from '../media/types'
 
 interface MediaDetailsResponse extends MediaDetails {
@@ -43,6 +43,20 @@ export const getMovieCollection = async (
 
   if (!response.ok) {
     throw new Error('Не удалось загрузить фильмы коллекции')
+  }
+
+  return response.json()
+}
+
+export const getTVSeason = async (
+  mediaId: number,
+  seasonNumber: number,
+  signal?: AbortSignal,
+): Promise<TVSeasonDetails> => {
+  const response = await fetch(`/api/media/tv/${mediaId}/season/${seasonNumber}`, { signal })
+
+  if (!response.ok) {
+    throw new Error('Не удалось загрузить серии сезона')
   }
 
   return response.json()

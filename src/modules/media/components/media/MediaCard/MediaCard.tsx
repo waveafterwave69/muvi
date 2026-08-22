@@ -5,6 +5,7 @@ import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star } from 'l
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
+import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
 
 interface MediaCardProps {
   media: Media
@@ -12,6 +13,7 @@ interface MediaCardProps {
   coupleStatus: MediaWatchStatus | undefined
   isUpdating: boolean
   showActions: boolean
+  userId?: string
   handleFavorite: () => void
   handleWatched: () => void
   handleToggleTVModal: () => void
@@ -32,11 +34,13 @@ export const MediaCard = ({
   handleToggleTVModal,
   isUpdating,
   showActions,
+  userId,
 }: MediaCardProps) => {
   const posterUrl = media.poster_path ? `https://image.tmdb.org/t/p/w500${media.poster_path}` : null
 
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
+  const hasStatus = status !== undefined
   const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
   const tvStatusIcon =
     status === 'watched' ? (
@@ -78,6 +82,14 @@ export const MediaCard = ({
             <HeartHandshake aria-hidden="true" />
             <span>В паре</span>
           </div>
+        )}
+
+        {media.type === 'tv' && hasStatus && userId && (
+          <TVCardProgress
+            mediaId={media.id}
+            userId={userId}
+            hasCoupleBadge={Boolean(coupleStatus)}
+          />
         )}
 
         {showActions && (
@@ -133,9 +145,7 @@ export const MediaCard = ({
               aria-label={tvStatusText ? `Текущий статус: ${tvStatusText}` : 'Выбрать статус'}
               onClick={handleToggleTVModal}
             >
-              <span className={styles.watchedButtonLabel}>
-                {tvStatusText ?? 'Выбрать статус'}
-              </span>
+              <span className={styles.watchedButtonLabel}>{tvStatusText ?? 'Выбрать статус'}</span>
               <span className={styles.watchedButtonLabelMobile} aria-hidden="true">
                 {tvStatusText ?? 'Выбрать статус'}
               </span>

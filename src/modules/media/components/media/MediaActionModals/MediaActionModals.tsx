@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react'
 import { StarsModal } from '../StarsModal/StarsModal'
 import { CommentModal } from '../CommentModal/CommentModal'
-import TVModal from '../../tv/TVModal'
+import TVModal from '../../tv/TVModal/TVModal'
 
 interface MediaActionModalsProps {
   stars: ComponentProps<typeof StarsModal>

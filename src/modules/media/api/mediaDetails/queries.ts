@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getMediaById, getMovieCollection } from './index'
+import { getMediaById, getMovieCollection, getTVSeason } from './index'
 import type { MediaType } from '../media/types'
 
 export const mediaKeys = {
@@ -9,6 +9,17 @@ export const mediaKeys = {
     ['media', mediaType, 'detail', id] as const,
   actors: (id: number, mediaType: MediaType) => [...mediaKeys.detail(id, mediaType), 'actors'] as const,
   collection: (id: number) => [...mediaKeys.all(), 'movie', 'collection', id] as const,
+  season: (id: number, seasonNumber: number) =>
+    [...mediaKeys.detail(id, 'tv'), 'season', seasonNumber] as const,
+}
+
+export const useTVSeasonQuery = (mediaId: number, seasonNumber: number, enabled = true) => {
+  return useQuery({
+    queryKey: mediaKeys.season(mediaId, seasonNumber),
+    queryFn: ({ signal }) => getTVSeason(mediaId, seasonNumber, signal),
+    enabled: enabled && mediaId > 0 && seasonNumber >= 0,
+    staleTime: 30 * 60 * 1000,
+  })
 }
 
 export const useMediaDetailsQuery = (mediaId: number, mediaType: MediaType = 'movie') => {

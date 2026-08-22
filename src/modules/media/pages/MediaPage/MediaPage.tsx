@@ -71,6 +71,7 @@ export function MediaPage({ initialSearch = '', initialCollectionId }: MediaPage
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         isPending={isPending}
+        mediaType={filters.mediaType}
       />
     </main>
   )
