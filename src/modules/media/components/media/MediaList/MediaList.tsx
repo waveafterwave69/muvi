@@ -9,6 +9,7 @@ import { MediaCardSkeleton } from '../MediaCardSkeleton/MediaCardSkeleton'
 import { MediaCard } from '../MediaCard/MediaCard'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { MediaActionModals } from '../MediaActionModals/MediaActionModals'
+import type { Variant } from '@/modules/media/api/couple/types'
 
 interface MediaListProps {
   media: Media[]
@@ -17,6 +18,7 @@ interface MediaListProps {
   hasNextPage: boolean
   isFetchingNextPage: boolean
   mediaType?: MediaType
+  statusVariant?: Variant
 }
 
 export const MediaList = ({
@@ -26,6 +28,7 @@ export const MediaList = ({
   fetchNextPage,
   isPending,
   mediaType,
+  statusVariant = 'solo',
 }: MediaListProps) => {
   const {
     addMedia,
@@ -44,7 +47,13 @@ export const MediaList = ({
     handleOpenTVModal,
     handleRemoveCoupleMedia,
     modalProps,
-  } = useAddMedia({ addMedia, removeMedia, removeCoupleMedia, isUpdating })
+  } = useAddMedia({
+    addMedia,
+    removeMedia,
+    removeCoupleMedia,
+    isUpdating,
+    defaultVariant: statusVariant,
+  })
 
   if (isPending) {
     return (
@@ -77,7 +86,9 @@ export const MediaList = ({
       >
         {media.map((item) => {
           const mediaKey = getMediaKey(item)
-          const status = statuses.get(mediaKey)
+          const soloStatus = statuses.get(mediaKey)
+          const coupleStatus = coupleStatuses.get(mediaKey)
+          const status = statusVariant === 'couple' ? coupleStatus : soloStatus
           const coupleMediaId = coupleMediaIds.get(mediaKey)
 
           return (
@@ -85,10 +96,10 @@ export const MediaList = ({
               media={item}
               comment={coupleComments.get(mediaKey) ?? item.comment}
               key={mediaKey}
-              coupleStatus={coupleStatuses.get(mediaKey)}
-              handleFavorite={() => handleFavoriteClick(item, status)}
-              handleWatched={() => handleWatchedClick(item, status)}
-              handleToggleTVModal={() => handleOpenTVModal(item, status)}
+              coupleStatus={coupleStatus}
+              handleFavorite={() => handleFavoriteClick(item, status, coupleMediaId)}
+              handleWatched={() => handleWatchedClick(item, status, coupleMediaId)}
+              handleToggleTVModal={() => handleOpenTVModal(item, status, coupleMediaId)}
               handleRemoveFromCouple={
                 coupleMediaId !== undefined
                   ? () => {
@@ -100,6 +111,7 @@ export const MediaList = ({
               status={status}
               showActions={!!user}
               userId={user?.id}
+              detailsVariant={statusVariant === 'couple' ? 'couple' : undefined}
             />
           )
         })}

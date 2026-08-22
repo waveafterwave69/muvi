@@ -51,16 +51,15 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
         media,
         options,
       })
-      return
+    } else {
+      await addMediaToCollection.mutateAsync({
+        media,
+        options,
+      })
     }
 
-    await addMediaToCollection.mutateAsync({
-      media,
-      options,
-    })
-
     if (media.type === 'tv' && options.status === 'watched') {
-      await markAllTVEpisodesWatched.mutateAsync(media.id)
+      await markAllTVEpisodesWatched.mutateAsync({ mediaId: media.id, variant })
     }
   }
 

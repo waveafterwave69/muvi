@@ -69,6 +69,8 @@ export const CoupleMediaCollection = ({ coupleId }: CoupleMediaCollectionProps) 
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
+        mediaType={filters.mediaType}
+        statusVariant="couple"
       />
     </section>
   )

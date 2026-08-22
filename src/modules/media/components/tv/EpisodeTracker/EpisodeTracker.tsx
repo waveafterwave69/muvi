@@ -1,11 +1,11 @@
 'use client'
 
 import { ChevronDown, EyeOff } from 'lucide-react'
-import { getMediaKey } from '../../../api/media/types'
 import type { MediaDetails } from '../../../api/mediaDetails/types'
 import { useEpisodeTracker } from '../../../hooks/tv/useEpisodeTracker'
-import { useMediaStatus } from '../../../hooks/useMediaStatus'
+import { useEpisodeProgressMode } from '../../../hooks/tv/useEpisodeProgressMode'
 import SeasonsContent from '../SeasonsContent/SeasonsContent'
+import EpisodeTrackerHeader from './EpisodeTrackerHeader'
 import styles from './EpisodeTracker.module.scss'
 
 interface EpisodeTrackerProps {
@@ -14,10 +14,16 @@ interface EpisodeTrackerProps {
 }
 
 const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
-  const { statuses, isUpdating: isStatusLoading } = useMediaStatus(media)
-  const status = statuses.get(getMediaKey(media))
-  const isInCollection = Boolean(status)
-  const canEditProgress = status === 'watching' || status === 'watched'
+  const {
+    variant,
+    status,
+    isStatusLoading,
+    isInCollection,
+    canEditProgress,
+    showModeSelector,
+    selectVariant,
+  } = useEpisodeProgressMode(media)
+
   const {
     seasons,
     selectedSeason,
@@ -37,29 +43,19 @@ const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
     isEpisodesLoading,
     isSaving,
     seasonError,
-  } = useEpisodeTracker({ media, userId, isInCollection, canEditProgress })
+  } = useEpisodeTracker({ media, userId, variant, isInCollection, canEditProgress })
 
   return (
     <section className={styles.tracker} aria-labelledby="episode-tracker-title">
-      <div className={styles.header}>
-        <div className={styles.heading}>
-          <p className={styles.eyebrow}>Мой сериал</p>
-          <h3 id="episode-tracker-title" className={styles.title}>
-            Прогресс просмотра
-          </h3>
-        </div>
-        <div className={styles.headerActions}>
-          <div
-            className={styles.counter}
-            aria-label={`Сериал просмотрен на ${roundedProgressPercent} процентов: ${watchedCount} из ${totalEpisodes} серий`}
-          >
-            <strong>{roundedProgressPercent}%</strong>
-            <span>
-              {watchedCount} из {totalEpisodes} серий
-            </span>
-          </div>
-        </div>
-      </div>
+      <EpisodeTrackerHeader
+        variant={variant}
+        watchedCount={watchedCount}
+        totalEpisodes={totalEpisodes}
+        roundedProgressPercent={roundedProgressPercent}
+        showModeSelector={showModeSelector}
+        isStatusLoading={isStatusLoading}
+        onModeChange={selectVariant}
+      />
 
       {!isStatusLoading && isInCollection && seasons.length > 0 && (
         <button
