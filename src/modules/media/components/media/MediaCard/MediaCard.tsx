@@ -5,6 +5,7 @@ import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star, X } from
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
+import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
 
 interface MediaCardProps {
   media: Media
@@ -12,6 +13,7 @@ interface MediaCardProps {
   coupleStatus: MediaWatchStatus | undefined
   isUpdating: boolean
   showActions: boolean
+  userId?: string
   handleFavorite: () => void
   handleRemoveFromCouple?: () => void
   handleWatched: () => void
@@ -41,11 +43,13 @@ export const MediaCard = ({
   handleToggleTVModal,
   isUpdating,
   showActions,
+  userId,
 }: MediaCardProps) => {
   const posterUrl = media.poster_path ? `https://image.tmdb.org/t/p/w500${media.poster_path}` : null
 
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
+  const hasStatus = status !== undefined
   const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
   const coupleStatusText = coupleStatus ? COUPLE_STATUS_LABELS[coupleStatus] : undefined
   const tvStatusIcon =
@@ -114,6 +118,14 @@ export const MediaCard = ({
               </button>
             )}
           </div>
+        )}
+
+        {media.type === 'tv' && hasStatus && userId && (
+          <TVCardProgress
+            mediaId={media.id}
+            userId={userId}
+            hasCoupleBadge={Boolean(coupleStatus)}
+          />
         )}
 
         {showActions && (

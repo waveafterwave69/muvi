@@ -61,6 +61,7 @@ export const FavoritesPage = () => {
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
+        mediaType={filters.mediaType}
       />
     </div>
   )

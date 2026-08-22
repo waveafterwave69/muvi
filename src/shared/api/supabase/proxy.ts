@@ -14,6 +14,8 @@ const PUBLIC_ROUTES = new Set([
 ])
 
 const PUBLIC_MEDIA_API_ROUTE = /^\/api\/media\/(movie|tv)\/\d+$/
+const PUBLIC_TV_SEASON_API_ROUTE = /^\/api\/media\/tv\/\d+\/season\/\d+$/
+const PUBLIC_TV_EPISODE_COUNT_API_ROUTE = /^\/api\/media\/tv\/\d+\/episode-count$/
 const PUBLIC_LEGACY_MOVIE_API_ROUTE = /^\/api\/movies\/\d+$/
 
 const PUBLIC_PROFILE_ROUTE =
@@ -31,6 +33,8 @@ const isPublicRoute = (pathname: string) => {
     PUBLIC_PROFILE_ROUTE.test(normalizedPathname) ||
     PUBLIC_MEDIA_ROUTE.test(normalizedPathname) ||
     PUBLIC_MEDIA_API_ROUTE.test(normalizedPathname) ||
+    PUBLIC_TV_SEASON_API_ROUTE.test(normalizedPathname) ||
+    PUBLIC_TV_EPISODE_COUNT_API_ROUTE.test(normalizedPathname) ||
     PUBLIC_LEGACY_MEDIA_ROUTE.test(normalizedPathname) ||
     PUBLIC_LEGACY_MOVIE_API_ROUTE.test(normalizedPathname)
   )

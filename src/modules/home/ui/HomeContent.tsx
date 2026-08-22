@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { LogIn, MoveRight } from 'lucide-react'
 import styles from './HomeContent.module.scss'
 import { Button } from '@/shared/ui'
+import { useCurrentUser } from '@/modules/auth'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -28,6 +29,7 @@ const itemVariants = {
 
 const HomeContent = () => {
   const router = useRouter()
+  const { data } = useCurrentUser()
 
   const handleRedirectAuth = (type: 'signup' | 'login') => {
     router.push(type === 'login' ? '/login' : '/signup')
@@ -50,18 +52,18 @@ const HomeContent = () => {
         Тёплое место для любимых фильмов и общих планов.
       </motion.p>
       <motion.div variants={itemVariants} className={styles.buttons}>
-        <Button
+        {!data && <Button
           onClick={() => handleRedirectAuth('login')}
           className={styles.button__border}
           variant="secondary"
         >
           <LogIn size={22} /> Войти
-        </Button>
+        </Button>}
 
-        <Button onClick={() => handleRedirectAuth('signup')}>
+        {!data && <Button onClick={() => handleRedirectAuth('signup')}>
           Зарегистрироваться
           <MoveRight size={24} />
-        </Button>
+        </Button>}
       </motion.div>
     </motion.div>
   )

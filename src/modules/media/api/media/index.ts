@@ -100,10 +100,15 @@ export const removeMediaFromCollection = async ({
   id,
   type,
 }: Pick<Media, 'id' | 'type'>): Promise<void> => {
-  const { data: deletedMediaId, error } = await supabase.rpc('remove_media_from_collection', {
-    p_external_id: id,
-    p_type: type,
-  })
+  const { data: deletedMediaId, error } =
+    type === 'tv'
+      ? await supabase.rpc('clear_tv_status', {
+          p_external_id: id,
+        })
+      : await supabase.rpc('remove_media_from_collection', {
+          p_external_id: id,
+          p_type: type,
+        })
 
   if (error) {
     throw new Error(`Не удалось удалить медиа: ${error.message}`, { cause: error })

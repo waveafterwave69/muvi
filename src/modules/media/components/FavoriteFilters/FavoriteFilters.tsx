@@ -14,9 +14,9 @@ const mediaTypeTabs: Array<{ label: string; id: MediaType }> = [
 
 const statusTabs: Array<{ label: string; id: FavoriteStatus }> = [
   { label: 'ИЗБРАННОЕ', id: 'planned' },
-  { label: 'ПРОСМОТРЕННОЕ', id: 'watched' },
+  { label: 'ПРОСМОТРЕННЫЕ', id: 'watched' },
   { label: 'В ПРОЦЕССЕ', id: 'watching' },
-  { label: 'ЗАБРОШЕННОЕ', id: 'dropped' },
+  { label: 'ЗАБРОШЕННЫЕ', id: 'dropped' },
 ]
 
 const isMediaType = (value: string | number): value is MediaType => {

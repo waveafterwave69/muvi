@@ -2,12 +2,14 @@ import { Check, Heart, Star } from 'lucide-react'
 import { Button, Card } from '@/shared/ui'
 import cardStyles from '../MediaCard/MediaCard.module.scss'
 import styles from './MediaCardSkeleton.module.scss'
+import type { MediaType } from '@/modules/media/api/media/types'
 
 interface MediaCardSkeletonProps {
   count?: number
+  mediaType?: MediaType
 }
 
-export function MediaCardSkeleton({ count = 8 }: MediaCardSkeletonProps) {
+export function MediaCardSkeleton({ count = 8, mediaType = 'movie' }: MediaCardSkeletonProps) {
   const skeletonsCount = Math.max(0, Math.floor(count))
 
   return Array.from({ length: skeletonsCount }, (_, index) => (
@@ -19,6 +21,14 @@ export function MediaCardSkeleton({ count = 8 }: MediaCardSkeletonProps) {
           <Star aria-hidden="true" />
           <span>0.0</span>
         </div>
+
+        {mediaType === 'tv' && (
+          <div className={`${styles.tvProgress} ${styles.skeletonSurface}`}>
+            <span className={styles.tvProgressLabel} />
+            <span className={styles.tvProgressPercent} />
+            <span className={styles.tvProgressTrack} />
+          </div>
+        )}
 
         <Button
           variant="secondary"
@@ -47,7 +57,7 @@ export function MediaCardSkeleton({ count = 8 }: MediaCardSkeletonProps) {
           aria-hidden="true"
           tabIndex={-1}
         >
-          Добавить в просмотренное
+          {mediaType === 'tv' ? 'Выбрать статус' : 'Добавить в просмотренное'}
         </Button>
       </div>
     </Card>
