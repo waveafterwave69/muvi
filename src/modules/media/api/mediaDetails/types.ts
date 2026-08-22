@@ -56,6 +56,37 @@ export interface MediaVideo {
   type: string
 }
 
+export interface TVSeasonSummary {
+  air_date: string | null
+  episode_count: number
+  id: number
+  name: string
+  overview: string
+  poster_path: string | null
+  season_number: number
+}
+
+export interface TVEpisode {
+  air_date: string | null
+  episode_number: number
+  id: number
+  name: string
+  overview: string
+  runtime: number | null
+  season_number: number
+  still_path: string | null
+}
+
+export interface TVSeasonDetails {
+  air_date: string | null
+  episodes: TVEpisode[]
+  id: number
+  name: string
+  overview: string
+  poster_path: string | null
+  season_number: number
+}
+
 export interface MediaDetails {
   type: MediaType
   id: number
@@ -66,6 +97,9 @@ export interface MediaDetails {
   belongs_to_collection: MovieCollection | null
   release_date: string
   runtime: number
+  number_of_episodes?: number
+  number_of_seasons?: number
+  seasons?: TVSeasonSummary[]
   vote_average: number
   genres: Genre[]
   director: string

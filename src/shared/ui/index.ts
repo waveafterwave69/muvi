@@ -10,5 +10,7 @@ import type { ModalProps, ModalVariant } from './Modal/Modal'
 
 export { Card, Button, Input, Modal, type Size, type Variant, type ModalProps, type ModalVariant }
 export { default as Link } from './Link/Link'
+export { default as Select } from './Select/Select'
+export type { SelectOption, SelectProps } from './Select/Select'
 
 export { type TabVariant, Tabs }

@@ -5,7 +5,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './MediaPromo.module.scss'
 import { Button } from '@/shared/ui'
-import { Calendar, Check, Clock2, LibraryBig, MoveLeft, Plus, Star } from 'lucide-react'
+import {
+  Calendar,
+  Check,
+  CircleX,
+  Clock2,
+  LibraryBig,
+  ListChecks,
+  MoveLeft,
+  Play,
+  Plus,
+  Star,
+} from 'lucide-react'
 import { getMediaKey, Media, MediaType } from '@/modules/media/api/media/types'
 import { MediaActionModals } from '../../media/MediaActionModals/MediaActionModals'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
@@ -30,6 +41,17 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
   const status = statuses.get(getMediaKey(media))
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
+  const hasTVStatus = status === 'watched' || status === 'watching' || status === 'dropped'
+  const tvStatusIcon =
+    status === 'watched' ? (
+      <Check aria-hidden="true" />
+    ) : status === 'watching' ? (
+      <Play aria-hidden="true" />
+    ) : status === 'dropped' ? (
+      <CircleX aria-hidden="true" />
+    ) : (
+      <ListChecks aria-hidden="true" />
+    )
 
   const mappedMedia: Media = {
     type: media.type,
@@ -49,7 +71,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
     vote_count: 0,
   }
 
-  const { handleFavoriteClick, handleWatchedClick, modalProps } = useAddMedia({
+  const { handleFavoriteClick, handleWatchedClick, handleOpenTVModal, modalProps } = useAddMedia({
     addMedia,
     removeMedia,
     removeCoupleMedia,
@@ -173,7 +195,47 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
               </Button>
             </div>
           ) : (
-            <div>TV</div>
+            <div className={styles.actionButtons}>
+              <Button
+                size="sm"
+                variant={isFavorite ? 'primary' : 'secondary'}
+                className={styles.watchedButton}
+                leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus aria-hidden="true" />}
+                aria-label={isFavorite ? 'Убрать сериал из избранного' : 'Добавить сериал в избранное'}
+                disabled={isUpdating}
+                onClick={() => handleFavoriteClick(mappedMedia, status)}
+              >
+                <span className={styles.watchedButtonLabel}>
+                  {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+                </span>
+              </Button>
+
+              <Button
+                size="sm"
+                variant={hasTVStatus ? 'primary' : 'secondary'}
+                className={styles.watchedButton}
+                leftIcon={tvStatusIcon}
+                aria-label={
+                  status === 'watching'
+                    ? 'Текущий статус: смотрю сейчас'
+                    : status === 'watched'
+                      ? 'Текущий статус: просмотрено'
+                      : status === 'dropped'
+                        ? 'Текущий статус: заброшено'
+                        : 'Выбрать статус сериала'
+                }
+                disabled={isUpdating}
+                onClick={() => handleOpenTVModal(mappedMedia, status)}
+              >
+                {status === 'watching'
+                  ? 'Смотрю сейчас'
+                  : status === 'watched'
+                    ? 'Просмотрено'
+                    : status === 'dropped'
+                      ? 'Заброшено'
+                      : 'Выбрать статус'}
+              </Button>
+            </div>
           ))}
       </div>
 
