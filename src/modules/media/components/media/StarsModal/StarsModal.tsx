@@ -5,6 +5,7 @@ import { useState } from 'react'
 import type { Variant } from '@/modules/media/api/couple/types'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './StarsModal.module.scss'
+import { useCurrentProfile } from '@/modules/auth'
 
 interface Props {
   isOpen: boolean
@@ -35,6 +36,7 @@ export const StarsModal = ({
 }: Props) => {
   const [hover, setHover] = useState(0)
   const activeRating = hover || stars || 0
+  const { data } = useCurrentProfile()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm" ariaLabel="Оценка">
@@ -42,7 +44,7 @@ export const StarsModal = ({
         <h3 className={styles.title}>Как тебе?</h3>
         <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
 
-        <Tabs
+        {data?.in_couple && <Tabs
           tabs={viewingModes}
           value={variant}
           variant="primary"
@@ -52,7 +54,7 @@ export const StarsModal = ({
               setVariant(value)
             }
           }}
-        />
+        />}
 
         <div className={styles.stars} role="group" aria-label="Оценка от 1 до 10">
           {ratings.map((rating) => (
