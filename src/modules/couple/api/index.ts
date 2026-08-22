@@ -1,5 +1,12 @@
 import { supabase } from '@/shared/api/supabase'
-import type { CoupleInvitePreview, CoupleInviteResponse, CouplePageData } from './types'
+import type {
+  CoupleInvitePreview,
+  CoupleInviteResponse,
+  CoupleMediaFilters,
+  CoupleMediaItem,
+  CoupleMediaResponse,
+  CouplePageData,
+} from './types'
 
 
 export const getCouplePageData = async (): Promise<CouplePageData> => {
@@ -14,6 +21,77 @@ export const getCouplePageData = async (): Promise<CouplePageData> => {
   }
 
   return pageData
+}
+
+interface GetCoupleMediaParams extends CoupleMediaFilters {
+  coupleId: string
+  page?: number
+  limit?: number
+  signal?: AbortSignal
+}
+
+export const getCoupleMedia = async ({
+  coupleId,
+  page = 1,
+  limit = 20,
+  mediaType,
+  status,
+  search,
+  signal,
+}: GetCoupleMediaParams): Promise<CoupleMediaResponse> => {
+  const from = (page - 1) * limit
+  const to = from + limit - 1
+  const normalizedSearch = search.trim()
+
+  let query = supabase
+    .from('couple_media')
+    .select(
+      `
+        couple_id,
+        media_id,
+        status,
+        created_at,
+        media:media!inner (*)
+      `,
+      { count: 'exact' },
+    )
+    .eq('couple_id', coupleId)
+    .eq('status', status)
+    .eq('media.type', mediaType)
+    .order('created_at', { ascending: false })
+    .range(from, to)
+
+  if (normalizedSearch) {
+    query = query.ilike('media.title', `%${normalizedSearch}%`)
+  }
+
+  if (signal) {
+    query = query.abortSignal(signal)
+  }
+
+  const { data, error, count } = await query.overrideTypes<CoupleMediaItem[], {
+    merge: false
+  }>()
+
+  if (error) {
+    throw new Error(`Не удалось загрузить коллекцию пары: ${error.message}`, {
+      cause: error,
+    })
+  }
+
+  const total = count ?? 0
+
+  return {
+    items: data ?? [],
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page * limit < total,
+      hasPreviousPage: page > 1,
+    },
+  }
 }
 
 export const createCoupleInvite = async (): Promise<void> => {

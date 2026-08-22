@@ -30,9 +30,16 @@ const isFavoriteStatus = (value: string | number): value is FavoriteStatus => {
 interface FavoriteFiltersProps {
   filters: FavoriteFiltersType
   onChange: <K extends keyof FavoriteFiltersType>(key: K, value: FavoriteFiltersType[K]) => void
+  title?: string
+  searchPlaceholder?: string
 }
 
-export const FavoriteFilters = ({ filters, onChange }: FavoriteFiltersProps) => {
+export const FavoriteFilters = ({
+  filters,
+  onChange,
+  title = 'Моя полка',
+  searchPlaceholder = 'Найти в своей коллекции...',
+}: FavoriteFiltersProps) => {
   const visibleStatusTabs =
     filters.mediaType === 'movie'
       ? statusTabs.filter((tab) => tab.id === 'planned' || tab.id === 'watched')
@@ -41,11 +48,11 @@ export const FavoriteFilters = ({ filters, onChange }: FavoriteFiltersProps) => 
   return (
     <div className={styles.header}>
       <div className={styles.container}>
-        <h3>Моя полка</h3>
+        <h3>{title}</h3>
         <Input
           size="sm"
           rootClassName={styles.search}
-          placeholder={'Найти в своей коллекции...'}
+          placeholder={searchPlaceholder}
           icon={<Search />}
           value={filters.search}
           onChange={(e) => onChange('search', e.target.value)}

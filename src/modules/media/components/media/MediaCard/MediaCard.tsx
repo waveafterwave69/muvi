@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star } from 'lucide-react'
+import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star, X } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
@@ -15,6 +15,7 @@ interface MediaCardProps {
   showActions: boolean
   userId?: string
   handleFavorite: () => void
+  handleRemoveFromCouple?: () => void
   handleWatched: () => void
   handleToggleTVModal: () => void
 }
@@ -25,11 +26,19 @@ const TV_STATUS_LABELS: Partial<Record<MediaWatchStatus, string>> = {
   dropped: 'Заброшено',
 }
 
+const COUPLE_STATUS_LABELS: Record<MediaWatchStatus, string> = {
+  planned: 'Запланировано',
+  watched: 'Просмотрено',
+  watching: 'В процессе',
+  dropped: 'Заброшено',
+}
+
 export const MediaCard = ({
   media,
   status,
   coupleStatus,
   handleFavorite,
+  handleRemoveFromCouple,
   handleWatched,
   handleToggleTVModal,
   isUpdating,
@@ -42,6 +51,7 @@ export const MediaCard = ({
   const isWatched = status === 'watched'
   const hasStatus = status !== undefined
   const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
+  const coupleStatusText = coupleStatus ? COUPLE_STATUS_LABELS[coupleStatus] : undefined
   const tvStatusIcon =
     status === 'watched' ? (
       <Check aria-hidden="true" />
@@ -72,15 +82,41 @@ export const MediaCard = ({
           )}
         </Link>
 
-        <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
-          <Star aria-hidden="true" />
-          <span>{media.vote_average.toFixed(1)}</span>
-        </div>
+        {isWatched ? (
+          <div
+            className={`${styles.rating} ${styles.my__rating}`}
+            aria-label={`Рейтинг ${media.rating}`}
+          >
+            <Star aria-hidden="true" />
+
+            <span> {media.rating}</span>
+          </div>
+        ) : (
+          <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
+            <Star aria-hidden="true" />
+
+            <span> {media.vote_average.toFixed(1)}</span>
+          </div>
+        )}
 
         {coupleStatus && (
-          <div className={styles.coupleBadge} aria-label="Добавлено в коллекцию пары">
+          <div
+            className={styles.coupleBadge}
+            aria-label={`Статус в коллекции пары: ${coupleStatusText}`}
+          >
             <HeartHandshake aria-hidden="true" />
-            <span>В паре</span>
+            <span className={styles.coupleStatusText}>{coupleStatusText}</span>
+            {handleRemoveFromCouple && (
+              <button
+                className={styles.coupleRemoveButton}
+                type="button"
+                aria-label={`Удалить «${media.title}» из коллекции пары`}
+                disabled={isUpdating}
+                onClick={handleRemoveFromCouple}
+              >
+                <X aria-hidden="true" />
+              </button>
+            )}
           </div>
         )}
 

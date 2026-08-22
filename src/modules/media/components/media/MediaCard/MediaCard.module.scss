@@ -79,26 +79,89 @@
   }
 }
 
+.my__rating {
+  svg {
+    color: var(--star-color);
+    fill: var(--star-color);
+  }
+}
+
 .coupleBadge {
   position: absolute;
   bottom: 8px;
   left: 8px;
   display: inline-flex;
+  max-width: calc(100% - 16px);
   align-items: center;
   gap: 6px;
   padding: 7px 10px;
-  pointer-events: none;
   border: 1px solid var(--accent-soft);
   border-radius: 9999px;
   background-color: var(--surface);
   color: var(--accent-soft);
   font-size: var(--base-font-size-small);
   font-weight: 700;
+  white-space: nowrap;
 
   svg {
     width: 16px;
     height: 16px;
   }
+}
+
+.coupleStatusText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.coupleRemoveButton {
+  display: flex;
+  width: 0;
+  height: 22px;
+  flex: 0 0 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  opacity: 0;
+  color: var(--accent-soft);
+  transition:
+    width 0.18s ease,
+    flex-basis 0.18s ease,
+    opacity 0.18s ease,
+    background-color 0.18s ease;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-soft);
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
+.coupleBadge:hover .coupleRemoveButton,
+.coupleBadge:focus-within .coupleRemoveButton {
+  width: 22px;
+  flex-basis: 22px;
+  opacity: 1;
+}
+
+.coupleBadge .coupleRemoveButton:disabled {
+  opacity: 0.45;
 }
 
 .favoriteButton {
@@ -252,5 +315,18 @@
 @media (max-width: 360px) {
   .content {
     padding-inline: 8px;
+  }
+}
+
+@media (hover: none) {
+  .coupleRemoveButton {
+    width: 20px;
+    height: 20px;
+    flex-basis: 20px;
+    opacity: 1;
+  }
+
+  .coupleRemoveButton:disabled {
+    opacity: 0.45;
   }
 }

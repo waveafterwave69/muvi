@@ -9,10 +9,12 @@ export type AddMediaHandler = (
 ) => Promise<void>
 
 export type RemoveMediaHandler = (media: Pick<Media, 'id' | 'type'>) => Promise<void>
+export type RemoveCoupleMediaHandler = (mediaId: number) => Promise<void>
 
 interface UseAddMediaParams {
   addMedia: AddMediaHandler
   removeMedia: RemoveMediaHandler
+  removeCoupleMedia: RemoveCoupleMediaHandler
   isUpdating: boolean
 }
 
@@ -22,7 +24,12 @@ interface MediaAction {
   status?: MediaWatchStatus
 }
 
-export const useAddMedia = ({ addMedia, removeMedia, isUpdating }: UseAddMediaParams) => {
+export const useAddMedia = ({
+  addMedia,
+  removeMedia,
+  removeCoupleMedia,
+  isUpdating,
+}: UseAddMediaParams) => {
   const [variant, setVariant] = useState<Variant>('solo')
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
@@ -75,6 +82,14 @@ export const useAddMedia = ({ addMedia, removeMedia, isUpdating }: UseAddMediaPa
   const handleOpenTVModal = (media: Media, status?: MediaWatchStatus) => {
     setActiveMedia({ type: 'tv-status', media, status })
     setIsTVModalOpen(true)
+  }
+
+  const handleRemoveCoupleMedia = async (mediaId: number) => {
+    try {
+      await removeCoupleMedia(mediaId)
+    } catch {
+      return
+    }
   }
 
   const addToWatched = async () => {
@@ -163,6 +178,7 @@ export const useAddMedia = ({ addMedia, removeMedia, isUpdating }: UseAddMediaPa
     handleFavoriteClick,
     handleWatchedClick,
     handleOpenTVModal,
+    handleRemoveCoupleMedia,
     modalProps: {
       stars: {
         isOpen: isStarsModalOpen,

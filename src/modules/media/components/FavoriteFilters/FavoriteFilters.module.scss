@@ -60,12 +60,9 @@
     width: 100%;
   }
 
-}
-
-@media (max-width: 480px) {
   .tvStatusTabs {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 4px;
     border-radius: 20px;
 

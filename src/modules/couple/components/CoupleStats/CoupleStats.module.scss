@@ -1,0 +1,188 @@
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.statCard {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 176px;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  background-image: radial-gradient(
+    circle at 88% 14%,
+    color-mix(in srgb, var(--accent) 9%, transparent),
+    transparent 36%
+  );
+}
+
+.statIcon {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent-soft);
+
+  svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+.statValue {
+  padding-right: 56px;
+  color: var(--text-primary);
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.statLabel {
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.35;
+  margin-top: 16px;
+}
+
+.statMeta,
+.tasteMeta {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.statMeta {
+  margin-top: 8px;
+}
+
+.tasteProgress {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  margin-top: 12px;
+  background: color-mix(in srgb, var(--text-muted) 24%, transparent);
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--button-primary-gradient);
+  }
+}
+
+.tasteMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-top: 9px;
+}
+
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .statCard {
+    min-height: 126px;
+    padding: 12px !important;
+  }
+
+  .statIcon {
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .statValue {
+    padding-right: 36px;
+    font-size: 30px;
+  }
+
+  .statLabel {
+    font-size: 13px;
+    line-height: 1.25;
+    margin-top: 10px;
+  }
+
+  .statMeta,
+  .tasteMeta {
+    font-size: 10px;
+  }
+
+  .statMeta {
+    margin-top: 6px;
+  }
+
+  .tasteProgress {
+    height: 5px;
+    margin-top: 10px;
+  }
+
+  .tasteMeta {
+    margin-top: 7px;
+  }
+
+  .tasteCard {
+    grid-column: 1 / -1;
+    min-height: 142px;
+  }
+}
+
+@media (max-width: 360px) {
+  .statsGrid {
+    gap: 8px;
+  }
+
+  .statCard {
+    min-height: 118px;
+    padding: 10px !important;
+  }
+
+  .statIcon {
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .statValue {
+    padding-right: 30px;
+    font-size: 27px;
+  }
+
+  .statLabel {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .statMeta {
+    margin-top: 5px;
+  }
+
+  .tasteCard {
+    min-height: 132px;
+  }
+}

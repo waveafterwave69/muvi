@@ -9,7 +9,11 @@ import {
   type MediaIdentity,
   type MediaStatuses,
 } from '../media/types'
-import { addMediaToCoupleCollection, getCoupleMediaStatuses } from '.'
+import {
+  addMediaToCoupleCollection,
+  getCoupleMediaStatuses,
+  removeMediaFromCoupleCollection,
+} from '.'
 
 interface AddMediaToCoupleVariables {
   media: Media
@@ -19,6 +23,7 @@ interface AddMediaToCoupleVariables {
 export const coupleMediaKeys = {
   all: ['couple-media'] as const,
   add: ['couple-media', 'add'] as const,
+  remove: ['couple-media', 'remove'] as const,
   statuses: (userId: string) => ['couple-media', userId, 'statuses'] as const,
   statusBatch: (userId: string, media: MediaIdentity[]) =>
     [...coupleMediaKeys.statuses(userId), media.map(getMediaKey)] as const,
@@ -61,15 +66,18 @@ export const useCoupleMediaStatuses = ({
     })),
     combine: (results) => {
       const statuses: MediaStatuses = new Map()
+      const mediaIds = new Map<string, number>()
 
       results.forEach((result) => {
-        result.data?.forEach((status, mediaKey) => {
-          statuses.set(mediaKey, status)
+        result.data?.forEach((item, mediaKey) => {
+          statuses.set(mediaKey, item.status)
+          mediaIds.set(mediaKey, item.mediaId)
         })
       })
 
       return {
         statuses,
+        mediaIds,
         isPending: results.some((result) => result.isPending),
         isFetching: results.some((result) => result.isFetching),
         error: results.find((result) => result.error)?.error ?? null,
@@ -95,6 +103,26 @@ export const useAddMediaToCoupleCollection = () => {
       ])
 
       toast.success('Медиа добавлено в коллекцию пары')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export const useRemoveMediaFromCoupleCollection = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation<void, Error, number>({
+    mutationFn: removeMediaFromCoupleCollection,
+    mutationKey: coupleMediaKeys.remove,
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: coupleMediaKeys.all }),
+        queryClient.invalidateQueries({ queryKey: coupleKeys.all }),
+      ])
+
+      toast.success('Медиа удалено из коллекции пары')
     },
     onError: (error) => {
       toast.error(error.message)
