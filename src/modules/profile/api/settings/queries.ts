@@ -14,8 +14,8 @@ export const useUpdateSettings = () => {
 
   return useMutation({
     mutationFn: updateSettings,
-    onSuccess: (updatedUser) => {
-      queryClient.setQueryData(['settings'], updatedUser)
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['settings'] })
       queryClient.invalidateQueries({ queryKey: ['profile'] })
       toast.success('Данные успешно обновлены!')
     },
