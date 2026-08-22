@@ -6,7 +6,7 @@ import { CoupleMediaCollection } from '@/modules/couple/components/CoupleMediaCo
 import { CoupleStats } from '@/modules/couple/components/CoupleStats'
 import { LeaveCoupleModal } from '@/modules/couple/components/LeaveCoupleModal'
 import { ProfilePreview } from '@/modules/couple/components/ProfilePreview'
-import { Button, Card } from '@/shared/ui'
+import { Button, Card, Link } from '@/shared/ui'
 import styles from './ActiveCoupleState.module.scss'
 
 const formatTogetherSince = (value?: string) => {
@@ -28,7 +28,6 @@ const formatTogetherSince = (value?: string) => {
 export const ActiveCoupleState = ({ couple }: { couple: CoupleData | null }) => {
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false)
   const profiles = couple?.members ?? []
-  const title = profiles.map((profile) => profile.username).join(' + ')
   const togetherSince = formatTogetherSince(couple?.together_since ?? couple?.created_at)
   const stats = couple?.stats
   const leaveCouple = useLeaveCouple()
@@ -40,7 +39,19 @@ export const ActiveCoupleState = ({ couple }: { couple: CoupleData | null }) => 
           <ProfilePreview profiles={profiles} size="sm" />
 
           <div className={styles.activeCopy}>
-            <h1>{title}</h1>
+            <div className={styles.title}>
+              {profiles.map((profile, index)  => {
+                const isLast = index === profiles.length - 1
+                return (
+                  <Link key={profile.id} href={`/profile/${profile.id}`}>
+                    <h1 className={styles.sub_title}>
+                      {isLast && <span>^_^</span>}
+                      {profile.username}
+                    </h1>
+                  </Link>
+                )
+              })}
+            </div>
             <p>
               {togetherSince ? `Вместе в Muvi с ${togetherSince}` : 'Вместе в Muvi'}
             </p>

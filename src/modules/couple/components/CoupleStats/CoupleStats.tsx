@@ -18,7 +18,6 @@ export const CoupleStats = ({ stats }: CoupleStatsProps) => {
         </span>
         <strong className={styles.statValue}>{stats.planned_count}</strong>
         <span className={styles.statLabel}>Хотим посмотреть</span>
-        <span className={styles.statMeta}>Всего в коллекции: {stats.total_count}</span>
       </Card>
 
       <Card className={styles.statCard}>
@@ -39,10 +38,6 @@ export const CoupleStats = ({ stats }: CoupleStatsProps) => {
         <span className={styles.statLabel}>Совпадение вкусов</span>
         <div className={styles.tasteProgress} aria-hidden>
           <span style={{ width: `${tasteMatchPercent}%` }} />
-        </div>
-        <div className={styles.tasteMeta}>
-          <span>Общих оценок: {stats.common_ratings_count}</span>
-          {stats.ratings_needed > 0 && <span>Нужно ещё: {stats.ratings_needed}</span>}
         </div>
       </Card>
     </section>

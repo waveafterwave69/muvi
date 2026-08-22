@@ -21,6 +21,15 @@
   padding: 32px;
 }
 
+.title, .sub_title {
+  display: flex;
+  gap: 10px;
+
+  span {
+    color: var(--text-muted);
+  }
+}
+
 .activeCopy {
   min-width: 0;
 
@@ -113,7 +122,6 @@
 
   .leaveButton {
     width: 100%;
-    min-height: 48px;
   }
 }
 
