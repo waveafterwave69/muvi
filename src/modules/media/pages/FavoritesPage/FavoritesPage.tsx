@@ -37,6 +37,7 @@ export const FavoritesPage = () => {
           id: external_id,
           release_date: release_date ?? '',
           vote_average: item.media.vote_average ?? 0,
+          comment: item.comment,
           rating: item.rating ?? 0,
         })
       })

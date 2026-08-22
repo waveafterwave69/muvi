@@ -13,6 +13,7 @@ import {
   getMediaKey,
 } from './types'
 import { supabase } from '@/shared/api/supabase'
+import { normalizeMediaComment } from '../../lib/mediaComment'
 
 export const getMedia = async ({
   page = 1,
@@ -86,7 +87,7 @@ export const addMediaToCollection = async (
 
     p_status: status,
 
-    p_comment: comment?.trim() || null,
+    p_comment: normalizeMediaComment(comment),
 
     p_rating: rating ?? null,
   })

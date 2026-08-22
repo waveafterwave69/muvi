@@ -3,6 +3,7 @@
 import { Check, MessageSquareText } from 'lucide-react'
 import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
+import { MEDIA_COMMENT_MAX_LENGTH } from '@/modules/media/lib/mediaComment'
 import styles from './CommentModal.module.scss'
 import { useCurrentProfile } from '@/modules/auth'
 
@@ -21,8 +22,6 @@ const viewingModes = [
   { id: 'solo', label: 'Соло' },
   { id: 'couple', label: 'Пара' },
 ]
-
-const MAX_COMMENT_LENGTH = 600
 
 export const CommentModal = ({
   isOpen,
@@ -86,13 +85,15 @@ export const CommentModal = ({
               className={styles.textarea}
               id={textareaId}
               value={comment}
-              maxLength={MAX_COMMENT_LENGTH}
+              maxLength={MEDIA_COMMENT_MAX_LENGTH}
               placeholder="Почему хотите посмотреть?"
               aria-describedby={hintId}
-              onChange={(event) => onCommentChange(event.target.value)}
+              onChange={(event) =>
+                onCommentChange(event.target.value.slice(0, MEDIA_COMMENT_MAX_LENGTH))
+              }
             />
             <span className={styles.counter} aria-live="polite">
-              {comment.length}/{MAX_COMMENT_LENGTH}
+              {comment.length}/{MEDIA_COMMENT_MAX_LENGTH}
             </span>
           </div>
         </div>

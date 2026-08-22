@@ -223,6 +223,49 @@
   -webkit-line-clamp: 2;
 }
 
+.comment {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--accent-soft) 24%, transparent);
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 10%, var(--surface-soft)),
+    var(--surface-soft)
+  );
+  color: var(--text-muted);
+  font-size: var(--base-font-size-small);
+  line-height: 1.45;
+
+  &::after {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--accent-soft);
+    content: '';
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    margin-top: 2px;
+    color: var(--accent-soft);
+    fill: color-mix(in srgb, var(--accent-soft) 18%, transparent);
+  }
+
+  p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
 .watchedButton {
   width: 100% !important;
   border: 1px solid var(--border-button-color);
@@ -307,6 +350,19 @@
 
   .title {
     font-size: var(--base-font-size-medium);
+  }
+
+  .comment {
+    gap: 6px;
+    padding: 8px 9px;
+    border-radius: 10px;
+    font-size: 11px;
+
+    svg {
+      width: 13px;
+      height: 13px;
+      flex-basis: 13px;
+    }
   }
 
   .watchedButton {

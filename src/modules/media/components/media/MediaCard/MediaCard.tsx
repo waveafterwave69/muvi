@@ -1,14 +1,27 @@
 'use client'
 
 import Image from 'next/image'
-import { Check, CircleX, Film, Heart, HeartHandshake, Play, Plus, Star, X } from 'lucide-react'
+import {
+  Check,
+  CircleX,
+  Film,
+  Heart,
+  HeartHandshake,
+  Play,
+  Plus,
+  Quote,
+  Star,
+  X,
+} from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
+import { formatMediaComment } from '@/modules/media/lib/mediaComment'
 import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
 
 interface MediaCardProps {
   media: Media
+  comment?: string | null
   status: MediaWatchStatus | undefined
   coupleStatus: MediaWatchStatus | undefined
   isUpdating: boolean
@@ -35,6 +48,7 @@ const COUPLE_STATUS_LABELS: Record<MediaWatchStatus, string> = {
 
 export const MediaCard = ({
   media,
+  comment,
   status,
   coupleStatus,
   handleFavorite,
@@ -50,6 +64,7 @@ export const MediaCard = ({
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
   const hasStatus = status !== undefined
+  const visibleComment = comment ? formatMediaComment(comment) : ''
   const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
   const coupleStatusText = coupleStatus ? COUPLE_STATUS_LABELS[coupleStatus] : undefined
   const tvStatusIcon =
@@ -82,7 +97,7 @@ export const MediaCard = ({
           )}
         </Link>
 
-        {isWatched ? (
+        {isWatched && media.rating != null ? (
           <div
             className={`${styles.rating} ${styles.my__rating}`}
             aria-label={`Рейтинг ${media.rating}`}
@@ -99,7 +114,7 @@ export const MediaCard = ({
           </div>
         )}
 
-        {(coupleStatus || (media.type === 'tv' && hasStatus && userId)) && (
+        {(coupleStatus || visibleComment || (media.type === 'tv' && hasStatus && userId)) && (
           <div className={styles.posterMeta}>
             {coupleStatus && (
               <div
@@ -120,6 +135,13 @@ export const MediaCard = ({
                   </button>
                 )}
               </div>
+            )}
+
+            {visibleComment && (
+              <blockquote className={styles.comment} aria-label="Комментарий пользователя">
+                <Quote aria-hidden="true" />
+                <p>{visibleComment}</p>
+              </blockquote>
             )}
 
             {media.type === 'tv' && hasStatus && userId && (
