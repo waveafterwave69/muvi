@@ -82,6 +82,7 @@ export const MediaList = ({
           return (
             <MediaCard
               media={item}
+              comment={item.comment}
               key={mediaKey}
               coupleStatus={coupleStatuses.get(mediaKey)}
               handleFavorite={() => handleFavoriteClick(item, status)}

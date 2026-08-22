@@ -13,7 +13,7 @@ const mediaTypeTabs: Array<{ label: string; id: MediaType }> = [
 ]
 
 const statusTabs: Array<{ label: string; id: FavoriteStatus }> = [
-  { label: 'ИЗБРАННОЕ', id: 'planned' },
+  { label: 'ИЗБРАННЫЕ', id: 'planned' },
   { label: 'ПРОСМОТРЕННЫЕ', id: 'watched' },
   { label: 'В ПРОЦЕССЕ', id: 'watching' },
   { label: 'ЗАБРОШЕННЫЕ', id: 'dropped' },

@@ -8,6 +8,7 @@ import {
   type MediaWatchStatus,
 } from '../media/types'
 import type { CoupleMediaStatusMap } from './types'
+import { normalizeMediaComment } from '../../lib/mediaComment'
 
 export interface AddMediaToCoupleResult {
   couple_id: string
@@ -46,7 +47,7 @@ export const addMediaToCoupleCollection = async (
     p_vote_count: media.vote_count,
 
     p_status: status,
-    p_comment: comment ?? null,
+    p_comment: normalizeMediaComment(comment),
     p_rating: rating ?? null,
   })
 

@@ -1,126 +1,116 @@
 'use client'
 
-import { FC, useState, useMemo } from 'react'
+import { useMemo, useState, type FC } from 'react'
+import { MediaCard } from '@/modules/media'
+import type { Media, MediaType, MediaWatchStatus } from '@/modules/media/api/media/types'
+import { Card, Tabs } from '@/shared/ui'
+import type { ProfileMedia } from '../../types/profileTypes'
 import styles from './MediaList.module.scss'
-import { ProfileMedia } from '../../types/profileTypes'
-import { Card } from '@/shared/ui'
-import Image from 'next/image'
-import Link from 'next/link'
-import Tabs from '@/shared/ui/Tabs/Tabs'
-import { Star } from 'lucide-react'
-import { getMediaHref } from '@/modules/media/api/media/types'
 
 interface MediaListProps {
   media: ProfileMedia[]
 }
 
-const TAB_PLANNED = 1
-const TAB_WATCHED = 2
+const mediaTypeTabs: Array<{ id: MediaType; label: string }> = [
+  { id: 'movie', label: 'Фильмы' },
+  { id: 'tv', label: 'Сериалы' },
+]
+
+const statusTabs: Array<{ id: MediaWatchStatus; label: string }> = [
+  { id: 'planned', label: 'ИЗБРАННЫЕ' },
+  { id: 'watched', label: 'ПРОСМОТРЕННЫЕ' },
+]
+
+const isMediaType = (value: string | number): value is MediaType => {
+  return mediaTypeTabs.some((tab) => tab.id === value)
+}
+
+const isMediaStatus = (value: string | number): value is MediaWatchStatus => {
+  return statusTabs.some((tab) => tab.id === value)
+}
+
+const toMediaCardData = (item: ProfileMedia): Media | null => {
+  if (!item.media) return null
+
+  return {
+    adult: false,
+    backdrop_path: null,
+    genre_ids: [],
+    id: item.media.external_id,
+    original_language: '',
+    original_title: item.media.title,
+    overview: item.media.overview,
+    popularity: 0,
+    poster_path: item.media.poster_path,
+    rating: item.rating ?? undefined,
+    release_date: item.media.release_date ?? '',
+    title: item.media.title,
+    type: item.media.type,
+    video: false,
+    vote_average: item.media.vote_average,
+    vote_count: 0,
+  }
+}
 
 const MediaList: FC<MediaListProps> = ({ media }) => {
-  const [activeTab, setActiveTab] = useState<number | string>(TAB_PLANNED)
-
-  const profileTabs = [
-    { id: TAB_PLANNED, label: 'В планах' },
-    { id: TAB_WATCHED, label: 'Просмотрено' },
-  ]
+  const [activeMediaType, setActiveMediaType] = useState<MediaType>('movie')
+  const [activeStatus, setActiveStatus] = useState<MediaWatchStatus>('planned')
 
   const filteredMedia = useMemo(() => {
-    return media.filter((item) => {
-      if (activeTab === TAB_PLANNED) {
-        return item.status === 'planned'
-      }
-      if (activeTab === TAB_WATCHED) {
-        return item.status === 'watched'
-      }
-      return true
-    })
-  }, [media, activeTab])
-
-  if (!media.length) {
-    return <Card className={styles.empty}>Список пока пуст :(</Card>
-  }
+    return media.filter(
+      (item) => item.media?.type === activeMediaType && item.status === activeStatus,
+    )
+  }, [activeMediaType, activeStatus, media])
 
   return (
-    <Card className={styles.wrapper_card}>
-      <div className={styles.tabs__container}>
+    <Card className={styles.wrapperCard}>
+      <div className={styles.filters}>
         <Tabs
+          className={styles.mediaTypeTabs}
           size="sm"
-          tabs={profileTabs}
-          value={activeTab}
-          onChange={(id) => setActiveTab(id)}
+          tabs={mediaTypeTabs}
+          value={activeMediaType}
+          onChange={(value) => {
+            if (isMediaType(value)) setActiveMediaType(value)
+          }}
+          variant="secondary"
+        />
+        <Tabs
+          className={styles.statusTabs}
+          size="sm"
+          tabs={statusTabs}
+          value={activeStatus}
+          onChange={(value) => {
+            if (isMediaStatus(value)) setActiveStatus(value)
+          }}
           variant="secondary"
         />
       </div>
 
-      {!filteredMedia.length ? (
-        <div className={styles.empty_tab}>
-          {activeTab === TAB_PLANNED && 'Нет запланированных фильмов'}
-          {activeTab === TAB_WATCHED && 'Нет просмотренных фильмов'}
-        </div>
-      ) : (
-        <div className={styles.media__grid}>
+      {filteredMedia.length ? (
+        <div className={styles.mediaGrid}>
           {filteredMedia.map((item) => {
-            const mediaItem = item.media
+            const mediaItem = toMediaCardData(item)
             if (!mediaItem) return null
 
-            const posterUrl = mediaItem.poster_path
-              ? `https://image.tmdb.org/t/p/w500${mediaItem.poster_path}`
-              : null
-
             return (
-              <div key={mediaItem.id}>
-                <Link
-                  href={getMediaHref({ id: mediaItem.external_id, type: mediaItem.type })}
-                  className={styles.media__card}
-                >
-                  <div className={styles.poster__wrapper}>
-                    {posterUrl ? (
-                      <Image
-                        src={posterUrl}
-                        alt={mediaItem.title}
-                        className={styles.poster}
-                        fill
-                        sizes="(max-width: 768px) 50vw, 25vw"
-                        priority={false}
-                      />
-                    ) : (
-                      <div className={styles.poster__placeholder}>
-                        <span>🎬</span>
-                      </div>
-                    )}
-
-                    {item.status === 'watched' && item.rating && (
-                      <div className={styles.user__rating}>
-                        <Star aria-hidden="true" /> <span>{item.rating}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className={styles.info}>
-                    <div className={styles.title_row}>
-                      <h4 className={styles.title} title={mediaItem.title}>
-                        {mediaItem.title}
-                      </h4>
-                    </div>
-
-                    {item.status === 'planned' && item.comment && (
-                      <p className={styles.comment} title={item.comment}>
-                        {item.comment}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className={styles.meta}>
-                    <span className={`${styles.status} ${styles[`status__${item.status}`]}`}>
-                      {item.status === 'watched' ? 'Просмотрено' : 'В планах'}
-                    </span>
-                  </div>
-                </Link>
-              </div>
+              <MediaCard
+                key={`${mediaItem.type}:${mediaItem.id}`}
+                media={mediaItem}
+                comment={item.comment}
+                status={item.status}
+                coupleStatus={undefined}
+                isUpdating={false}
+                showActions={false}
+                handleFavorite={() => undefined}
+                handleWatched={() => undefined}
+                handleToggleTVModal={() => undefined}
+              />
             )
           })}
         </div>
+      ) : (
+        <p className={styles.empty}>Ничего не найдено</p>
       )}
     </Card>
   )
