@@ -1,6 +1,6 @@
 'use client'
 
-import type { FC } from 'react'
+import { useId, type FC } from 'react'
 import { motion } from 'framer-motion'
 import styles from './Tabs.module.scss'
 import { TabVariant } from '@/shared/types/variant'
@@ -24,6 +24,8 @@ const Tabs: FC<TabsProps> = ({
   value,
   onChange,
 }) => {
+  const layoutId = useId()
+
   return (
     <div
       role="tablist"
@@ -43,7 +45,7 @@ const Tabs: FC<TabsProps> = ({
 
             {isActive && (
               <motion.span
-                layoutId={`active-pill-${variant}`}
+                layoutId={`active-pill-${layoutId}`}
                 className={styles.tab__bg}
                 transition={{
                   type: 'spring',

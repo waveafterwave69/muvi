@@ -1,0 +1,1 @@
+export { EmptyCoupleState } from './EmptyCoupleState'

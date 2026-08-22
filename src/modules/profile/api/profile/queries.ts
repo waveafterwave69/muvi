@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchProfile, fetchUserMovies, logoutUser } from '.'
+import { fetchProfile, fetchUserMedia, logoutUser } from '.'
+import { toast } from 'sonner'
 
 export const useGetProfile = (userId: string | null) => {
   return useQuery({
@@ -8,11 +9,13 @@ export const useGetProfile = (userId: string | null) => {
   })
 }
 
-export const useGetUserMovies = (userId: string | null, enabled: boolean) => {
+export const useGetUserMedia = (userId: string | null, enabled: boolean) => {
   return useQuery({
-    queryFn: () => fetchUserMovies(userId),
-    queryKey: ['userMovies', userId],
+    queryFn: () => fetchUserMedia(userId),
+    queryKey: ['userMedia', userId],
     enabled: enabled,
+    staleTime: 0,
+    gcTime: 0,
   })
 }
 
@@ -25,6 +28,9 @@ export const useLogout = () => {
       queryClient.clear()
 
       window.location.href = '/'
+    },
+    onError: (error) => {
+      toast.error('Не удалось выйти из профиля' + error.message)
     },
   })
 }

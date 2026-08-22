@@ -1,0 +1,81 @@
+.preview {
+  --avatar-size: 114px;
+  --avatar-overlap: 38px;
+  --link-size: 50px;
+
+  position: relative;
+  display: flex;
+  width: max-content;
+  height: var(--avatar-size);
+  margin: 42px auto 34px;
+}
+
+.small {
+  --avatar-size: 96px;
+  --avatar-overlap: 34px;
+  --link-size: 40px;
+
+  margin: 0;
+}
+
+.avatar {
+  display: flex;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  flex: 0 0 var(--avatar-size);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--card-border-color);
+  border-radius: 50%;
+  background: var(--surface-raised);
+  color: var(--accent-soft);
+
+  + .avatar {
+    margin-left: calc(var(--avatar-overlap) * -1);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  svg {
+    width: 25px;
+  }
+}
+
+.placeholder {
+  background: color-mix(in srgb, var(--surface-raised) 74%, var(--bg));
+}
+
+.link {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--avatar-size) - var(--avatar-overlap) / 2);
+  z-index: 2;
+  display: flex;
+  width: var(--link-size);
+  height: var(--link-size);
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--surface);
+  border-radius: 50%;
+  background: var(--button-primary-gradient);
+  color: var(--text-secondary);
+  transform: translate(-50%, -50%);
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .preview:not(.small) {
+    transform: scale(0.86);
+    margin-top: 24px;
+    margin-bottom: 18px;
+  }
+}

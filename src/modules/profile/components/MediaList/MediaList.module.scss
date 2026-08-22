@@ -1,0 +1,54 @@
+.wrapperCard {
+  margin-top: 15px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.mediaTypeTabs,
+.statusTabs {
+  max-width: 320px;
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+.empty {
+  margin: 0;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .wrapperCard {
+    margin-top: 10px;
+  }
+
+  .filters {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .mediaTypeTabs,
+  .statusTabs {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mediaGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useEffect, useRef, useState, type FC, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, type FC, type MouseEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { classNames } from '@/shared/helpers/className'
 import type { Size } from '@/shared/types/size'

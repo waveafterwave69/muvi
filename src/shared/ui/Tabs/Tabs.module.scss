@@ -85,9 +85,29 @@
 }
 
 @media (max-width: 768px) {
+  .tabs {
+    justify-content: flex-start;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .tab {
+    min-width: max-content;
+    scroll-snap-align: start;
+    white-space: nowrap;
+  }
+
   .sm {
     .tab {
       padding: 8px;
+      min-height: 40px;
     }
     .tab__text {
       font-size: 12px;
@@ -97,12 +117,14 @@
   .md {
     .tab {
       padding: 10px;
+      min-height: 44px;
     }
   }
 
   .lg {
     .tab {
       padding: 14px;
+      min-height: 48px;
     }
   }
 }

@@ -7,9 +7,9 @@ import { ProfileCard } from '@/modules/profile'
 import { Button } from '@/shared/ui'
 import { LogOut, Pencil } from 'lucide-react'
 import SkeletonProfilePage from './SkeletonProfilePage/SkeletonProfilePage'
-import { useGetProfile, useLogout, useGetUserMovies } from '../../api/profile/queries'
-import MovieList from '../../components/MovieList/MovieList'
-import SkeletonMovieList from '../../components/MovieList/SkeletonMovieList/SkeletonMovieList'
+import { useGetProfile, useLogout, useGetUserMedia } from '../../api/profile/queries'
+import MediaList from '../../components/MediaList/MediaList'
+import SkeletonMediaList from '../../components/MediaList/SkeletonMediaList/SkeletonMediaList'
 
 interface ProfilePageProps {
   id: string | null
@@ -20,16 +20,16 @@ const ProfilePage: FC<ProfilePageProps> = ({ id }) => {
 
   const { data: profile, isLoading: isProfileLoading } = useGetProfile(id)
   const { mutate: handleLogout } = useLogout()
-  const { data: userMovies = [], isLoading: isMoviesLoading } = useGetUserMovies(
+  const { data: userMedia = [], isLoading: isMediaLoading } = useGetUserMedia(
     id,
     !isProfileLoading,
   )
 
-  const favMovies = userMovies.filter((movie) => {
-    return movie.status === 'planned'
+  const favoriteMedia = userMedia.filter((media) => {
+    return media.status === 'planned'
   })
-  const watchedMovies = userMovies.filter((movie) => {
-    return movie.status === 'watched'
+  const watchedMedia = userMedia.filter((media) => {
+    return media.status === 'watched'
   })
 
   useEffect(() => {
@@ -38,11 +38,11 @@ const ProfilePage: FC<ProfilePageProps> = ({ id }) => {
     }
   }, [id, profile?.isOwn, router])
 
-  if (isProfileLoading || isMoviesLoading) {
+  if (isProfileLoading || isMediaLoading) {
     return (
       <>
         <SkeletonProfilePage isOwn={!id} />
-        <SkeletonMovieList />
+        <SkeletonMediaList />
       </>
     )
   }
@@ -62,13 +62,13 @@ const ProfilePage: FC<ProfilePageProps> = ({ id }) => {
     <section className={styles.profile}>
       <div className={styles.profile__card}>
         <ProfileCard
-          watchedMovies={watchedMovies}
-          favMovies={favMovies}
+          watchedMedia={watchedMedia}
+          favoriteMedia={favoriteMedia}
           profile={profile}
           actions={profile?.isOwn ? actionsElement : undefined}
         />
       </div>
-      <MovieList movies={userMovies} />
+      <MediaList media={userMedia} />
     </section>
   )
 }

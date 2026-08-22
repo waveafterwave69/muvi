@@ -1,3 +1,5 @@
+import type { MediaType } from '@/modules/media/api/media/types'
+
 export interface ProfileIdentity {
   id: string
   Profile_id: string
@@ -34,9 +36,20 @@ export interface Profile {
   username: string
 }
 
-export interface ProfileMovie {
+interface ProfileMediaDetails {
+  id: number
+  external_id: number
+  type: MediaType
+  title: string
+  overview: string
+  poster_path: string | null
+  release_date: string | null
+  vote_average: number
+}
+
+export interface ProfileMedia {
   comment: null | string
-  movies: any
+  media: ProfileMediaDetails | null
   rating: number | null
   status: 'watched' | 'planned'
   watched_at: string | null

@@ -28,10 +28,18 @@
   --glow-bottom-size-2: 70%;
 
   --base-font-size-large: 18px;
-  --card-bg: #120d12e6;
+  --card-bg: #120d12f6;
   --card-border-color: #fff5fa20;
   --modal-overlay-bg: #080609b8;
   --modal-shadow: 0 24px 80px #0000008c;
+
+  --media-text-primary: #fff5fa;
+  --media-text-muted: #d6c8d0;
+  --media-surface: #080609b8;
+  --media-border: #fff5fa40;
+  --media-focus: #fff5fa;
+  --media-action-shadow: rgba(255, 79, 158, 0.35);
+  --media-action-shadow-hover: rgba(255, 79, 158, 0.5);
 
   --base-font-size: 16px;
   --base-font-size-medium: 14px;
@@ -67,14 +75,58 @@
   --tabs-secondary-border-color: #ff7ab666;
 }
 
+:root[data-theme='light'] {
+  --text-primary: #102a42;
+  --text-secondary: #ffffff;
+  --text-muted: #48647d;
+  --bg: #f5f9ff;
+  --surface: #ffffff;
+  --surface-soft: #edf7ff;
+  --surface-raised: #def0ff;
+  --accent: #1689f5;
+  --accent-soft: #59b2ff;
+  --accent-hover: #1689f514;
+  --accent-hover-alt: #4fb0ffc4;
+
+  --card-bg: #fffffff2;
+  --card-border-color: #c9e0f5;
+  --modal-overlay-bg: #102a426b;
+  --modal-shadow: 0 24px 80px #102a4238;
+  --media-action-shadow: rgba(22, 137, 245, 0.35);
+  --media-action-shadow-hover: rgba(22, 137, 245, 0.5);
+  --glow-top-color-1: rgba(22, 137, 245, 0.12);
+  --glow-top-color-2: rgba(22, 137, 245, 0.02);
+  --glow-top-size: 45%;
+
+  --glow-bottom-color-1: rgba(22, 137, 245, 0.14);
+  --glow-bottom-color-2: rgba(22, 137, 245, 0.03);
+  --glow-bottom-size-1: 35%;
+  --glow-bottom-size-2: 75%;
+
+  --brand-bg: #ffffffcc;
+  --brand-border-color: #1689f433;
+
+  --border-button-color: #c9e0f5;
+
+  --button-primary-gradient: linear-gradient(90deg, #5ab1ff 0%, #1689f4 100%);
+
+  --button-primary-gradient-hover: linear-gradient(90deg, #4697dd 0%, #1665af 100%);
+  --tabs-bg: #ffffffcc;
+  --tabs-primary-bg: linear-gradient(90deg, #63abe9 0%, #1d88ec 100%);
+  --tabs-secondary-bg: #4f9bff24;
+  --tabs-secondary-border-color: #c9e0f5;
+  --tabs-border-color: #c9e0f5;
+  --tabs-active-text: #fff;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     --text-primary: #102a42;
     --text-secondary: #ffffff;
     --text-muted: #48647d;
-    --bg: #f5f9ff;
+    --bg: #d3e0f3;
     --surface: #ffffff;
-    --surface-soft: #edf7ff;
+    --surface-soft: #f5fbff;
     --surface-raised: #def0ff;
     --accent: #1689f5;
     --accent-soft: #59b2ff;
@@ -85,6 +137,8 @@
     --card-border-color: #c9e0f5;
     --modal-overlay-bg: #102a426b;
     --modal-shadow: 0 24px 80px #102a4238;
+    --media-action-shadow: rgba(22, 137, 245, 0.35);
+    --media-action-shadow-hover: rgba(22, 137, 245, 0.5);
     --glow-top-color-1: rgba(22, 137, 245, 0.12);
     --glow-top-color-2: rgba(22, 137, 245, 0.02);
     --glow-top-size: 45%;
