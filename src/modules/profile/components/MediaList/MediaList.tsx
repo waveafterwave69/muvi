@@ -12,21 +12,32 @@ interface MediaListProps {
 }
 
 const mediaTypeTabs: Array<{ id: MediaType; label: string }> = [
-  { id: 'movie', label: 'Фильмы' },
-  { id: 'tv', label: 'Сериалы' },
+  { id: 'movie', label: 'ФИЛЬМЫ' },
+  { id: 'tv', label: 'СЕРИАЛЫ' },
 ]
 
-const statusTabs: Array<{ id: MediaWatchStatus; label: string }> = [
+const moviesStatusTabs: Array<{ id: MediaWatchStatus; label: string }> = [
   { id: 'planned', label: 'ИЗБРАННЫЕ' },
   { id: 'watched', label: 'ПРОСМОТРЕННЫЕ' },
+]
+
+const tvStatusTabs: Array<{ id: MediaWatchStatus; label: string }> = [
+  { id: 'planned', label: 'ИЗБРАННЫЕ' },
+  { id: 'watched', label: 'ПРОСМОТРЕННЫЕ' },
+  { id: 'watching', label: 'В ПРОЦЕССЕ' },
+  { id: 'dropped', label: 'ЗАБРОШЕННЫЕ' },
 ]
 
 const isMediaType = (value: string | number): value is MediaType => {
   return mediaTypeTabs.some((tab) => tab.id === value)
 }
 
-const isMediaStatus = (value: string | number): value is MediaWatchStatus => {
-  return statusTabs.some((tab) => tab.id === value)
+const isMovieStatus = (value: string | number): value is MediaWatchStatus => {
+  return moviesStatusTabs.some((tab) => tab.id === value)
+}
+
+const isTvStatus = (value: string | number): value is MediaWatchStatus => {
+  return tvStatusTabs.some((tab) => tab.id === value)
 }
 
 const toMediaCardData = (item: ProfileMedia): Media | null => {
@@ -65,26 +76,50 @@ const MediaList: FC<MediaListProps> = ({ media }) => {
   return (
     <Card className={styles.wrapperCard}>
       <div className={styles.filters}>
-        <Tabs
-          className={styles.mediaTypeTabs}
-          size="sm"
-          tabs={mediaTypeTabs}
-          value={activeMediaType}
-          onChange={(value) => {
-            if (isMediaType(value)) setActiveMediaType(value)
-          }}
-          variant="secondary"
-        />
-        <Tabs
-          className={styles.statusTabs}
-          size="sm"
-          tabs={statusTabs}
-          value={activeStatus}
-          onChange={(value) => {
-            if (isMediaStatus(value)) setActiveStatus(value)
-          }}
-          variant="secondary"
-        />
+        <div className={styles.filterGroup}>
+          <Tabs
+            className={styles.mediaTypeTabs}
+            size="sm"
+            tabs={mediaTypeTabs}
+            value={activeMediaType}
+            onChange={(value) => {
+              if (!isMediaType(value)) return
+
+              setActiveMediaType(value)
+
+              if (value === 'movie' && !isMovieStatus(activeStatus)) {
+                setActiveStatus('planned')
+              }
+            }}
+            variant="secondary"
+          />
+        </div>
+
+        <div className={`${styles.filterGroup} ${styles.statusGroup}`}>
+          {activeMediaType === 'movie' ? (
+            <Tabs
+              className={styles.statusTabs}
+              size="sm"
+              tabs={moviesStatusTabs}
+              value={activeStatus}
+              onChange={(value) => {
+                if (isMovieStatus(value)) setActiveStatus(value)
+              }}
+              variant="secondary"
+            />
+          ) : (
+            <Tabs
+              className={`${styles.statusTabs} ${styles.tvStatusTabs}`}
+              size="sm"
+              tabs={tvStatusTabs}
+              value={activeStatus}
+              onChange={(value) => {
+                if (isTvStatus(value)) setActiveStatus(value)
+              }}
+              variant="secondary"
+            />
+          )}
+        </div>
       </div>
 
       {filteredMedia.length ? (
