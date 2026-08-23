@@ -27,10 +27,12 @@ interface EpisodeTrackerCardProps {
 }
 
 const EpisodeTrackerCard = ({ media, userId }: EpisodeTrackerCardProps) => {
-  const { statuses } = useMediaStatus(media)
-  const status = statuses.get(getMediaKey(media))
+  const { statuses, coupleStatuses } = useMediaStatus(media)
+  const mediaKey = getMediaKey(media)
+  const soloStatus = statuses.get(mediaKey)
+  const coupleStatus = coupleStatuses.get(mediaKey)
 
-  if (status === undefined) return null
+  if (soloStatus === undefined && coupleStatus === undefined) return null
 
   return (
     <Card>

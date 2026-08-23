@@ -2,10 +2,12 @@ import { useCallback, useMemo, useState } from 'react'
 import { useEpisodeProgress } from '../../api/episodeProgress/queries'
 import { useTVSeasonQuery } from '../../api/mediaDetails/queries'
 import type { MediaDetails } from '../../api/mediaDetails/types'
+import type { Variant } from '../../api/couple/types'
 
 interface UseEpisodeTrackerParams {
   media: MediaDetails
   userId: string
+  variant: Variant
   isInCollection: boolean
   canEditProgress: boolean
 }
@@ -18,6 +20,7 @@ interface SeasonSelection {
 export const useEpisodeTracker = ({
   media,
   userId,
+  variant,
   isInCollection,
   canEditProgress,
 }: UseEpisodeTrackerParams) => {
@@ -48,7 +51,7 @@ export const useEpisodeTracker = ({
     isLoading: isProgressLoading,
     setWatched,
     isSaving,
-  } = useEpisodeProgress(userId, media.id, isInCollection)
+  } = useEpisodeProgress(userId, media.id, variant, isInCollection)
   const {
     data: season,
     isLoading: isSeasonLoading,
@@ -106,12 +109,13 @@ export const useEpisodeTracker = ({
 
       setWatched({
         mediaId: media.id,
+        variant,
         seasonNumber: selectedSeason,
         episodeNumbers: [episodeNumber],
         watched: !isEpisodeWatched(episodeNumber),
       })
     },
-    [canEditProgress, isEpisodeWatched, media.id, selectedSeason, setWatched],
+    [canEditProgress, isEpisodeWatched, media.id, selectedSeason, setWatched, variant],
   )
 
   const toggleWholeSeason = useCallback(() => {
@@ -119,6 +123,7 @@ export const useEpisodeTracker = ({
 
     setWatched({
       mediaId: media.id,
+      variant,
       seasonNumber: selectedSeason,
       episodeNumbers: seasonEpisodes.map((episode) => episode.episode_number),
       watched: !isWholeSeasonWatched,
@@ -130,6 +135,7 @@ export const useEpisodeTracker = ({
     seasonEpisodes,
     selectedSeason,
     setWatched,
+    variant,
   ])
 
   const toggleExpanded = useCallback(() => {

@@ -1,5 +1,11 @@
 import { supabase } from '@/shared/api/supabase'
-import type { EpisodeProgress, SetEpisodesWatchedParams, TVEpisodeCount } from './types'
+import type { Variant } from '../couple/types'
+import type {
+  EpisodeProgress,
+  MarkAllTVEpisodesWatchedParams,
+  SetEpisodesWatchedParams,
+  TVEpisodeCount,
+} from './types'
 
 interface EpisodeProgressRow extends EpisodeProgress {
   media: {
@@ -11,7 +17,34 @@ interface EpisodeProgressRow extends EpisodeProgress {
 export const getEpisodeProgress = async (
   userId: string,
   externalMediaId: number,
+  variant: Variant,
 ): Promise<EpisodeProgress[]> => {
+  if (variant === 'couple') {
+    const { data, error } = await supabase
+      .from('couple_episode_progress')
+      .select(
+        `
+          season_number,
+          episode_number,
+          watched_at,
+          media:media!inner(external_id, type)
+        `,
+      )
+      .eq('media.external_id', externalMediaId)
+      .eq('media.type', 'tv')
+      .overrideTypes<EpisodeProgressRow[], { merge: false }>()
+
+    if (error) {
+      throw new Error(`Не удалось загрузить прогресс пары: ${error.message}`, { cause: error })
+    }
+
+    return data.map(({ season_number, episode_number, watched_at }) => ({
+      season_number,
+      episode_number,
+      watched_at,
+    }))
+  }
+
   const { data, error } = await supabase
     .from('user_episode_progress')
     .select(
@@ -40,11 +73,14 @@ export const getEpisodeProgress = async (
 
 export const setEpisodesWatched = async ({
   mediaId,
+  variant,
   seasonNumber,
   episodeNumbers,
   watched,
 }: SetEpisodesWatchedParams): Promise<void> => {
-  const { error } = await supabase.rpc('set_episodes_watched', {
+  const functionName =
+    variant === 'couple' ? 'set_couple_episodes_watched' : 'set_episodes_watched'
+  const { error } = await supabase.rpc(functionName, {
     p_external_id: mediaId,
     p_season_number: seasonNumber,
     p_episode_numbers: episodeNumbers,
@@ -69,10 +105,17 @@ export const getTVEpisodeCount = async (
   return response.json()
 }
 
-export const markAllTVEpisodesWatched = async (mediaId: number): Promise<void> => {
+export const markAllTVEpisodesWatched = async ({
+  mediaId,
+  variant,
+}: MarkAllTVEpisodesWatchedParams): Promise<void> => {
   const { seasons } = await getTVEpisodeCount(mediaId)
 
-  const { error } = await supabase.rpc('set_all_tv_episodes_watched', {
+  const functionName =
+    variant === 'couple'
+      ? 'set_all_couple_tv_episodes_watched'
+      : 'set_all_tv_episodes_watched'
+  const { error } = await supabase.rpc(functionName, {
     p_external_id: mediaId,
     p_episodes: seasons,
   })

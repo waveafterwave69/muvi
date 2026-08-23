@@ -1,3 +1,5 @@
+import type { Variant } from '../couple/types'
+
 export interface EpisodeProgress {
   season_number: number
   episode_number: number
@@ -6,9 +8,15 @@ export interface EpisodeProgress {
 
 export interface SetEpisodesWatchedParams {
   mediaId: number
+  variant: Variant
   seasonNumber: number
   episodeNumbers: number[]
   watched: boolean
+}
+
+export interface MarkAllTVEpisodesWatchedParams {
+  mediaId: number
+  variant: Variant
 }
 
 export interface TVEpisodeCount {

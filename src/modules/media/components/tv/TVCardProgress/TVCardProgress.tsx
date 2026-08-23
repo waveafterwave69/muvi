@@ -2,15 +2,17 @@
 
 import { useEpisodeProgress, useTVEpisodeCount } from '../../../api/episodeProgress/queries'
 import styles from './TVCardProgress.module.scss'
+import type { Variant } from '../../../api/couple/types'
 
 interface TVCardProgressProps {
   mediaId: number
   userId: string
+  variant?: Variant
 }
 
-const TVCardProgress = ({ mediaId, userId }: TVCardProgressProps) => {
+const TVCardProgress = ({ mediaId, userId, variant = 'solo' }: TVCardProgressProps) => {
   const { data: episodeCount } = useTVEpisodeCount(mediaId, true)
-  const { data: progress } = useEpisodeProgress(userId, mediaId, true)
+  const { data: progress } = useEpisodeProgress(userId, mediaId, variant, true)
   const total = episodeCount?.total ?? 0
 
   if (!total || !progress) return null

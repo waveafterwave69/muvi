@@ -16,12 +16,14 @@ interface UseAddMediaParams {
   removeMedia: RemoveMediaHandler
   removeCoupleMedia: RemoveCoupleMediaHandler
   isUpdating: boolean
+  defaultVariant?: Variant
 }
 
 interface MediaAction {
   type: 'planned' | 'watched' | 'tv-status'
   media: Media
   status?: MediaWatchStatus
+  coupleMediaId?: number
 }
 
 export const useAddMedia = ({
@@ -29,8 +31,9 @@ export const useAddMedia = ({
   removeMedia,
   removeCoupleMedia,
   isUpdating,
+  defaultVariant = 'solo',
 }: UseAddMediaParams) => {
-  const [variant, setVariant] = useState<Variant>('solo')
+  const [variant, setVariant] = useState<Variant>(defaultVariant)
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
   const [isStarsModalOpen, setIsStarsModalOpen] = useState(false)
@@ -59,28 +62,53 @@ export const useAddMedia = ({
     resetActiveMedia()
   }
 
-  const handleFavoriteClick = (media: Media, status?: MediaWatchStatus) => {
+  const handleFavoriteClick = (
+    media: Media,
+    status?: MediaWatchStatus,
+    coupleMediaId?: number,
+  ) => {
+    setVariant(defaultVariant)
+
     if (status === 'planned') {
-      void removeMedia(media)
+      if (defaultVariant === 'couple' && coupleMediaId !== undefined) {
+        void removeCoupleMedia(coupleMediaId)
+      } else {
+        void removeMedia(media)
+      }
       return
     }
 
-    setActiveMedia({ type: 'planned', media, status })
+    setActiveMedia({ type: 'planned', media, status, coupleMediaId })
     setIsCommentModalOpen(true)
   }
 
-  const handleWatchedClick = (media: Media, status?: MediaWatchStatus) => {
+  const handleWatchedClick = (
+    media: Media,
+    status?: MediaWatchStatus,
+    coupleMediaId?: number,
+  ) => {
+    setVariant(defaultVariant)
+
     if (status === 'watched') {
-      void removeMedia(media)
+      if (defaultVariant === 'couple' && coupleMediaId !== undefined) {
+        void removeCoupleMedia(coupleMediaId)
+      } else {
+        void removeMedia(media)
+      }
       return
     }
 
-    setActiveMedia({ type: 'watched', media, status })
+    setActiveMedia({ type: 'watched', media, status, coupleMediaId })
     setIsStarsModalOpen(true)
   }
 
-  const handleOpenTVModal = (media: Media, status?: MediaWatchStatus) => {
-    setActiveMedia({ type: 'tv-status', media, status })
+  const handleOpenTVModal = (
+    media: Media,
+    status?: MediaWatchStatus,
+    coupleMediaId?: number,
+  ) => {
+    setVariant(defaultVariant)
+    setActiveMedia({ type: 'tv-status', media, status, coupleMediaId })
     setIsTVModalOpen(true)
   }
 
@@ -167,7 +195,12 @@ export const useAddMedia = ({
     if (!activeMedia) return
 
     try {
-      await removeMedia(activeMedia.media)
+      if (variant === 'couple') {
+        if (activeMedia.coupleMediaId === undefined) return
+        await removeCoupleMedia(activeMedia.coupleMediaId)
+      } else {
+        await removeMedia(activeMedia.media)
+      }
       closeTVModal()
     } catch {
       return
