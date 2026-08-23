@@ -109,15 +109,15 @@ export const MediaCard = ({
             aria-label={`Рейтинг ${media.rating}`}
           >
             <Star aria-hidden="true" />
-
-            <span> {media.rating}</span>
+            <span>{media.rating}</span>
           </div>
         ) : (
-          <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
-            <Star aria-hidden="true" />
-
-            <span> {media.vote_average.toFixed(1)}</span>
-          </div>
+          media.vote_average > 0 && (
+            <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
+              <Star aria-hidden="true" />
+              <span>{media.vote_average.toFixed(1)}</span>
+            </div>
+          )
         )}
 
         {(coupleStatus || visibleComment || (media.type === 'tv' && hasStatus && userId)) && (

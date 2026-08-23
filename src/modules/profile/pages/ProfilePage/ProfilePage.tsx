@@ -20,10 +20,7 @@ const ProfilePage: FC<ProfilePageProps> = ({ id }) => {
 
   const { data: profile, isLoading: isProfileLoading } = useGetProfile(id)
   const { mutate: handleLogout } = useLogout()
-  const { data: userMedia = [], isLoading: isMediaLoading } = useGetUserMedia(
-    id,
-    !isProfileLoading,
-  )
+  const { data: userMedia = [], isLoading: isMediaLoading } = useGetUserMedia(id, !isProfileLoading)
 
   const favoriteMedia = userMedia.filter((media) => {
     return media.status === 'planned'
