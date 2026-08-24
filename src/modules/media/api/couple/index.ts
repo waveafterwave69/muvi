@@ -105,19 +105,3 @@ export const getCoupleMediaStatuses = async (
       .filter(([key]) => requestedKeys.has(key)),
   )
 }
-
-export const removeMediaFromCoupleCollection = async (mediaId: number): Promise<void> => {
-  const { data, error } = await supabase.rpc('remove_media_from_couple_collection', {
-    p_media_id: mediaId,
-  })
-
-  if (error) {
-    throw new Error(`Не удалось удалить медиа из коллекции пары: ${error.message}`, {
-      cause: error,
-    })
-  }
-
-  if (!data) {
-    throw new Error('Медиа не найдено в коллекции пары')
-  }
-}

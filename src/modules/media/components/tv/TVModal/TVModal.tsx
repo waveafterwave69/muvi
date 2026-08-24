@@ -16,6 +16,7 @@ interface TVModalProps {
   isSubmitting?: boolean
   variant: Variant
   setVariant: Dispatch<SetStateAction<Variant>>
+  in_couple: boolean
 }
 
 type TVWatchStatus = Exclude<MediaWatchStatus, 'planned'>
@@ -46,10 +47,10 @@ const TVModal: FC<TVModalProps> = ({
   isSubmitting = false,
   variant,
   setVariant,
+  in_couple
 }) => {
   const [selectedTab, setSelectedTab] = useState<TVWatchStatus | null>(null)
   const currentTab = selectedTab ?? getTVWatchStatus(currentStatus)
-  const { data } = useCurrentProfile()
 
   const handleClose = () => {
     setSelectedTab(null)
@@ -71,7 +72,7 @@ const TVModal: FC<TVModalProps> = ({
       <p className={styles.subtitle}>
         Статус сериала, который будет отображаться в вашей коллекции
       </p>
-      {data?.in_couple && (
+      {in_couple && (
         <Tabs
           tabs={viewingModes}
           value={variant}

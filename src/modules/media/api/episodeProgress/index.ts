@@ -18,9 +18,10 @@ export const getEpisodeProgress = async (
   userId: string,
   externalMediaId: number,
   variant: Variant,
+  coupleId?: string,
 ): Promise<EpisodeProgress[]> => {
   if (variant === 'couple') {
-    const { data, error } = await supabase
+    let query = supabase
       .from('couple_episode_progress')
       .select(
         `
@@ -32,6 +33,12 @@ export const getEpisodeProgress = async (
       )
       .eq('media.external_id', externalMediaId)
       .eq('media.type', 'tv')
+
+    if (coupleId) {
+      query = query.eq('couple_id', coupleId)
+    }
+
+    const { data, error } = await query
       .overrideTypes<EpisodeProgressRow[], { merge: false }>()
 
     if (error) {

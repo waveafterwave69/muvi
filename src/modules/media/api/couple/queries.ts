@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { coupleKeys } from '@/modules/couple/api/queries'
+import { invalidateMediaCardQueries, mediaCardCacheKeys } from '../cache'
 import {
   getMediaKey,
   type AddMediaOptions,
@@ -12,7 +13,6 @@ import {
 import {
   addMediaToCoupleCollection,
   getCoupleMediaStatuses,
-  removeMediaFromCoupleCollection,
 } from '.'
 
 interface AddMediaToCoupleVariables {
@@ -21,10 +21,10 @@ interface AddMediaToCoupleVariables {
 }
 
 export const coupleMediaKeys = {
-  all: ['couple-media'] as const,
-  add: ['couple-media', 'add'] as const,
-  remove: ['couple-media', 'remove'] as const,
-  statuses: (userId: string) => ['couple-media', userId, 'statuses'] as const,
+  all: mediaCardCacheKeys.couple,
+  add: [...mediaCardCacheKeys.couple, 'add'] as const,
+  statuses: (userId: string) =>
+    [...mediaCardCacheKeys.couple, userId, 'statuses'] as const,
   statusBatch: (userId: string, media: MediaIdentity[]) =>
     [...coupleMediaKeys.statuses(userId), media.map(getMediaKey)] as const,
 }
@@ -97,35 +97,13 @@ export const useAddMediaToCoupleCollection = () => {
     mutationKey: coupleMediaKeys.add,
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: coupleMediaKeys.all,
-        }),
+        invalidateMediaCardQueries(queryClient),
         queryClient.invalidateQueries({
           queryKey: coupleKeys.all,
         }),
       ])
 
       toast.success('Медиа добавлено в коллекцию пары')
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
-}
-
-export const useRemoveMediaFromCoupleCollection = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation<void, Error, number>({
-    mutationFn: removeMediaFromCoupleCollection,
-    mutationKey: coupleMediaKeys.remove,
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: coupleMediaKeys.all }),
-        queryClient.invalidateQueries({ queryKey: coupleKeys.all }),
-      ])
-
-      toast.success('Медиа удалено из коллекции пары')
     },
     onError: (error) => {
       toast.error(error.message)

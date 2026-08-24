@@ -11,8 +11,8 @@ import type { Variant } from '../couple/types'
 import type { MarkAllTVEpisodesWatchedParams } from './types'
 
 export const episodeProgressKeys = {
-  detail: (userId: string, mediaId: number, variant: Variant) =>
-    ['episode-progress', variant, userId, mediaId] as const,
+  detail: (userId: string, mediaId: number, variant: Variant, coupleId?: string) =>
+    ['episode-progress', variant, coupleId ?? userId, mediaId] as const,
   episodeCount: (mediaId: number) => ['media', 'tv', mediaId, 'episode-count'] as const,
 }
 
@@ -29,13 +29,14 @@ export const useEpisodeProgress = (
   mediaId: number,
   variant: Variant,
   enabled: boolean,
+  coupleId?: string,
 ) => {
   const queryClient = useQueryClient()
-  const queryKey = episodeProgressKeys.detail(userId, mediaId, variant)
+  const queryKey = episodeProgressKeys.detail(userId, mediaId, variant, coupleId)
 
   const query = useQuery({
     queryKey,
-    queryFn: () => getEpisodeProgress(userId, mediaId, variant),
+    queryFn: () => getEpisodeProgress(userId, mediaId, variant, coupleId),
     enabled: enabled && Boolean(userId) && mediaId > 0,
   })
 

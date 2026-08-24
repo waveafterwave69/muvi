@@ -51,10 +51,42 @@
   white-space: nowrap;
 }
 
+.compact {
+  gap: 3px 6px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  box-shadow: none;
+  backdrop-filter: none;
+
+  .label {
+    span {
+      font-size: 9px;
+      letter-spacing: 0.03em;
+    }
+
+    strong {
+      font-size: 10px;
+    }
+  }
+
+  .track {
+    height: 3px;
+  }
+
+  .count {
+    font-size: 9px;
+  }
+}
+
 @media (max-width: 768px) {
   .progress {
     padding: 7px 8px;
     border-radius: 10px;
+  }
+
+  .progress.compact {
+    padding: 4px 6px;
+    border-radius: 8px;
   }
 
   .label span { font-size: 10px; }

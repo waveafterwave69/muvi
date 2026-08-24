@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { AddMediaOptions, Media, MediaWatchStatus } from '../api/media/types'
 import type { Variant } from '../api/couple/types'
+import { useCurrentProfile } from '@/modules/auth'
 
 export type AddMediaHandler = (
   media: Media,
@@ -40,6 +41,7 @@ export const useAddMedia = ({
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false)
   const [isTVModalOpen, setIsTVModalOpen] = useState(false)
   const [activeMedia, setActiveMedia] = useState<MediaAction | null>(null)
+  const { data } = useCurrentProfile()
 
   const resetActiveMedia = () => {
     setActiveMedia(null)
@@ -222,6 +224,7 @@ export const useAddMedia = ({
         isSubmitting: isUpdating,
         variant,
         setVariant,
+        in_couple: data?.in_couple ?? false
       },
       comment: {
         isOpen: isCommentModalOpen,
@@ -232,6 +235,7 @@ export const useAddMedia = ({
         isSubmitting: isUpdating,
         variant,
         setVariant,
+        in_couple: data?.in_couple ?? false
       },
       tv: {
         currentStatus: activeMedia?.status,
@@ -242,6 +246,7 @@ export const useAddMedia = ({
         isSubmitting: isUpdating,
         variant,
         setVariant,
+        in_couple: data?.in_couple ?? false
       },
     },
   }

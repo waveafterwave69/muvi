@@ -16,6 +16,7 @@ export interface CommentModalProps {
   isSubmitting?: boolean
   variant: 'couple' | 'solo';
   setVariant: (variant: 'couple' | 'solo') => void;
+  in_couple: boolean;
 }
 
 const viewingModes = [
@@ -32,11 +33,11 @@ export const CommentModal = ({
   isSubmitting = false,
   variant,
   setVariant,
+  in_couple
 }: CommentModalProps) => {
   const titleId = useId()
   const textareaId = useId()
   const hintId = useId()
-  const { data } = useCurrentProfile()
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSubmit()
@@ -57,7 +58,7 @@ export const CommentModal = ({
           </div>
         </header>
 
-        {data?.in_couple && <Tabs
+        {in_couple && <Tabs
           className={styles.tabs}
           tabs={viewingModes}
           value={variant}

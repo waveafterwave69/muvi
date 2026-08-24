@@ -5,8 +5,8 @@ import { MediaDetails } from '../api/mediaDetails/types'
 import {
   useAddMediaToCoupleCollection,
   useCoupleMediaStatuses,
-  useRemoveMediaFromCoupleCollection,
 } from '@/modules/media/api/couple/queries'
+import { useRemoveMediaFromCoupleCollection } from '@/modules/couple/api/queries'
 import type { Variant } from '../api/couple/types'
 import { useMarkAllTVEpisodesWatched } from '../api/episodeProgress/queries'
 
