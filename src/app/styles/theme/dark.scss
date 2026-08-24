@@ -1,0 +1,37 @@
+:root[data-theme='dark'] {
+  --bg: #080609;
+  --text-primary: #fff5fa;
+  --text-secondary: #000000;
+  --text-muted: #b9a8b2ee;
+  --surface: #120d12;
+  --surface-soft: #1c141c;
+  --surface-raised: #241924;
+  --accent: #ff4f9e;
+  --accent-soft: #ff7ab6;
+  --accent-hover: #ff4f9e14;
+  --accent-hover-alt: #ff4f9e66;
+  --card-bg: #120d12f6;
+  --card-border-color: #fff5fa20;
+  --modal-overlay-bg: #080609b8;
+  --modal-shadow: 0 24px 80px #0000008c;
+  --media-action-shadow: rgba(255, 79, 158, 0.35);
+  --media-action-shadow-hover: rgba(255, 79, 158, 0.5);
+  --glow-top-color-1: rgba(22, 137, 245, 0.07);
+  --glow-top-color-2: transparent;
+  --glow-top-size: 20%;
+  --glow-bottom-color-1: rgba(255, 79, 158, 0.08);
+  --glow-bottom-color-2: rgba(255, 79, 158, 0.02);
+  --glow-bottom-size-1: 20%;
+  --glow-bottom-size-2: 70%;
+  --brand-bg: #ffffff0a;
+  --brand-border-color: #ffffff1a;
+  --border-button-color: #3b2a35;
+  --button-primary-gradient: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
+  --button-primary-gradient-hover: linear-gradient(90deg, #f166a5 0%, #c5206a 100%);
+  --tabs-bg: #0b080b;
+  --tabs-primary-bg: linear-gradient(90deg, #ff7ab6 0%, #ff4f9e 100%);
+  --tabs-secondary-bg: #ff4f9e24;
+  --tabs-secondary-border-color: #ff7ab666;
+  --tabs-border-color: #fff5fa14;
+  --tabs-active-text: #000;
+}
