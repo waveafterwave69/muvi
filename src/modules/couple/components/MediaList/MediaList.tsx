@@ -6,11 +6,11 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import type {
   CoupleMediaFilters,
   CoupleMediaItem,
-  MediaWatchStatus,
 } from '@/modules/couple/api/types'
 import { useMedia } from '@/modules/couple/hooks/useMedia'
 import { MediaActionModals } from '@/modules/media/components/media/MediaActionModals/MediaActionModals'
 import type { Profile } from '@/modules/profile'
+import { MediaWatchStatus } from '@/shared/domain/media'
 
 interface Props {
   isPending: boolean
@@ -40,8 +40,13 @@ export const MediaList = ({
   coupleId,
   profiles,
 }: Props) => {
-  const { handleFavoriteClick, handleWatchedClick, isUpdating, modalProps } =
-    useMedia(coupleId)
+  const {
+    handleFavoriteClick,
+    handleWatchedClick,
+    handleOpenTVModal,
+    isUpdating,
+    modalProps,
+  } = useMedia(coupleId)
 
   return (
     <>
@@ -93,6 +98,7 @@ export const MediaList = ({
                 isUpdating={isUpdating}
                 onFavoriteClick={() => handleFavoriteClick(item)}
                 onWatchedClick={() => handleWatchedClick(item)}
+                onTVStatusClick={() => handleOpenTVModal(item)}
                 addedBy={addedBy}
               />
             )

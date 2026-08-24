@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import type { Media, MediaType } from '@/modules/media/api/media/types'
+import type { Media } from '@/modules/media/api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 const TMDB_URL = 'https://api.themoviedb.org/3'
 const MEDIA_TYPES = new Set<MediaType>(['movie', 'tv'])

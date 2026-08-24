@@ -3,9 +3,8 @@
 import { Check, MessageSquareText } from 'lucide-react'
 import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
-import { MEDIA_COMMENT_MAX_LENGTH } from '@/modules/media/lib/mediaComment'
 import styles from './CommentModal.module.scss'
-import { useCurrentProfile } from '@/modules/auth'
+import { MEDIA_COMMENT_MAX_LENGTH } from '@/shared/domain/media'
 
 export interface CommentModalProps {
   isOpen: boolean

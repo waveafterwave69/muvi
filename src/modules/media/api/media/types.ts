@@ -1,13 +1,7 @@
-export type MediaType = 'movie' | 'tv'
-
-export interface MediaIdentity {
-  id: number
-  type: MediaType
-}
+import { MediaIdentity, MediaType, MediaWatchStatus, Pagination } from '@/shared/domain/media'
 
 export const getMediaKey = ({ id, type }: MediaIdentity): string => `${type}:${id}`
 
-export const getMediaHref = ({ id, type }: MediaIdentity): string => `/media/${type}/${id}`
 
 export type MediaCategory = 'popular' | 'top_rated' | 'upcoming'
 
@@ -74,7 +68,6 @@ export interface FiltersType {
   mediaType: MediaType
 }
 
-export type MediaWatchStatus = 'planned' | 'watched' | 'watching' | 'dropped'
 
 export interface AddMediaOptions {
   status: MediaWatchStatus
@@ -113,14 +106,7 @@ export interface UserMedia {
   media: DbMedia
 }
 
-export interface Pagination {
-  page: number
-  limit: number
-  total: number
-  totalPages: number
-  hasNextPage: boolean
-  hasPreviousPage: boolean
-}
+
 
 export interface UserMediaResponse {
   items: UserMedia[]

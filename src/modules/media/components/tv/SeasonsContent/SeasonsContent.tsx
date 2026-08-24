@@ -9,9 +9,9 @@ import {
   Tv,
 } from 'lucide-react'
 import { Button, Select } from '@/shared/ui'
-import type { MediaWatchStatus } from '../../../api/media/types'
 import type { TVEpisode, TVSeasonSummary } from '../../../api/mediaDetails/types'
 import styles from './SeasonsContent.module.scss'
+import { MediaWatchStatus } from '@/shared/domain/media'
 
 interface SeasonsContentProps {
   status?: MediaWatchStatus

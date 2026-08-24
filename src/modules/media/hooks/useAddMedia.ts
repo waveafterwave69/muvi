@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import type { AddMediaOptions, Media, MediaWatchStatus } from '../api/media/types'
+import type { AddMediaOptions, Media } from '../api/media/types'
 import type { Variant } from '../api/couple/types'
 import { useCurrentProfile } from '@/modules/auth'
+import { MediaWatchStatus } from '@/shared/domain/media'
 
 export type AddMediaHandler = (
   media: Media,

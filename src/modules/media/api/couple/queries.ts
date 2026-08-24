@@ -7,13 +7,13 @@ import {
   getMediaKey,
   type AddMediaOptions,
   type Media,
-  type MediaIdentity,
   type MediaStatuses,
 } from '../media/types'
 import {
   addMediaToCoupleCollection,
   getCoupleMediaStatuses,
 } from '.'
+import { MediaIdentity } from '@/shared/domain/media'
 
 interface AddMediaToCoupleVariables {
   media: Media

@@ -3,12 +3,10 @@ import {
   getMediaKey,
   type AddMediaOptions,
   type Media,
-  type MediaIdentity,
   type MediaStatusRow,
-  type MediaWatchStatus,
 } from '../media/types'
 import type { CoupleMediaStatusMap } from './types'
-import { normalizeMediaComment } from '../../lib/mediaComment'
+import { MediaIdentity, MediaWatchStatus, normalizeMediaComment } from '@/shared/domain/media'
 
 export interface AddMediaToCoupleResult {
   couple_id: string

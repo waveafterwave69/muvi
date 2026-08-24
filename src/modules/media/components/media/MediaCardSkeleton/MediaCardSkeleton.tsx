@@ -2,7 +2,7 @@ import { Check, Heart, Star } from 'lucide-react'
 import { Button, Card } from '@/shared/ui'
 import cardStyles from '../MediaCard/MediaCard.module.scss'
 import styles from './MediaCardSkeleton.module.scss'
-import type { MediaType } from '@/modules/media/api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 interface MediaCardSkeletonProps {
   count?: number

@@ -1,7 +1,5 @@
 import type { Profile } from '@/modules/profile/types/profileTypes'
-import type {
-  Pagination,
-} from '@/modules/media/api/media/types'
+import { MediaType, MediaWatchStatus, Pagination } from '@/shared/domain/media'
 
 export interface CoupleData {
   id: string
@@ -49,9 +47,7 @@ export interface CoupleInvitePreview {
 
 export type CoupleInviteResponse = 'accept' | 'decline'
 
-export type MediaWatchStatus = 'planned' | 'watched' | 'watching' | 'dropped'
 
-export type MediaType = 'movie' | 'tv'
 
 
 export interface CoupleMediaFilters {

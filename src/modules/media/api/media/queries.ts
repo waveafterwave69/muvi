@@ -8,17 +8,15 @@ import {
 } from '.'
 import {
   AddMediaOptions,
-  MediaIdentity,
-  MediaType,
   Media,
   MediaCategory,
   MediaStatuses,
-  MediaWatchStatus,
   getMediaKey,
 } from './types'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
 import { invalidateMediaCardQueries, mediaCardCacheKeys } from '../cache'
+import { MediaIdentity, MediaType, MediaWatchStatus } from '@/shared/domain/media'
 
 interface InfiniteMediaQueryParams {
   category?: MediaCategory

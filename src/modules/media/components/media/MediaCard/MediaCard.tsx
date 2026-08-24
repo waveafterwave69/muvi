@@ -15,10 +15,10 @@ import {
 } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
-import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
-import { formatMediaComment } from '@/modules/media/lib/mediaComment'
+import { Media } from '@/modules/media/api/media/types'
 import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
 import type { Variant } from '@/modules/media/api/couple/types'
+import { formatMediaComment, getMediaHref, MediaWatchStatus } from '@/shared/domain/media'
 
 interface MediaCardProps {
   media: Media

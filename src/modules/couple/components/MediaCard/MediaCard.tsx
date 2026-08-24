@@ -11,13 +11,12 @@ import {
   Quote,
   Star,
 } from 'lucide-react'
-import { getMediaHref } from '@/modules/media/api/media/types'
-import { formatMediaComment } from '@/modules/media/lib/mediaComment'
 import { Button, Card } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
-import type { CoupleMediaItem, MediaWatchStatus } from '@/modules/couple/api/types'
+import type { CoupleMediaItem } from '@/modules/couple/api/types'
 import { DefaultAvatar, type Profile } from '@/modules/profile'
 import TVCardProgress from '@/modules/media/components/tv/TVCardProgress/TVCardProgress'
+import { formatMediaComment, getMediaHref, MediaWatchStatus } from '@/shared/domain/media'
 
 interface MediaCardProps {
   item: CoupleMediaItem
@@ -25,6 +24,7 @@ interface MediaCardProps {
   isUpdating: boolean
   onFavoriteClick: () => void
   onWatchedClick: () => void
+  onTVStatusClick: () => void
   addedBy?: Profile | null
 }
 
@@ -33,6 +33,12 @@ const STATUS_LABELS: Record<MediaWatchStatus, string> = {
   watching: 'Смотрим сейчас',
   watched: 'Уже посмотрели',
   dropped: 'Перестали смотреть',
+}
+
+const TV_STATUS_LABELS: Partial<Record<MediaWatchStatus, string>> = {
+  watched: 'Просмотрено',
+  watching: 'В процессе',
+  dropped: 'Заброшено',
 }
 
 const StatusIcon = ({ status }: { status: MediaWatchStatus }) => {
@@ -49,6 +55,7 @@ export const MediaCard = ({
   isUpdating,
   onFavoriteClick,
   onWatchedClick,
+  onTVStatusClick,
   addedBy,
 }: MediaCardProps) => {
   const { status, media } = item
@@ -57,6 +64,7 @@ export const MediaCard = ({
   const mediaLabel = media.type === 'tv' ? 'сериала' : 'фильма'
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
+  const tvStatusText = TV_STATUS_LABELS[status]
   const comment = item.comment ? formatMediaComment(item.comment) : ''
   const detailsHref = `${getMediaHref({ id: media.external_id, type: media.type })}?mode=couple`
 
@@ -164,17 +172,32 @@ export const MediaCard = ({
           </p>
         </div>
 
-        <Button
-          variant={isWatched ? 'primary' : 'secondary'}
-          size="sm"
-          className={styles.watchedButton}
-          leftIcon={isWatched ? <Check aria-hidden /> : <Plus aria-hidden />}
-          disabled={isUpdating}
-          aria-pressed={isWatched}
-          onClick={onWatchedClick}
-        >
-          {isWatched ? 'Просмотрено' : 'В просмотренное'}
-        </Button>
+        {media.type === 'movie' ? (
+          <Button
+            variant={isWatched ? 'primary' : 'secondary'}
+            size="sm"
+            className={styles.watchedButton}
+            leftIcon={isWatched ? <Check aria-hidden /> : <Plus aria-hidden />}
+            disabled={isUpdating}
+            aria-pressed={isWatched}
+            onClick={onWatchedClick}
+          >
+            {isWatched ? 'Просмотрено' : 'В просмотренное'}
+          </Button>
+        ) : (
+          <Button
+            variant={tvStatusText ? 'primary' : 'secondary'}
+            size="sm"
+            className={styles.watchedButton}
+            leftIcon={<StatusIcon status={status} />}
+            disabled={isUpdating}
+            aria-pressed={Boolean(tvStatusText)}
+            aria-label={tvStatusText ? `Текущий статус: ${tvStatusText}` : 'Выбрать статус'}
+            onClick={onTVStatusClick}
+          >
+            {tvStatusText ?? 'Выбрать статус'}
+          </Button>
+        )}
       </div>
     </Card>
   )

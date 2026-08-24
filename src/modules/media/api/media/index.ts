@@ -2,18 +2,16 @@ import {
   AddMediaOptions,
   GetMediaStatusesParams,
   Media,
-  MediaType,
   MediaCategory,
   MediaResponse,
   MediaStatuses,
   MediaStatusRow,
-  MediaWatchStatus,
   UserMedia,
   UserMediaResponse,
   getMediaKey,
 } from './types'
 import { supabase } from '@/shared/api/supabase'
-import { normalizeMediaComment } from '../../lib/mediaComment'
+import { MediaType, MediaWatchStatus, normalizeMediaComment } from '@/shared/domain/media'
 
 export const getMedia = async ({
   page = 1,

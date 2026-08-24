@@ -1,4 +1,4 @@
-import type { MediaWatchStatus } from '../media/types'
+import { MediaWatchStatus } from '@/shared/domain/media'
 
 export type Variant = 'solo' | 'couple'
 

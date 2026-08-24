@@ -1,5 +1,6 @@
 import type { CastMember, MediaDetails, TVSeasonDetails } from './types'
-import type { MediaResponse, MediaType } from '../media/types'
+import type { MediaResponse } from '../media/types'
+import { MediaType } from '@/shared/domain/media'
 
 interface MediaDetailsResponse extends MediaDetails {
   created_by?: Array<{ name?: string }>

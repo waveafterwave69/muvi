@@ -1,6 +1,7 @@
 import { Input, Tabs } from '@/shared/ui'
-import type { FiltersType, MediaCategory, MediaType } from '@/modules/media/api/media/types'
+import type { FiltersType, MediaCategory } from '@/modules/media/api/media/types'
 import styles from './MediaFilters.module.scss'
+import { MediaType } from '@/shared/domain/media'
 
 interface FiltersProps {
   filters: FiltersType

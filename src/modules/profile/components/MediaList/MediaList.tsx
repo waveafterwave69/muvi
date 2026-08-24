@@ -2,10 +2,11 @@
 
 import { useMemo, useState, type FC } from 'react'
 import { MediaCard } from '@/modules/media'
-import type { Media, MediaType, MediaWatchStatus } from '@/modules/media/api/media/types'
+import type { Media } from '@/modules/media/api/media/types'
 import { Card, Tabs } from '@/shared/ui'
 import type { ProfileMedia } from '../../types/profileTypes'
 import styles from './MediaList.module.scss'
+import { MediaType, MediaWatchStatus } from '@/shared/domain/media'
 
 interface MediaListProps {
   media: ProfileMedia[]

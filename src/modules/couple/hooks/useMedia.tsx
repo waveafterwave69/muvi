@@ -3,7 +3,8 @@ import {
   useRemoveMediaFromCoupleCollection,
   useUpdateCoupleMedia,
 } from '@/modules/couple/api/queries'
-import type { CoupleMediaItem, MediaWatchStatus } from '@/modules/couple/api/types'
+import type { CoupleMediaItem } from '@/modules/couple/api/types'
+import { MediaWatchStatus } from '@/shared/domain/media'
 
 type ModalType = 'stars' | 'comment' | 'tv' | null
 
