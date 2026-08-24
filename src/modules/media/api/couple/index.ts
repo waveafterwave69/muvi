@@ -3,12 +3,10 @@ import {
   getMediaKey,
   type AddMediaOptions,
   type Media,
-  type MediaIdentity,
   type MediaStatusRow,
-  type MediaWatchStatus,
 } from '../media/types'
 import type { CoupleMediaStatusMap } from './types'
-import { normalizeMediaComment } from '../../lib/mediaComment'
+import { MediaIdentity, MediaWatchStatus, normalizeMediaComment } from '@/shared/domain/media'
 
 export interface AddMediaToCoupleResult {
   couple_id: string
@@ -104,20 +102,4 @@ export const getCoupleMediaStatuses = async (
       )
       .filter(([key]) => requestedKeys.has(key)),
   )
-}
-
-export const removeMediaFromCoupleCollection = async (mediaId: number): Promise<void> => {
-  const { data, error } = await supabase.rpc('remove_media_from_couple_collection', {
-    p_media_id: mediaId,
-  })
-
-  if (error) {
-    throw new Error(`Не удалось удалить медиа из коллекции пары: ${error.message}`, {
-      cause: error,
-    })
-  }
-
-  if (!data) {
-    throw new Error('Медиа не найдено в коллекции пары')
-  }
 }

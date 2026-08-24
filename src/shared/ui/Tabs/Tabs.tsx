@@ -1,29 +1,29 @@
 'use client'
 
-import { useId, type FC } from 'react'
+import { useId } from 'react'
 import { motion } from 'framer-motion'
 import styles from './Tabs.module.scss'
 import { TabVariant } from '@/shared/types/variant'
 import { Size } from '@/shared/types/size'
 import { Tab } from '@/shared/types/tab'
 
-interface TabsProps {
+interface TabsProps<T extends Tab['id']> {
   variant?: TabVariant
   className?: string
   size?: Size
   tabs: Tab[]
-  value: number | string
-  onChange: (id: number | string) => void
+  value: T
+  onChange: (id: T) => void
 }
 
-const Tabs: FC<TabsProps> = ({
+const Tabs = <T extends Tab['id'],>({
   className = '',
   tabs,
   variant = 'primary',
   size = 'md',
   value,
   onChange,
-}) => {
+}: TabsProps<T>) => {
   const layoutId = useId()
 
   return (
@@ -36,9 +36,9 @@ const Tabs: FC<TabsProps> = ({
 
         return (
           <button
-            key={tab.id}
+            key={String(tab.id)}
             type="button"
-            onClick={() => onChange(tab.id)}
+            onClick={() => onChange(tab.id as T)}
             className={`${styles.tab} ${isActive ? styles.is__active : ''}`}
           >
             <span className={styles.tab__text}>{tab.label}</span>

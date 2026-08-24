@@ -5,7 +5,6 @@ import { useState } from 'react'
 import type { Variant } from '@/modules/media/api/couple/types'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './StarsModal.module.scss'
-import { useCurrentProfile } from '@/modules/auth'
 
 interface Props {
   isOpen: boolean
@@ -16,6 +15,7 @@ interface Props {
   isSubmitting?: boolean
   variant: Variant
   setVariant: (variant: Variant) => void
+  in_couple: boolean
 }
 
 const ratings = Array.from({ length: 10 }, (_, index) => index + 1)
@@ -33,10 +33,10 @@ export const StarsModal = ({
   isSubmitting = false,
   variant,
   setVariant,
+  in_couple
 }: Props) => {
   const [hover, setHover] = useState(0)
   const activeRating = hover || stars || 0
-  const { data } = useCurrentProfile()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm" ariaLabel="Оценка">
@@ -44,7 +44,7 @@ export const StarsModal = ({
         <h3 className={styles.title}>Как тебе?</h3>
         <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
 
-        {data?.in_couple && <Tabs
+        {in_couple && <Tabs
           tabs={viewingModes}
           value={variant}
           variant="primary"

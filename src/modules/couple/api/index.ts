@@ -6,6 +6,8 @@ import type {
   CoupleMediaItem,
   CoupleMediaResponse,
   CouplePageData,
+  UpdateCoupleMediaParams,
+  UpdateCoupleMediaResult,
 } from './types'
 
 
@@ -51,15 +53,35 @@ export const getCoupleMedia = async ({
         media_id,
         status,
         created_at,
-        media:media!inner (*)
+        rating,
+        comment,
+        added_by,
+        media:media!inner (
+          id,
+          external_id,
+          source,
+          type,
+          backdrop_path,
+          poster_path,
+          title,
+          vote_average,
+          created_at,
+          updated_at
+        )
       `,
       { count: 'exact' },
     )
     .eq('couple_id', coupleId)
-    .eq('status', status)
-    .eq('media.type', mediaType)
     .order('created_at', { ascending: false })
     .range(from, to)
+
+  if(mediaType) {
+    query = query.eq('media.type', mediaType)
+  }
+
+  if (status) {
+    query = query.eq('status', status)
+  }
 
   if (normalizedSearch) {
     query = query.ilike('media.title', `%${normalizedSearch}%`)
@@ -91,6 +113,50 @@ export const getCoupleMedia = async ({
       hasNextPage: page * limit < total,
       hasPreviousPage: page > 1,
     },
+  }
+}
+
+export const updateCoupleMedia = async ({
+  coupleId,
+  mediaId,
+  status,
+  comment,
+  rating,
+}: UpdateCoupleMediaParams): Promise<UpdateCoupleMediaResult> => {
+  const { data, error } = await supabase.rpc('update_couple_media', {
+    p_couple_id: coupleId,
+    p_media_id: mediaId,
+    p_status: status,
+    p_comment: comment,
+    p_rating: rating,
+  })
+
+  if (error) {
+    throw new Error(`Не удалось обновить медиа в коллекции пары: ${error.message}`, {
+      cause: error,
+    })
+  }
+
+  if (!data) {
+    throw new Error('Сервер не вернул обновлённое медиа')
+  }
+
+  return data as UpdateCoupleMediaResult
+}
+
+export const removeMediaFromCoupleCollection = async (mediaId: number): Promise<void> => {
+  const { data, error } = await supabase.rpc('remove_media_from_couple_collection', {
+    p_media_id: mediaId,
+  })
+
+  if (error) {
+    throw new Error(`Не удалось удалить медиа из коллекции пары: ${error.message}`, {
+      cause: error,
+    })
+  }
+
+  if (!data) {
+    throw new Error('Медиа не найдено в коллекции пары')
   }
 }
 

@@ -8,11 +8,19 @@ interface TVCardProgressProps {
   mediaId: number
   userId: string
   variant?: Variant
+  compact?: boolean
+  coupleId?: string
 }
 
-const TVCardProgress = ({ mediaId, userId, variant = 'solo' }: TVCardProgressProps) => {
+const TVCardProgress = ({
+  mediaId,
+  userId,
+  variant = 'solo',
+  compact = false,
+  coupleId,
+}: TVCardProgressProps) => {
   const { data: episodeCount } = useTVEpisodeCount(mediaId, true)
-  const { data: progress } = useEpisodeProgress(userId, mediaId, variant, true)
+  const { data: progress } = useEpisodeProgress(userId, mediaId, variant, true, coupleId)
   const total = episodeCount?.total ?? 0
 
   if (!total || !progress) return null
@@ -22,7 +30,7 @@ const TVCardProgress = ({ mediaId, userId, variant = 'solo' }: TVCardProgressPro
 
   return (
     <div
-      className={styles.progress}
+      className={`${styles.progress} ${compact ? styles.compact : ''}`}
       aria-label={`Сериал просмотрен на ${percent} процентов: ${watched} из ${total} серий`}
     >
       <div className={styles.label}>

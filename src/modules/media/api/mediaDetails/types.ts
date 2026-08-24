@@ -1,4 +1,5 @@
-import type { Media, MediaResponse, MediaType } from '../media/types'
+import type { Media, MediaResponse } from '../media/types'
+import { MediaType } from '@/shared/domain/media'
 
 export interface Genre {
   id: number

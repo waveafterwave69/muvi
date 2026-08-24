@@ -1,6 +1,6 @@
 import { MediaDetailsPage } from '@/modules/media'
-import type { MediaType } from '@/modules/media/api/media/types'
 import { notFound } from 'next/navigation'
+import { MediaType } from '@/shared/domain/media'
 
 interface MediaDetailsRouteProps {
   params: Promise<{

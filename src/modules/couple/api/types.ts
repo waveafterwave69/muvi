@@ -1,10 +1,5 @@
 import type { Profile } from '@/modules/profile/types/profileTypes'
-import type {
-  DbMedia,
-  MediaType,
-  MediaWatchStatus,
-  Pagination,
-} from '@/modules/media/api/media/types'
+import { MediaType, MediaWatchStatus, Pagination } from '@/shared/domain/media'
 
 export interface CoupleData {
   id: string
@@ -52,10 +47,26 @@ export interface CoupleInvitePreview {
 
 export type CoupleInviteResponse = 'accept' | 'decline'
 
+
+
+
 export interface CoupleMediaFilters {
-  mediaType: MediaType
-  status: MediaWatchStatus
+  mediaType: MediaType| null
+  status: MediaWatchStatus | null
   search: string
+}
+
+export interface DbMedia {
+  id: number
+  external_id: number
+  source: string
+  type: MediaType
+  backdrop_path: string | null
+  poster_path: string | null
+  title: string
+  vote_average: number
+  created_at: string
+  updated_at: string
 }
 
 export interface CoupleMediaItem {
@@ -64,9 +75,30 @@ export interface CoupleMediaItem {
   status: MediaWatchStatus
   created_at: string
   media: DbMedia
+  rating: number
+  added_by: string
+  comment: string | null
 }
 
 export interface CoupleMediaResponse {
   items: CoupleMediaItem[]
   pagination: Pagination
+}
+
+export interface UpdateCoupleMediaParams {
+  coupleId: string
+  mediaId: number
+  status: MediaWatchStatus
+  comment: string | null
+  rating: number | null
+}
+
+export interface UpdateCoupleMediaResult {
+  couple_id: string
+  media_id: number
+  added_by: string
+  status: MediaWatchStatus
+  comment: string | null
+  rating: number | null
+  created_at: string
 }

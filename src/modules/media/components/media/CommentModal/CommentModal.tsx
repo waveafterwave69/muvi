@@ -3,9 +3,8 @@
 import { Check, MessageSquareText } from 'lucide-react'
 import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
-import { MEDIA_COMMENT_MAX_LENGTH } from '@/modules/media/lib/mediaComment'
 import styles from './CommentModal.module.scss'
-import { useCurrentProfile } from '@/modules/auth'
+import { MEDIA_COMMENT_MAX_LENGTH } from '@/shared/domain/media'
 
 export interface CommentModalProps {
   isOpen: boolean
@@ -16,6 +15,7 @@ export interface CommentModalProps {
   isSubmitting?: boolean
   variant: 'couple' | 'solo';
   setVariant: (variant: 'couple' | 'solo') => void;
+  in_couple: boolean;
 }
 
 const viewingModes = [
@@ -32,11 +32,11 @@ export const CommentModal = ({
   isSubmitting = false,
   variant,
   setVariant,
+  in_couple
 }: CommentModalProps) => {
   const titleId = useId()
   const textareaId = useId()
   const hintId = useId()
-  const { data } = useCurrentProfile()
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSubmit()
@@ -57,7 +57,7 @@ export const CommentModal = ({
           </div>
         </header>
 
-        {data?.in_couple && <Tabs
+        {in_couple && <Tabs
           className={styles.tabs}
           tabs={viewingModes}
           value={variant}

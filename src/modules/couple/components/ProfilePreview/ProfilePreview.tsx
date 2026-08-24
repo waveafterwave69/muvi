@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { Link2 } from 'lucide-react'
-import { DefaultAvatar } from '@/modules/profile'
-import type { Profile } from '@/modules/profile/types/profileTypes'
+import { DefaultAvatar, Profile } from '@/modules/profile'
 import styles from './ProfilePreview.module.scss'
 
 interface ProfilePreviewProps {

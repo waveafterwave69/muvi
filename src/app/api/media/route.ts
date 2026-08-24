@@ -1,10 +1,10 @@
 import {
-  MediaType,
   Media,
   MediaCategory,
   MediaResponse,
 } from '@/modules/media/api/media/types'
 import { NextResponse } from 'next/server'
+import { MediaType } from '@/shared/domain/media'
 
 const TMDB_URL = 'https://api.themoviedb.org/3'
 const MEDIA_CATEGORIES = new Set<MediaCategory>(['popular', 'top_rated', 'upcoming'])
