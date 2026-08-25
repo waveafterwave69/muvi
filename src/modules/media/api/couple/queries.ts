@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useMutation, useQueries, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { coupleKeys } from '@/modules/couple/api/queries'
-import { invalidateMediaCardQueries, mediaCardCacheKeys } from '../cache'
 import {
   getMediaKey,
   type AddMediaOptions,
@@ -14,6 +13,7 @@ import {
   getCoupleMediaStatuses,
 } from '.'
 import { MediaIdentity } from '@/shared/domain/media'
+import { invalidateMediaCardQueries, mediaCardCacheKeys } from '@/shared/api/query-cache/media'
 
 interface AddMediaToCoupleVariables {
   media: Media

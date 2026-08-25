@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { invalidateMediaCardQueries } from '@/modules/media/api/cache'
+import { invalidateMediaCardQueries } from '@/shared/api/query-cache/media/cache'
 import {
   cancelCoupleInvite,
   createCoupleInvite,

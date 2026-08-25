@@ -15,8 +15,8 @@ import {
 } from './types'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
-import { invalidateMediaCardQueries, mediaCardCacheKeys } from '../cache'
 import { MediaIdentity, MediaType, MediaWatchStatus } from '@/shared/domain/media'
+import { invalidateMediaCardQueries, mediaCardCacheKeys } from '@/shared/api/query-cache/media'
 
 interface InfiniteMediaQueryParams {
   category?: MediaCategory

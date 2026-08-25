@@ -1,6 +1,7 @@
 .grid {
   display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, var(--couple-media-card-width)));
+  grid-template-columns: repeat(3, minmax(0, var(--couple-media-card-width)));
+  align-items: start;
   justify-content: center;
   gap: 16px;
   overflow: visible !important;
@@ -86,12 +87,6 @@
   }
 }
 
-@media (max-width: 1495px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, var(--couple-media-card-width)));
-  }
-}
-
 @media (max-width: 1129px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, var(--couple-media-card-width)));
@@ -110,11 +105,11 @@
   }
 }
 
-@media (max-width: 539px) {
+@media (max-width: 600px) {
   .skeleton {
     max-width: none;
     max-height: none;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 11 / 10;
     border-radius: 14px;
 
     &:nth-child(n + 3) {

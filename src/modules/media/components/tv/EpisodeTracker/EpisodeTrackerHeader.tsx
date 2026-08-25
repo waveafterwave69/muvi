@@ -1,15 +1,15 @@
-import type { Variant } from '../../../api/couple/types'
 import EpisodeProgressModeSelector from './EpisodeProgressModeSelector'
 import styles from './EpisodeTracker.module.scss'
+import { MediaActionTarget } from '@/shared/domain/media'
 
 interface EpisodeTrackerHeaderProps {
-  variant: Variant
+  variant: MediaActionTarget
   watchedCount: number
   totalEpisodes: number
   roundedProgressPercent: number
   showModeSelector: boolean
   isStatusLoading: boolean
-  onModeChange: (variant: Variant) => void
+  onModeChange: (variant: MediaActionTarget) => void
 }
 
 const EpisodeTrackerHeader = ({

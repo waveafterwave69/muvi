@@ -1,13 +1,13 @@
 'use client'
 
-import { useEpisodeProgress, useTVEpisodeCount } from '../../../api/episodeProgress/queries'
 import styles from './TVCardProgress.module.scss'
-import type { Variant } from '../../../api/couple/types'
+import { MediaActionTarget } from '@/shared/domain/media'
+import { useEpisodeProgress, useTVEpisodeCount } from '../../api/queries'
 
 interface TVCardProgressProps {
   mediaId: number
   userId: string
-  variant?: Variant
+  variant?: MediaActionTarget
   compact?: boolean
   coupleId?: string
 }

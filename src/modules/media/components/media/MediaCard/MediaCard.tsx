@@ -16,9 +16,8 @@ import {
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import { Media } from '@/modules/media/api/media/types'
-import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
-import type { Variant } from '@/modules/media/api/couple/types'
-import { formatMediaComment, getMediaHref, MediaWatchStatus } from '@/shared/domain/media'
+import { TVCardProgress } from '@/features/episode-progress'
+import { formatMediaComment, getMediaHref, MediaWatchStatus, MediaActionTarget } from '@/shared/domain/media'
 
 interface MediaCardProps {
   media: Media
@@ -28,7 +27,7 @@ interface MediaCardProps {
   isUpdating: boolean
   showActions: boolean
   userId?: string
-  detailsVariant?: Variant
+  detailsVariant?: MediaActionTarget
   handleFavorite: () => void
   handleRemoveFromCouple?: () => void
   handleWatched: () => void

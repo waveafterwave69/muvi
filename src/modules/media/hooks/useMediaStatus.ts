@@ -7,8 +7,8 @@ import {
   useCoupleMediaStatuses,
 } from '@/modules/media/api/couple/queries'
 import { useRemoveMediaFromCoupleCollection } from '@/modules/couple/api/queries'
-import type { Variant } from '../api/couple/types'
-import { useMarkAllTVEpisodesWatched } from '../api/episodeProgress/queries'
+import { MediaActionTarget } from '@/shared/domain/media'
+import { useMarkAllTVEpisodesWatched } from '@/features/episode-progress'
 
 export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDetails[]) => {
   const mediaArray = Array.isArray(items) ? items : [items]
@@ -45,7 +45,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     media,
   })
 
-  const addMedia = async (media: Media, options: AddMediaOptions, variant: Variant) => {
+  const addMedia = async (media: Media, options: AddMediaOptions, variant: MediaActionTarget) => {
     if (variant === 'couple') {
       await addMediaToCouple.mutateAsync({
         media,

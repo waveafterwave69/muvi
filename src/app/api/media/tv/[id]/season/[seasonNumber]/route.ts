@@ -46,7 +46,6 @@ export async function GET(
 
     return NextResponse.json(await response.json())
   } catch (error) {
-    console.error('Ошибка при запросе сезона в TMDB:', error)
     return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 502 })
   }
 }

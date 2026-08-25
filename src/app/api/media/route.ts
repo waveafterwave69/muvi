@@ -69,7 +69,6 @@ export async function GET(request: Request) {
   const token = process.env.TMDB_API_KEY
 
   if (!token) {
-    console.error('TMDB_API_KEY is not configured')
     return NextResponse.json({ error: 'Сервис каталога не настроен' }, { status: 500 })
   }
 
@@ -134,7 +133,6 @@ export async function GET(request: Request) {
     })
 
     if (!response.ok) {
-      console.error(`TMDB request failed with status ${response.status}`)
       return NextResponse.json({ error: 'Не удалось загрузить каталог' }, { status: 502 })
     }
 
@@ -157,7 +155,6 @@ export async function GET(request: Request) {
     }
     return NextResponse.json(normalizedResponse)
   } catch (error) {
-    console.error('TMDB request failed', error)
     return NextResponse.json({ error: 'Не удалось загрузить каталог' }, { status: 502 })
   }
 }

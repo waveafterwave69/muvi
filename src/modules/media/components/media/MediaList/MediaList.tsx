@@ -8,9 +8,8 @@ import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { MediaCardSkeleton } from '../MediaCardSkeleton/MediaCardSkeleton'
 import { MediaCard } from '../MediaCard/MediaCard'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
-import { MediaActionModals } from '../MediaActionModals/MediaActionModals'
-import type { Variant } from '@/modules/media/api/couple/types'
-import { MediaType } from '@/shared/domain/media'
+import { MediaType, MediaActionTarget } from '@/shared/domain/media'
+import { MediaActionModals } from '@/features/media-actions'
 
 interface MediaListProps {
   media: Media[]
@@ -19,7 +18,7 @@ interface MediaListProps {
   hasNextPage: boolean
   isFetchingNextPage: boolean
   mediaType?: MediaType
-  statusVariant?: Variant
+  statusVariant?: MediaActionTarget
 }
 
 export const MediaList = ({

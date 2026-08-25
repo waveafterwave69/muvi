@@ -1,11 +1,6 @@
 import { supabase } from '@/shared/api/supabase'
-import type { Variant } from '../couple/types'
-import type {
-  EpisodeProgress,
-  MarkAllTVEpisodesWatchedParams,
-  SetEpisodesWatchedParams,
-  TVEpisodeCount,
-} from './types'
+import { MediaActionTarget } from '@/shared/domain/media'
+import { EpisodeProgress, MarkAllTVEpisodesWatchedParams, SetEpisodesWatchedParams, TVEpisodeCount } from './types'
 
 interface EpisodeProgressRow extends EpisodeProgress {
   media: {
@@ -17,7 +12,7 @@ interface EpisodeProgressRow extends EpisodeProgress {
 export const getEpisodeProgress = async (
   userId: string,
   externalMediaId: number,
-  variant: Variant,
+  variant: MediaActionTarget,
   coupleId?: string,
 ): Promise<EpisodeProgress[]> => {
   if (variant === 'couple') {
@@ -84,7 +79,7 @@ export const setEpisodesWatched = async ({
   seasonNumber,
   episodeNumbers,
   watched,
-}: SetEpisodesWatchedParams): Promise<void> => {
+  }: SetEpisodesWatchedParams): Promise<void> => {
   const functionName =
     variant === 'couple' ? 'set_couple_episodes_watched' : 'set_episodes_watched'
   const { error } = await supabase.rpc(functionName, {
@@ -113,8 +108,8 @@ export const getTVEpisodeCount = async (
 }
 
 export const markAllTVEpisodesWatched = async ({
-  mediaId,
-  variant,
+ mediaId,
+ variant,
 }: MarkAllTVEpisodesWatchedParams): Promise<void> => {
   const { seasons } = await getTVEpisodeCount(mediaId)
 

@@ -6,3 +6,5 @@ export interface MediaIdentity {
   id: number
   type: MediaType
 }
+
+export type MediaActionTarget = 'solo' | 'couple'

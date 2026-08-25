@@ -2,9 +2,9 @@
 
 import { Star } from 'lucide-react'
 import { useState } from 'react'
-import type { Variant } from '@/modules/media/api/couple/types'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './StarsModal.module.scss'
+import { MediaActionTarget } from '@/shared/domain/media'
 
 interface Props {
   isOpen: boolean
@@ -13,9 +13,9 @@ interface Props {
   stars: number | null
   onSubmit: () => void
   isSubmitting?: boolean
-  variant: Variant
-  setVariant: (variant: Variant) => void
-  in_couple: boolean
+  target: MediaActionTarget
+  onTargetChange?: (value: MediaActionTarget) => void,
+  allowTargetSelection: boolean
 }
 
 const ratings = Array.from({ length: 10 }, (_, index) => index + 1)
@@ -31,9 +31,9 @@ export const StarsModal = ({
   setStars,
   onSubmit,
   isSubmitting = false,
-  variant,
-  setVariant,
-  in_couple
+  target,
+  onTargetChange,
+  allowTargetSelection,
 }: Props) => {
   const [hover, setHover] = useState(0)
   const activeRating = hover || stars || 0
@@ -44,14 +44,14 @@ export const StarsModal = ({
         <h3 className={styles.title}>Как тебе?</h3>
         <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
 
-        {in_couple && <Tabs
+        {allowTargetSelection && <Tabs
           tabs={viewingModes}
-          value={variant}
+          value={target}
           variant="primary"
           size="sm"
           onChange={(value) => {
             if (value === 'solo' || value === 'couple') {
-              setVariant(value)
+              onTargetChange?.(value)
             }
           }}
         />}

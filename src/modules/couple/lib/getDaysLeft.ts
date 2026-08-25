@@ -1,5 +1,3 @@
-import { useRouter } from 'next/navigation'
-import { useRespondToCoupleInviteFromLink } from '@/modules/couple/api/queries'
 
 export const getDaysLeft = (expiresAt: string) => {
   const remaining = new Date(expiresAt).getTime() - Date.now()
