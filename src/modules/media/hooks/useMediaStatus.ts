@@ -5,10 +5,10 @@ import { MediaDetails } from '../api/mediaDetails/types'
 import {
   useAddMediaToCoupleCollection,
   useCoupleMediaStatuses,
-  useRemoveMediaFromCoupleCollection,
 } from '@/modules/media/api/couple/queries'
-import type { Variant } from '../api/couple/types'
-import { useMarkAllTVEpisodesWatched } from '../api/episodeProgress/queries'
+import { useRemoveMediaFromCoupleCollection } from '@/modules/couple/api/queries'
+import { MediaActionTarget } from '@/shared/domain/media'
+import { useMarkAllTVEpisodesWatched } from '@/features/episode-progress'
 
 export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDetails[]) => {
   const mediaArray = Array.isArray(items) ? items : [items]
@@ -47,7 +47,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
   const addMedia = async (
     media: Media,
     options: AddMediaOptions,
-    variant: Variant,
+    variant: MediaActionTarget,
     silent = false,
   ) => {
     if (variant === 'couple') {

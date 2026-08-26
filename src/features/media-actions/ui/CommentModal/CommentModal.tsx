@@ -3,10 +3,12 @@
 import { Check, MessageSquareText, Trash2 } from 'lucide-react'
 import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
-import { MEDIA_COMMENT_MAX_LENGTH } from '@/modules/media/lib/mediaComment'
 import styles from './CommentModal.module.scss'
-import { useCurrentProfile } from '@/modules/auth'
-import type { MediaWatchStatus } from '@/modules/media/api/media/types'
+import {
+  MEDIA_COMMENT_MAX_LENGTH,
+  type MediaActionTarget,
+  type MediaWatchStatus,
+} from '@/shared/domain/media'
 
 export interface CommentModalProps {
   isOpen: boolean
@@ -17,8 +19,9 @@ export interface CommentModalProps {
   isSubmitting?: boolean
   currentStatus?: MediaWatchStatus
   onRemove: () => void
-  variant: 'couple' | 'solo'
-  setVariant: (variant: 'couple' | 'solo') => void
+  target: MediaActionTarget
+  onTargetChange?: (value: MediaActionTarget) => void
+  allowTargetSelection: boolean
 }
 
 const viewingModes = [
@@ -35,13 +38,13 @@ export const CommentModal = ({
   isSubmitting = false,
   currentStatus,
   onRemove,
-  variant,
-  setVariant,
+  target,
+  onTargetChange,
+  allowTargetSelection,
 }: CommentModalProps) => {
   const titleId = useId()
   const textareaId = useId()
   const hintId = useId()
-  const { data } = useCurrentProfile()
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSubmit()
@@ -62,16 +65,16 @@ export const CommentModal = ({
           </div>
         </header>
 
-        {data?.in_couple && (
+        {allowTargetSelection && (
           <Tabs
             className={styles.tabs}
             tabs={viewingModes}
-            value={variant}
+            value={target}
             variant="primary"
             size="sm"
-            onChange={(v) => {
-              if (v === 'solo' || v === 'couple') {
-                setVariant(v)
+            onChange={(value) => {
+              if (value === 'solo' || value === 'couple') {
+                onTargetChange?.(value)
               }
             }}
           />

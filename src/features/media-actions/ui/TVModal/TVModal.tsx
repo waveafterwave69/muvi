@@ -1,11 +1,9 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { FC, useState } from 'react'
 import styles from './TVModal.module.scss'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import { Tab } from '@/shared/types/tab'
 import { Check, Trash2 } from 'lucide-react'
-import { MediaWatchStatus } from '../../../api/media/types'
-import { Variant } from '@/modules/media/api/couple/types'
-import { useCurrentProfile } from '@/modules/auth'
+import { MediaWatchStatus, MediaActionTarget } from '@/shared/domain/media'
 
 interface TVModalProps {
   isOpen: boolean
@@ -14,8 +12,9 @@ interface TVModalProps {
   onRemove: () => void
   currentStatus?: MediaWatchStatus
   isSubmitting?: boolean
-  variant: Variant
-  setVariant: Dispatch<SetStateAction<Variant>>
+  target: MediaActionTarget
+  onTargetChange?: (value: MediaActionTarget) => void
+  allowTargetSelection: boolean
 }
 
 type TVWatchStatus = Exclude<MediaWatchStatus, 'planned'>
@@ -44,12 +43,12 @@ const TVModal: FC<TVModalProps> = ({
   onRemove,
   currentStatus,
   isSubmitting = false,
-  variant,
-  setVariant,
+  target,
+  onTargetChange,
+  allowTargetSelection,
 }) => {
   const [selectedTab, setSelectedTab] = useState<TVWatchStatus | null>(null)
   const currentTab = selectedTab ?? getTVWatchStatus(currentStatus)
-  const { data } = useCurrentProfile()
 
   const handleClose = () => {
     setSelectedTab(null)
@@ -71,16 +70,16 @@ const TVModal: FC<TVModalProps> = ({
       <p className={styles.subtitle}>
         Статус сериала, который будет отображаться в вашей коллекции
       </p>
-      {data?.in_couple && (
+      {allowTargetSelection && (
         <Tabs
           tabs={viewingModes}
-          value={variant}
+          value={target}
           variant="primary"
           size="sm"
           onChange={(value) => {
             if (value === 'solo' || value === 'couple') {
               setSelectedTab(null)
-              setVariant(value)
+              onTargetChange?.(value)
             }
           }}
         />

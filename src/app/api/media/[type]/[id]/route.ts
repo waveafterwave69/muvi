@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import type { Media, MediaType } from '@/modules/media/api/media/types'
+import type { Media } from '@/modules/media/api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 const TMDB_URL = 'https://api.themoviedb.org/3'
 const MEDIA_TYPES = new Set<MediaType>(['movie', 'tv'])
@@ -64,7 +65,6 @@ export async function GET(
   const token = process.env.TMDB_API_KEY
 
   if (!token) {
-    console.error('TMDB_API_KEY is not configured в .env')
     return NextResponse.json({ error: 'Сервис каталога не настроен' }, { status: 500 })
   }
 
@@ -100,7 +100,6 @@ export async function GET(
     })
 
     if (!response.ok) {
-      console.error(`TMDB API вернул статус: ${response.status}`)
       if (response.status === 404) {
         return NextResponse.json({ error: 'Медиа не найдено в базе TMDB' }, { status: 404 })
       }

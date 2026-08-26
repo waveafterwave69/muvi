@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import type { AddMediaOptions, Media, MediaWatchStatus } from '../api/media/types'
-import type { Variant } from '../api/couple/types'
+import type { AddMediaOptions, Media } from '../api/media/types'
+import { useCurrentProfile } from '@/modules/auth'
+import { MediaWatchStatus, MediaActionTarget } from '@/shared/domain/media'
 
 export type AddMediaHandler = (
   media: Media,
   options: AddMediaOptions,
-  variant: Variant,
+  variant: MediaActionTarget,
+  silent?: boolean,
 ) => Promise<void>
 
 export type RemoveMediaHandler = (media: Pick<Media, 'id' | 'type'>) => Promise<void>
@@ -16,7 +18,7 @@ interface UseAddMediaParams {
   removeMedia: RemoveMediaHandler
   removeCoupleMedia: RemoveCoupleMediaHandler
   isUpdating: boolean
-  defaultVariant?: Variant
+  defaultVariant?: MediaActionTarget
 }
 
 interface MediaAction {
@@ -35,13 +37,14 @@ export const useAddMedia = ({
   isUpdating,
   defaultVariant = 'solo',
 }: UseAddMediaParams) => {
-  const [variant, setVariant] = useState<Variant>(defaultVariant)
+  const [target, setTarget] = useState<MediaActionTarget>(defaultVariant)
   const [stars, setStars] = useState<number | null>(null)
   const [comment, setComment] = useState<string | null>(null)
   const [isStarsModalOpen, setIsStarsModalOpen] = useState(false)
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false)
   const [isTVModalOpen, setIsTVModalOpen] = useState(false)
   const [activeMedia, setActiveMedia] = useState<MediaAction | null>(null)
+  const { data } = useCurrentProfile()
 
   const resetActiveMedia = () => {
     setActiveMedia(null)
@@ -64,13 +67,17 @@ export const useAddMedia = ({
     resetActiveMedia()
   }
 
+  const onTargetChange = (newTarget: MediaActionTarget) => {
+    setTarget(newTarget)
+  }
+
   const handleFavoriteClick = (
     media: Media,
     soloStatus?: MediaWatchStatus,
     coupleMediaId?: number,
     coupleStatus?: MediaWatchStatus,
   ) => {
-    setVariant(defaultVariant)
+    onTargetChange(defaultVariant)
     const status = defaultVariant === 'couple' ? coupleStatus : soloStatus
 
     if (status === 'planned') {
@@ -99,7 +106,7 @@ export const useAddMedia = ({
     coupleMediaId?: number,
     coupleStatus?: MediaWatchStatus,
   ) => {
-    setVariant(defaultVariant)
+    onTargetChange(defaultVariant)
     const status = defaultVariant === 'couple' ? coupleStatus : soloStatus
 
     if (status === 'watched') {
@@ -128,7 +135,7 @@ export const useAddMedia = ({
     coupleMediaId?: number,
     coupleStatus?: MediaWatchStatus,
   ) => {
-    setVariant(defaultVariant)
+    onTargetChange(defaultVariant)
     setActiveMedia({
       type: 'tv-status',
       media,
@@ -159,7 +166,7 @@ export const useAddMedia = ({
           rating: stars,
           comment: null,
         },
-        variant,
+        target,
       )
 
       closeStarsModal()
@@ -179,7 +186,7 @@ export const useAddMedia = ({
           rating: null,
           comment,
         },
-        variant,
+        target,
       )
 
       closeCommentModal()
@@ -210,7 +217,7 @@ export const useAddMedia = ({
           rating: null,
           comment: null,
         },
-        variant,
+        target,
       )
 
       closeTVModal()
@@ -223,7 +230,7 @@ export const useAddMedia = ({
     if (!activeMedia) return
 
     try {
-      if (variant === 'couple') {
+      if (target === 'couple') {
         if (activeMedia.coupleMediaId === undefined) return
         await removeCoupleMedia(activeMedia.coupleMediaId)
       } else {
@@ -235,7 +242,7 @@ export const useAddMedia = ({
     }
   }
 
-  const activeStatus = variant === 'couple' ? activeMedia?.coupleStatus : activeMedia?.soloStatus
+  const activeStatus = target === 'couple' ? activeMedia?.coupleStatus : activeMedia?.soloStatus
 
   return {
     handleFavoriteClick,
@@ -252,8 +259,9 @@ export const useAddMedia = ({
         isSubmitting: isUpdating,
         currentStatus: activeStatus,
         onRemove: () => handleRemoveActiveStatus(closeStarsModal),
-        variant,
-        setVariant,
+        target,
+        onTargetChange,
+        allowTargetSelection: data?.in_couple ?? false,
       },
       comment: {
         isOpen: isCommentModalOpen,
@@ -264,8 +272,9 @@ export const useAddMedia = ({
         isSubmitting: isUpdating,
         currentStatus: activeStatus,
         onRemove: () => handleRemoveActiveStatus(closeCommentModal),
-        variant,
-        setVariant,
+        target,
+        onTargetChange,
+        allowTargetSelection: data?.in_couple ?? false,
       },
       tv: {
         currentStatus: activeStatus,
@@ -274,8 +283,9 @@ export const useAddMedia = ({
         isOpen: isTVModalOpen,
         onClose: closeTVModal,
         isSubmitting: isUpdating,
-        variant,
-        setVariant,
+        target,
+        onTargetChange,
+        allowTargetSelection: data?.in_couple ?? false,
       },
     },
   }

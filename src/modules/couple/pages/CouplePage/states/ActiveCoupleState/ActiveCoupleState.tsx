@@ -71,7 +71,7 @@ export const ActiveCoupleState = ({ couple }: { couple: CoupleData | null }) => 
       </Card>
 
       {stats && <CoupleStats stats={stats} />}
-      {couple?.id && <CoupleMediaCollection coupleId={couple.id} />}
+      {couple?.id && <CoupleMediaCollection coupleId={couple.id} profiles={profiles} />}
 
       <LeaveCoupleModal
         isOpen={isLeaveModalOpen}

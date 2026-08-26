@@ -1,14 +1,15 @@
 'use client'
 
 import { ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
-import { getMediaKey, type Media, type MediaType } from '@/modules/media/api/media/types'
+import { getMediaKey, type Media } from '@/modules/media/api/media/types'
 import { useHorizontalSlider } from '@/modules/media/hooks/useHorizontalSlider'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { useCurrentUser } from '@/modules/auth'
 import styles from './SimilarMedia.module.scss'
 import { MediaCard } from '../../media/MediaCard/MediaCard'
-import { MediaActionModals } from '../../media/MediaActionModals/MediaActionModals'
+import { MediaType } from '@/shared/domain/media'
+import { MediaActionModals } from '@/features/media-actions'
 
 interface SimilarMediaProps {
   media: Media[]

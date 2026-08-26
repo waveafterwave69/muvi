@@ -6,7 +6,7 @@ import { MediaFilters } from '../../components/media/MediaFilters/MediaFilters'
 import { useInfiniteMediaQuery } from '../../api/media/queries'
 import type { FiltersType, Media } from '../../api/media/types'
 import { useMemo, useState } from 'react'
-import { useDebounce } from '../../hooks/useDebounce'
+import { useDebounce } from '@/shared/hooks/useDebounce'
 
 const initialFilters: FiltersType = {
   search: '',

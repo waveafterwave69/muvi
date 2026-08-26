@@ -1,6 +1,4 @@
-import type { MediaWatchStatus } from '../media/types'
-
-export type Variant = 'solo' | 'couple'
+import { MediaWatchStatus } from '@/shared/domain/media'
 
 export interface CoupleMediaStatus {
   mediaId: number

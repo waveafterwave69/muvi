@@ -1,41 +1,33 @@
+import { MediaActionTarget } from '@/shared/domain/media'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import {
   getEpisodeProgress,
   getTVEpisodeCount,
   markAllTVEpisodesWatched,
   setEpisodesWatched,
-} from '.'
-import type { EpisodeProgress, SetEpisodesWatchedParams } from './types'
-import type { Variant } from '../couple/types'
-import type { MarkAllTVEpisodesWatchedParams } from './types'
+} from './index'
+import { toast } from 'sonner'
+import { EpisodeProgress, MarkAllTVEpisodesWatchedParams, SetEpisodesWatchedParams } from './types'
 
 export const episodeProgressKeys = {
-  detail: (userId: string, mediaId: number, variant: Variant) =>
-    ['episode-progress', variant, userId, mediaId] as const,
+  detail: (userId: string, mediaId: number, variant: MediaActionTarget, coupleId?: string) =>
+    ['episode-progress', variant, coupleId ?? userId, mediaId] as const,
   episodeCount: (mediaId: number) => ['media', 'tv', mediaId, 'episode-count'] as const,
 }
-
-export const useTVEpisodeCount = (mediaId: number, enabled: boolean) =>
-  useQuery({
-    queryKey: episodeProgressKeys.episodeCount(mediaId),
-    queryFn: ({ signal }) => getTVEpisodeCount(mediaId, signal),
-    enabled: enabled && mediaId > 0,
-    staleTime: 30 * 60 * 1000,
-  })
 
 export const useEpisodeProgress = (
   userId: string,
   mediaId: number,
-  variant: Variant,
+  variant: MediaActionTarget,
   enabled: boolean,
+  coupleId?: string,
 ) => {
   const queryClient = useQueryClient()
-  const queryKey = episodeProgressKeys.detail(userId, mediaId, variant)
+  const queryKey = episodeProgressKeys.detail(userId, mediaId, variant, coupleId)
 
   const query = useQuery({
     queryKey,
-    queryFn: () => getEpisodeProgress(userId, mediaId, variant),
+    queryFn: () => getEpisodeProgress(userId, mediaId, variant, coupleId),
     enabled: enabled && Boolean(userId) && mediaId > 0,
   })
 
@@ -86,6 +78,14 @@ export const useEpisodeProgress = (
     isSaving: mutation.isPending,
   }
 }
+
+export const useTVEpisodeCount = (mediaId: number, enabled: boolean) =>
+  useQuery({
+    queryKey: episodeProgressKeys.episodeCount(mediaId),
+    queryFn: ({ signal }) => getTVEpisodeCount(mediaId, signal),
+    enabled: enabled && mediaId > 0,
+    staleTime: 30 * 60 * 1000,
+  })
 
 export const useMarkAllTVEpisodesWatched = (userId: string) => {
   const queryClient = useQueryClient()

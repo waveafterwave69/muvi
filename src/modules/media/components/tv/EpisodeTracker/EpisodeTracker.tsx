@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ChevronDown, EyeOff, UserRound, UsersRound } from 'lucide-react'
 import { Button, Modal } from '@/shared/ui'
 import { useCurrentProfile } from '@/modules/auth'
-import type { Variant } from '../../../api/couple/types'
+import type { MediaActionTarget } from '@/shared/domain/media'
 import type { MediaDetails } from '../../../api/mediaDetails/types'
 import { useEpisodeTracker } from '../../../hooks/tv/useEpisodeTracker'
 import { useEpisodeProgressMode } from '../../../hooks/tv/useEpisodeProgressMode'
@@ -18,8 +18,8 @@ interface EpisodeTrackerProps {
 }
 
 type PendingProgressAction =
-  | { type: 'episode'; episodeNumber: number; variant?: Variant }
-  | { type: 'season'; variant?: Variant }
+  | { type: 'episode'; episodeNumber: number; variant?: MediaActionTarget }
+  | { type: 'season'; variant?: MediaActionTarget }
 
 const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
   const {
@@ -87,7 +87,7 @@ const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
     void toggleWholeSeason()
   }
 
-  const chooseProgressVariant = (nextVariant: Variant) => {
+  const chooseProgressVariant = (nextVariant: MediaActionTarget) => {
     if (!pendingAction) return
 
     executedAction.current = null

@@ -3,7 +3,8 @@
 import styles from './FavoriteFilters.module.scss'
 import { Input, Tabs } from '@/shared/ui'
 import { Search } from 'lucide-react'
-import { FavoriteFiltersType, MediaType } from '../../api/media/types'
+import { FavoriteFiltersType } from '../../api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 type FavoriteStatus = FavoriteFiltersType['status']
 

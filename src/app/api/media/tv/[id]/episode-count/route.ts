@@ -56,7 +56,6 @@ export async function GET(
       seasons,
     })
   } catch (error) {
-    console.error('Ошибка при загрузке количества серий из TMDB:', error)
     return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 502 })
   }
 }

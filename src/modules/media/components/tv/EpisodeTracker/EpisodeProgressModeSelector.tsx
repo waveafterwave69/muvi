@@ -1,10 +1,10 @@
 import { Tabs } from '@/shared/ui'
-import type { Variant } from '../../../api/couple/types'
 import styles from './EpisodeTracker.module.scss'
+import { MediaActionTarget } from '@/shared/domain/media'
 
 interface EpisodeProgressModeSelectorProps {
-  variant: Variant
-  onChange: (variant: Variant) => void
+  variant: MediaActionTarget
+  onChange: (variant: MediaActionTarget) => void
 }
 
 const progressTabs = [

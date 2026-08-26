@@ -1,4 +1,4 @@
-import type { MediaType } from '@/modules/media/api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 export interface ProfileIdentity {
   id: string

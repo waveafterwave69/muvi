@@ -1,18 +1,26 @@
 'use client'
 
-import { useEpisodeProgress, useTVEpisodeCount } from '../../../api/episodeProgress/queries'
 import styles from './TVCardProgress.module.scss'
-import type { Variant } from '../../../api/couple/types'
+import { MediaActionTarget } from '@/shared/domain/media'
+import { useEpisodeProgress, useTVEpisodeCount } from '../../api/queries'
 
 interface TVCardProgressProps {
   mediaId: number
   userId: string
-  variant?: Variant
+  variant?: MediaActionTarget
+  compact?: boolean
+  coupleId?: string
 }
 
-const TVCardProgress = ({ mediaId, userId, variant = 'solo' }: TVCardProgressProps) => {
+const TVCardProgress = ({
+  mediaId,
+  userId,
+  variant = 'solo',
+  compact = false,
+  coupleId,
+}: TVCardProgressProps) => {
   const { data: episodeCount } = useTVEpisodeCount(mediaId, true)
-  const { data: progress } = useEpisodeProgress(userId, mediaId, variant, true)
+  const { data: progress } = useEpisodeProgress(userId, mediaId, variant, true, coupleId)
   const total = episodeCount?.total ?? 0
 
   if (!total || !progress) return null
@@ -22,7 +30,7 @@ const TVCardProgress = ({ mediaId, userId, variant = 'solo' }: TVCardProgressPro
 
   return (
     <div
-      className={styles.progress}
+      className={`${styles.progress} ${compact ? styles.compact : ''}`}
       aria-label={`Сериал просмотрен на ${percent} процентов: ${watched} из ${total} серий`}
     >
       <div className={styles.label}>

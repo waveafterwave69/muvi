@@ -1,6 +1,6 @@
 import { useMediaDetailsQuery, useMovieCollectionQuery } from '../api/mediaDetails/queries'
 import { useCurrentUser } from '@/modules/auth/hooks/useCurrentUser'
-import type { MediaType } from '../api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 export const useMediaDetailsPage = (mediaId: number, mediaType: MediaType = 'movie') => {
   const { data: currentUser, isLoading: isUserLoading } = useCurrentUser()

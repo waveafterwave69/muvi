@@ -1,6 +1,6 @@
 import { supabase } from '@/shared/api/supabase'
-import type { Variant } from '../couple/types'
-import type {
+import { MediaActionTarget } from '@/shared/domain/media'
+import {
   EpisodeProgress,
   MarkAllTVEpisodesWatchedParams,
   SetEpisodesWatchedParams,
@@ -17,10 +17,11 @@ interface EpisodeProgressRow extends EpisodeProgress {
 export const getEpisodeProgress = async (
   userId: string,
   externalMediaId: number,
-  variant: Variant,
+  variant: MediaActionTarget,
+  coupleId?: string,
 ): Promise<EpisodeProgress[]> => {
   if (variant === 'couple') {
-    const { data, error } = await supabase
+    let query = supabase
       .from('couple_episode_progress')
       .select(
         `
@@ -32,7 +33,12 @@ export const getEpisodeProgress = async (
       )
       .eq('media.external_id', externalMediaId)
       .eq('media.type', 'tv')
-      .overrideTypes<EpisodeProgressRow[], { merge: false }>()
+
+    if (coupleId) {
+      query = query.eq('couple_id', coupleId)
+    }
+
+    const { data, error } = await query.overrideTypes<EpisodeProgressRow[], { merge: false }>()
 
     if (error) {
       throw new Error(`Не удалось загрузить прогресс пары: ${error.message}`, { cause: error })
@@ -78,8 +84,7 @@ export const setEpisodesWatched = async ({
   episodeNumbers,
   watched,
 }: SetEpisodesWatchedParams): Promise<void> => {
-  const functionName =
-    variant === 'couple' ? 'set_couple_episodes_watched' : 'set_episodes_watched'
+  const functionName = variant === 'couple' ? 'set_couple_episodes_watched' : 'set_episodes_watched'
   const { error } = await supabase.rpc(functionName, {
     p_external_id: mediaId,
     p_season_number: seasonNumber,
@@ -112,9 +117,7 @@ export const markAllTVEpisodesWatched = async ({
   const { seasons } = await getTVEpisodeCount(mediaId)
 
   const functionName =
-    variant === 'couple'
-      ? 'set_all_couple_tv_episodes_watched'
-      : 'set_all_tv_episodes_watched'
+    variant === 'couple' ? 'set_all_couple_tv_episodes_watched' : 'set_all_tv_episodes_watched'
   const { error } = await supabase.rpc(functionName, {
     p_external_id: mediaId,
     p_episodes: seasons,

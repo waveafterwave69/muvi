@@ -18,12 +18,13 @@ import {
   Plus,
   Star,
 } from 'lucide-react'
-import { getMediaKey, Media, MediaType } from '@/modules/media/api/media/types'
-import { MediaActionModals } from '../../media/MediaActionModals/MediaActionModals'
+import { getMediaKey, Media } from '@/modules/media/api/media/types'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { MediaDetails, Genre } from '@/modules/media/api/mediaDetails/types'
 import { formatRuntime } from '@/shared/helpers/formatters'
+import { MediaType } from '@/shared/domain/media'
+import { MediaActionModals } from '@/features/media-actions'
 
 interface MediaPromoProps {
   media: MediaDetails

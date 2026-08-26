@@ -3,13 +3,13 @@
 import styles from './MediaList.module.scss'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useCurrentUser } from '@/modules/auth'
-import { getMediaKey, Media, type MediaType } from '@/modules/media/api/media/types'
+import { getMediaKey, Media } from '@/modules/media/api/media/types'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { MediaCardSkeleton } from '../MediaCardSkeleton/MediaCardSkeleton'
 import { MediaCard } from '../MediaCard/MediaCard'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
-import { MediaActionModals } from '../MediaActionModals/MediaActionModals'
-import type { Variant } from '@/modules/media/api/couple/types'
+import { MediaType, MediaActionTarget } from '@/shared/domain/media'
+import { MediaActionModals } from '@/features/media-actions'
 
 interface MediaListProps {
   media: Media[]
@@ -18,7 +18,7 @@ interface MediaListProps {
   hasNextPage: boolean
   isFetchingNextPage: boolean
   mediaType?: MediaType
-  statusVariant?: Variant
+  statusVariant?: MediaActionTarget
 }
 
 export const MediaList = ({

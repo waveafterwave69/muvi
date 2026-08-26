@@ -3,10 +3,10 @@
 import styles from './FavoritesPage.module.scss'
 import { FavoriteFilters } from '../../components/FavoriteFilters/FavoriteFilters'
 import { useMemo, useState } from 'react'
-import { useDebounce } from '@/modules/media/hooks/useDebounce'
 import { FavoriteFiltersType, Media } from '../../api/media/types'
 import { useInfiniteFavoriteMediaQuery } from '../../api/media/queries'
 import { MediaList } from '../../components/media/MediaList/MediaList'
+import { useDebounce } from '@/shared/hooks/useDebounce'
 
 const initialFilters: FavoriteFiltersType = {
   mediaType: 'movie',

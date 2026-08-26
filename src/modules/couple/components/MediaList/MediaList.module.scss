@@ -1,0 +1,143 @@
+.grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, var(--couple-media-card-width)));
+  align-items: start;
+  justify-content: center;
+  gap: 16px;
+  overflow: visible !important;
+}
+
+.loader {
+  margin: 0;
+  padding: 32px 20px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.loader {
+  grid-column: 1 / -1;
+}
+
+.empty {
+  display: flex;
+  width: min(100%, 520px);
+  align-items: center;
+  align-self: center;
+  gap: 18px;
+  padding: 24px !important;
+  margin-top: 16px;
+  background: var(--card-bg);
+}
+
+.emptyIcon {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-hover);
+  color: var(--accent-soft);
+
+  svg {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.emptyCopy {
+  min-width: 0;
+
+  h3 {
+    color: var(--text-primary);
+    font-size: var(--h3-font-size-small);
+    line-height: 1.25;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: var(--base-font-size-medium);
+    line-height: 1.5;
+  }
+}
+
+.skeleton {
+  width: 100%;
+  max-width: var(--couple-media-card-width);
+  max-height: var(--couple-media-card-height);
+  aspect-ratio: var(--couple-media-card-aspect-ratio);
+  overflow: hidden;
+  border: 1px solid var(--card-border-color);
+  border-radius: 20px;
+  background: linear-gradient(
+          105deg,
+          var(--surface) 25%,
+          var(--surface-raised) 42%,
+          var(--surface) 60%
+  );
+  background-size: 240% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -160%;
+  }
+}
+
+@media (max-width: 1129px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, var(--couple-media-card-width)));
+    gap: 12px;
+  }
+
+  .skeleton {
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 763px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .skeleton {
+    max-width: none;
+    max-height: none;
+    aspect-ratio: 11 / 10;
+    border-radius: 14px;
+
+    &:nth-child(n + 3) {
+      display: none;
+    }
+  }
+
+  .empty {
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px !important;
+    margin-top: 4px;
+  }
+
+  .emptyIcon {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
