@@ -1,10 +1,9 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { FC, useState } from 'react'
 import styles from './TVModal.module.scss'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import { Tab } from '@/shared/types/tab'
 import { Check, Trash2 } from 'lucide-react'
-import { Variant } from '@/modules/media/api/couple/types'
-import { MediaWatchStatus } from '@/shared/domain/media'
+import { MediaWatchStatus, MediaActionTarget } from '@/shared/domain/media'
 
 interface TVModalProps {
   isOpen: boolean
@@ -13,9 +12,9 @@ interface TVModalProps {
   onRemove: () => void
   currentStatus?: MediaWatchStatus
   isSubmitting?: boolean
-  variant: Variant
-  setVariant: Dispatch<SetStateAction<Variant>>
-  in_couple: boolean
+  target: MediaActionTarget
+  onTargetChange?: (value: MediaActionTarget) => void,
+  allowTargetSelection: boolean
 }
 
 type TVWatchStatus = Exclude<MediaWatchStatus, 'planned'>
@@ -44,9 +43,9 @@ const TVModal: FC<TVModalProps> = ({
   onRemove,
   currentStatus,
   isSubmitting = false,
-  variant,
-  setVariant,
-  in_couple
+  target,
+  onTargetChange,
+  allowTargetSelection
 }) => {
   const [selectedTab, setSelectedTab] = useState<TVWatchStatus | null>(null)
   const currentTab = selectedTab ?? getTVWatchStatus(currentStatus)
@@ -71,15 +70,15 @@ const TVModal: FC<TVModalProps> = ({
       <p className={styles.subtitle}>
         Статус сериала, который будет отображаться в вашей коллекции
       </p>
-      {in_couple && (
+      {allowTargetSelection && (
         <Tabs
           tabs={viewingModes}
-          value={variant}
+          value={target}
           variant="primary"
           size="sm"
           onChange={(value) => {
             if (value === 'solo' || value === 'couple') {
-              setVariant(value)
+              onTargetChange?.(value)
             }
           }}
         />

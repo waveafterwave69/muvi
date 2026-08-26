@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useEpisodeProgress } from '../../api/episodeProgress/queries'
 import { useTVSeasonQuery } from '../../api/mediaDetails/queries'
 import type { MediaDetails } from '../../api/mediaDetails/types'
-import type { Variant } from '../../api/couple/types'
+import { MediaActionTarget } from '@/shared/domain/media'
+import { useEpisodeProgress } from '@/features/episode-progress'
 
 interface UseEpisodeTrackerParams {
   media: MediaDetails
   userId: string
-  variant: Variant
+  variant: MediaActionTarget
   isInCollection: boolean
   canEditProgress: boolean
 }

@@ -8,7 +8,7 @@ import type {
   CoupleMediaItem,
 } from '@/modules/couple/api/types'
 import { useMedia } from '@/modules/couple/hooks/useMedia'
-import { MediaActionModals } from '@/modules/media/components/media/MediaActionModals/MediaActionModals'
+import { MediaActionModals } from '@/features/media-actions'
 import type { Profile } from '@/modules/profile'
 import { MediaWatchStatus } from '@/shared/domain/media'
 

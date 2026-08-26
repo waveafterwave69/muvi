@@ -15,16 +15,14 @@ const StatusesTabs: Array<{
 
 interface FiltersProps {
   filters: CoupleMediaFilters
-  onChangeFilter: <K extends keyof CoupleMediaFilters>(
-    key: K,
-    value: CoupleMediaFilters[K],
-  ) => void
+  onChangeFilter: <K extends keyof CoupleMediaFilters>(key: K, value: CoupleMediaFilters[K]) => void
 }
 
 export const Filters = ({ filters, onChangeFilter }: FiltersProps) => {
   return (
     <div className={styles.root}>
       <Tabs
+        size="sm"
         variant="secondary"
         tabs={StatusesTabs}
         value={filters.status}

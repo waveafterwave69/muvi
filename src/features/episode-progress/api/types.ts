@@ -1,4 +1,4 @@
-import type { Variant } from '../couple/types'
+import { MediaActionTarget } from '@/shared/domain/media'
 
 export interface EpisodeProgress {
   season_number: number
@@ -8,7 +8,7 @@ export interface EpisodeProgress {
 
 export interface SetEpisodesWatchedParams {
   mediaId: number
-  variant: Variant
+  variant: MediaActionTarget
   seasonNumber: number
   episodeNumbers: number[]
   watched: boolean
@@ -16,7 +16,7 @@ export interface SetEpisodesWatchedParams {
 
 export interface MarkAllTVEpisodesWatchedParams {
   mediaId: number
-  variant: Variant
+  variant: MediaActionTarget
 }
 
 export interface TVEpisodeCount {

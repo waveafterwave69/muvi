@@ -65,7 +65,6 @@ export async function GET(
   const token = process.env.TMDB_API_KEY
 
   if (!token) {
-    console.error('TMDB_API_KEY is not configured в .env')
     return NextResponse.json({ error: 'Сервис каталога не настроен' }, { status: 500 })
   }
 
@@ -101,7 +100,6 @@ export async function GET(
     })
 
     if (!response.ok) {
-      console.error(`TMDB API вернул статус: ${response.status}`)
       if (response.status === 404) {
         return NextResponse.json({ error: 'Медиа не найдено в базе TMDB' }, { status: 404 })
       }

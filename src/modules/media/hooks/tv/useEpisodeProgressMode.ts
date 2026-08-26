@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import type { Variant } from '../../api/couple/types'
 import type { MediaDetails } from '../../api/mediaDetails/types'
 import { getMediaKey } from '../../api/media/types'
 import { useMediaStatus } from '../useMediaStatus'
+import { MediaActionTarget } from '@/shared/domain/media'
 
 export const useEpisodeProgressMode = (media: MediaDetails) => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const requestedVariant = searchParams.get('mode')
-  const initialVariant: Variant = requestedVariant === 'couple' ? 'couple' : 'solo'
+  const initialVariant: MediaActionTarget = requestedVariant === 'couple' ? 'couple' : 'solo'
   const [selection, setSelection] = useState(() => ({
     mediaId: media.id,
     sourceVariant: initialVariant,
@@ -31,7 +31,7 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
   const coupleStatus = coupleStatuses.get(mediaKey)
   const hasSoloCollection = soloStatus !== undefined
   const hasCoupleCollection = coupleStatus !== undefined
-  const variant: Variant =
+  const variant: MediaActionTarget =
     (preferredVariant === 'solo' && hasSoloCollection) ||
     (preferredVariant === 'couple' && hasCoupleCollection)
       ? preferredVariant
@@ -42,7 +42,7 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
           : preferredVariant
   const status = variant === 'couple' ? coupleStatus : soloStatus
 
-  const selectVariant = (nextVariant: Variant) => {
+  const selectVariant = (nextVariant: MediaActionTarget) => {
     setSelection({
       mediaId: media.id,
       sourceVariant: initialVariant,

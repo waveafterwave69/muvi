@@ -4,7 +4,7 @@ import { Check, MessageSquareText } from 'lucide-react'
 import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './CommentModal.module.scss'
-import { MEDIA_COMMENT_MAX_LENGTH } from '@/shared/domain/media'
+import { MEDIA_COMMENT_MAX_LENGTH, MediaActionTarget } from '@/shared/domain/media'
 
 export interface CommentModalProps {
   isOpen: boolean
@@ -13,9 +13,9 @@ export interface CommentModalProps {
   onCommentChange: (comment: string) => void
   onSubmit: () => void
   isSubmitting?: boolean
-  variant: 'couple' | 'solo';
-  setVariant: (variant: 'couple' | 'solo') => void;
-  in_couple: boolean;
+  target: MediaActionTarget
+  onTargetChange?: (value: MediaActionTarget) => void,
+  allowTargetSelection: boolean
 }
 
 const viewingModes = [
@@ -30,9 +30,9 @@ export const CommentModal = ({
   onCommentChange,
   onSubmit,
   isSubmitting = false,
-  variant,
-  setVariant,
-  in_couple
+  target,
+  onTargetChange,
+  allowTargetSelection,
 }: CommentModalProps) => {
   const titleId = useId()
   const textareaId = useId()
@@ -57,15 +57,15 @@ export const CommentModal = ({
           </div>
         </header>
 
-        {in_couple && <Tabs
+        {allowTargetSelection && <Tabs
           className={styles.tabs}
           tabs={viewingModes}
-          value={variant}
+          value={target}
           variant="primary"
           size="sm"
           onChange={(v) => {
             if(v === 'solo' || v === 'couple') {
-              setVariant(v)
+              onTargetChange?.(v)
             }
           }}
         />}

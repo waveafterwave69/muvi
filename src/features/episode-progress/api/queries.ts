@@ -1,33 +1,19 @@
+import { MediaActionTarget } from '@/shared/domain/media'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { getEpisodeProgress, getTVEpisodeCount, markAllTVEpisodesWatched, setEpisodesWatched } from './index'
 import { toast } from 'sonner'
-import {
-  getEpisodeProgress,
-  getTVEpisodeCount,
-  markAllTVEpisodesWatched,
-  setEpisodesWatched,
-} from '.'
-import type { EpisodeProgress, SetEpisodesWatchedParams } from './types'
-import type { Variant } from '../couple/types'
-import type { MarkAllTVEpisodesWatchedParams } from './types'
+import { EpisodeProgress, MarkAllTVEpisodesWatchedParams, SetEpisodesWatchedParams } from './types'
 
 export const episodeProgressKeys = {
-  detail: (userId: string, mediaId: number, variant: Variant, coupleId?: string) =>
+  detail: (userId: string, mediaId: number, variant: MediaActionTarget, coupleId?: string) =>
     ['episode-progress', variant, coupleId ?? userId, mediaId] as const,
   episodeCount: (mediaId: number) => ['media', 'tv', mediaId, 'episode-count'] as const,
 }
 
-export const useTVEpisodeCount = (mediaId: number, enabled: boolean) =>
-  useQuery({
-    queryKey: episodeProgressKeys.episodeCount(mediaId),
-    queryFn: ({ signal }) => getTVEpisodeCount(mediaId, signal),
-    enabled: enabled && mediaId > 0,
-    staleTime: 30 * 60 * 1000,
-  })
-
 export const useEpisodeProgress = (
   userId: string,
   mediaId: number,
-  variant: Variant,
+  variant: MediaActionTarget,
   enabled: boolean,
   coupleId?: string,
 ) => {
@@ -77,6 +63,14 @@ export const useEpisodeProgress = (
 
   return { ...query, setWatched: mutation.mutate, isSaving: mutation.isPending }
 }
+
+export const useTVEpisodeCount = (mediaId: number, enabled: boolean) =>
+  useQuery({
+    queryKey: episodeProgressKeys.episodeCount(mediaId),
+    queryFn: ({ signal }) => getTVEpisodeCount(mediaId, signal),
+    enabled: enabled && mediaId > 0,
+    staleTime: 30 * 60 * 1000,
+  })
 
 export const useMarkAllTVEpisodesWatched = (userId: string) => {
   const queryClient = useQueryClient()

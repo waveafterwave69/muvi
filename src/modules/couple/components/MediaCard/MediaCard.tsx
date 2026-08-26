@@ -1,21 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  CalendarDays,
-  Check,
-  CircleX,
-  Film,
-  Heart,
-  Play,
-  Plus,
-  Quote,
-  Star,
-} from 'lucide-react'
+import { CalendarDays, Check, CircleX, Film, Heart, Play, Plus, Quote, Star } from 'lucide-react'
 import { Button, Card } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
 import type { CoupleMediaItem } from '@/modules/couple/api/types'
 import { DefaultAvatar, type Profile } from '@/modules/profile'
-import TVCardProgress from '@/modules/media/components/tv/TVCardProgress/TVCardProgress'
+import { TVCardProgress } from '@/features/episode-progress'
 import { formatMediaComment, getMediaHref, MediaWatchStatus } from '@/shared/domain/media'
 
 interface MediaCardProps {
@@ -110,9 +100,7 @@ export const MediaCard = ({
 
         {comment ? (
           <blockquote
-            className={`${styles.comment} ${
-              media.type === 'tv' ? styles.commentWithProgress : ''
-            }`}
+            className={`${styles.comment} ${media.type === 'tv' ? styles.commentWithProgress : ''}`}
             title={comment}
             aria-label={`Комментарий: ${comment}`}
           >
