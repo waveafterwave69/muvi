@@ -18,6 +18,7 @@ import {
 interface AddMediaToCoupleVariables {
   media: Media
   options: AddMediaOptions
+  silent?: boolean
 }
 
 export const coupleMediaKeys = {
@@ -51,9 +52,7 @@ export const useCoupleMediaStatuses = ({
       return []
     }
 
-    const uniqueMedia = Array.from(
-      new Map(media.map((item) => [getMediaKey(item), item])).values(),
-    )
+    const uniqueMedia = Array.from(new Map(media.map((item) => [getMediaKey(item), item])).values())
 
     return splitIntoBatches(uniqueMedia, 20)
   }, [media, userId])
@@ -63,6 +62,7 @@ export const useCoupleMediaStatuses = ({
       queryKey: coupleMediaKeys.statusBatch(userId, batch),
       queryFn: () => getCoupleMediaStatuses(batch),
       staleTime: 60_000,
+      refetchInterval: 60 * 60 * 1000,
     })),
     combine: (results) => {
       const statuses: MediaStatuses = new Map()
@@ -95,7 +95,7 @@ export const useAddMediaToCoupleCollection = () => {
   return useMutation<void, Error, AddMediaToCoupleVariables>({
     mutationFn: ({ media, options }) => addMediaToCoupleCollection(media, options),
     mutationKey: coupleMediaKeys.add,
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: coupleMediaKeys.all,
@@ -105,7 +105,9 @@ export const useAddMediaToCoupleCollection = () => {
         }),
       ])
 
-      toast.success('Медиа добавлено в коллекцию пары')
+      if (!variables.silent) {
+        toast.success('Медиа добавлено в коллекцию пары')
+      }
     },
     onError: (error) => {
       toast.error(error.message)

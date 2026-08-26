@@ -7,7 +7,7 @@ import type {
   CoupleMediaResponse,
   CouplePageData,
 } from './types'
-
+import { ensureInactiveCoupleTVMediaDropped } from '@/modules/media/api/episodeProgress/inactivity'
 
 export const getCouplePageData = async (): Promise<CouplePageData> => {
   const { data, error } = await supabase.rpc('get_couple_page_data')
@@ -39,6 +39,8 @@ export const getCoupleMedia = async ({
   search,
   signal,
 }: GetCoupleMediaParams): Promise<CoupleMediaResponse> => {
+  await ensureInactiveCoupleTVMediaDropped(coupleId)
+
   const from = (page - 1) * limit
   const to = from + limit - 1
   const normalizedSearch = search.trim()
@@ -69,9 +71,12 @@ export const getCoupleMedia = async ({
     query = query.abortSignal(signal)
   }
 
-  const { data, error, count } = await query.overrideTypes<CoupleMediaItem[], {
-    merge: false
-  }>()
+  const { data, error, count } = await query.overrideTypes<
+    CoupleMediaItem[],
+    {
+      merge: false
+    }
+  >()
 
   if (error) {
     throw new Error(`Не удалось загрузить коллекцию пары: ${error.message}`, {
@@ -115,9 +120,7 @@ const isCoupleInvitePreview = (value: unknown): value is CoupleInvitePreview => 
   )
 }
 
-export const getCoupleInvitePreview = async (
-  inviteId: string,
-): Promise<CoupleInvitePreview> => {
+export const getCoupleInvitePreview = async (inviteId: string): Promise<CoupleInvitePreview> => {
   const { data, error } = await supabase.rpc('get_couple_invite_preview', {
     p_token: inviteId,
   })

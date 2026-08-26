@@ -154,6 +154,7 @@ export const useMediaStatuses = ({ userId, media }: { userId: string; media: Med
         }),
 
       staleTime: 60_000,
+      refetchInterval: 60 * 60 * 1000,
     })),
 
     combine: (results) => {

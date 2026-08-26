@@ -23,6 +23,8 @@ interface MediaAction {
   type: 'planned' | 'watched' | 'tv-status'
   media: Media
   status?: MediaWatchStatus
+  soloStatus?: MediaWatchStatus
+  coupleStatus?: MediaWatchStatus
   coupleMediaId?: number
 }
 
@@ -64,10 +66,12 @@ export const useAddMedia = ({
 
   const handleFavoriteClick = (
     media: Media,
-    status?: MediaWatchStatus,
+    soloStatus?: MediaWatchStatus,
     coupleMediaId?: number,
+    coupleStatus?: MediaWatchStatus,
   ) => {
     setVariant(defaultVariant)
+    const status = defaultVariant === 'couple' ? coupleStatus : soloStatus
 
     if (status === 'planned') {
       if (defaultVariant === 'couple' && coupleMediaId !== undefined) {
@@ -78,16 +82,25 @@ export const useAddMedia = ({
       return
     }
 
-    setActiveMedia({ type: 'planned', media, status, coupleMediaId })
+    setActiveMedia({
+      type: 'planned',
+      media,
+      status,
+      soloStatus,
+      coupleStatus,
+      coupleMediaId,
+    })
     setIsCommentModalOpen(true)
   }
 
   const handleWatchedClick = (
     media: Media,
-    status?: MediaWatchStatus,
+    soloStatus?: MediaWatchStatus,
     coupleMediaId?: number,
+    coupleStatus?: MediaWatchStatus,
   ) => {
     setVariant(defaultVariant)
+    const status = defaultVariant === 'couple' ? coupleStatus : soloStatus
 
     if (status === 'watched') {
       if (defaultVariant === 'couple' && coupleMediaId !== undefined) {
@@ -98,17 +111,32 @@ export const useAddMedia = ({
       return
     }
 
-    setActiveMedia({ type: 'watched', media, status, coupleMediaId })
+    setActiveMedia({
+      type: 'watched',
+      media,
+      status,
+      soloStatus,
+      coupleStatus,
+      coupleMediaId,
+    })
     setIsStarsModalOpen(true)
   }
 
   const handleOpenTVModal = (
     media: Media,
-    status?: MediaWatchStatus,
+    soloStatus?: MediaWatchStatus,
     coupleMediaId?: number,
+    coupleStatus?: MediaWatchStatus,
   ) => {
     setVariant(defaultVariant)
-    setActiveMedia({ type: 'tv-status', media, status, coupleMediaId })
+    setActiveMedia({
+      type: 'tv-status',
+      media,
+      status: defaultVariant === 'couple' ? coupleStatus : soloStatus,
+      soloStatus,
+      coupleStatus,
+      coupleMediaId,
+    })
     setIsTVModalOpen(true)
   }
 
@@ -166,8 +194,8 @@ export const useAddMedia = ({
     if (status === 'watched') {
       setIsTVModalOpen(false)
       setActiveMedia({
+        ...activeMedia,
         type: 'watched',
-        media: activeMedia.media,
         status,
       })
       setIsStarsModalOpen(true)
@@ -191,7 +219,7 @@ export const useAddMedia = ({
     }
   }
 
-  const handleRemoveTVStatus = async () => {
+  const handleRemoveActiveStatus = async (closeModal: () => void) => {
     if (!activeMedia) return
 
     try {
@@ -201,11 +229,13 @@ export const useAddMedia = ({
       } else {
         await removeMedia(activeMedia.media)
       }
-      closeTVModal()
+      closeModal()
     } catch {
       return
     }
   }
+
+  const activeStatus = variant === 'couple' ? activeMedia?.coupleStatus : activeMedia?.soloStatus
 
   return {
     handleFavoriteClick,
@@ -220,6 +250,8 @@ export const useAddMedia = ({
         stars,
         onSubmit: addToWatched,
         isSubmitting: isUpdating,
+        currentStatus: activeStatus,
+        onRemove: () => handleRemoveActiveStatus(closeStarsModal),
         variant,
         setVariant,
       },
@@ -230,13 +262,15 @@ export const useAddMedia = ({
         onCommentChange: setComment,
         onSubmit: addToFavorite,
         isSubmitting: isUpdating,
+        currentStatus: activeStatus,
+        onRemove: () => handleRemoveActiveStatus(closeCommentModal),
         variant,
         setVariant,
       },
       tv: {
-        currentStatus: activeMedia?.status,
+        currentStatus: activeStatus,
         onClick: handleTVStatusChange,
-        onRemove: handleRemoveTVStatus,
+        onRemove: () => handleRemoveActiveStatus(closeTVModal),
         isOpen: isTVModalOpen,
         onClose: closeTVModal,
         isSubmitting: isUpdating,

@@ -15,23 +15,25 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
     mediaId: media.id,
     sourceVariant: initialVariant,
     variant: initialVariant,
+    isExplicit: requestedVariant === 'solo' || requestedVariant === 'couple',
   }))
+  const isExplicitSelection =
+    selection.mediaId === media.id &&
+    selection.sourceVariant === initialVariant &&
+    selection.isExplicit
   const preferredVariant =
     selection.mediaId === media.id && selection.sourceVariant === initialVariant
       ? selection.variant
       : initialVariant
 
-  const {
-    statuses,
-    coupleStatuses,
-    isUpdating: isStatusLoading,
-  } = useMediaStatus(media)
+  const { addMedia, statuses, coupleStatuses, isUpdating: isStatusLoading } = useMediaStatus(media)
   const mediaKey = getMediaKey(media)
   const soloStatus = statuses.get(mediaKey)
   const coupleStatus = coupleStatuses.get(mediaKey)
   const hasSoloCollection = soloStatus !== undefined
   const hasCoupleCollection = coupleStatus !== undefined
   const variant: Variant =
+    isExplicitSelection ||
     (preferredVariant === 'solo' && hasSoloCollection) ||
     (preferredVariant === 'couple' && hasCoupleCollection)
       ? preferredVariant
@@ -42,11 +44,24 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
           : preferredVariant
   const status = variant === 'couple' ? coupleStatus : soloStatus
 
+  const updateStatus = (nextStatus: 'watching' | 'watched' | 'dropped') =>
+    addMedia(
+      media,
+      {
+        status: nextStatus,
+        rating: null,
+        comment: null,
+      },
+      variant,
+      true,
+    )
+
   const selectVariant = (nextVariant: Variant) => {
     setSelection({
       mediaId: media.id,
       sourceVariant: initialVariant,
       variant: nextVariant,
+      isExplicit: true,
     })
 
     const nextSearchParams = new URLSearchParams(searchParams.toString())
@@ -57,9 +72,10 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
   return {
     variant,
     status,
+    updateStatus,
     isStatusLoading,
-    isInCollection: status !== undefined,
-    canEditProgress: status === 'watching' || status === 'watched',
+    hasSoloCollection,
+    hasCoupleCollection,
     showModeSelector: hasSoloCollection && hasCoupleCollection,
     selectVariant,
   }

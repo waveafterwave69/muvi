@@ -39,7 +39,12 @@ export const useEpisodeProgress = (
     enabled: enabled && Boolean(userId) && mediaId > 0,
   })
 
-  const mutation = useMutation<void, Error, SetEpisodesWatchedParams, { previous?: EpisodeProgress[] }>({
+  const mutation = useMutation<
+    void,
+    Error,
+    SetEpisodesWatchedParams,
+    { previous?: EpisodeProgress[] }
+  >({
     mutationFn: setEpisodesWatched,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey })
@@ -74,7 +79,12 @@ export const useEpisodeProgress = (
     onSettled: () => queryClient.invalidateQueries({ queryKey }),
   })
 
-  return { ...query, setWatched: mutation.mutate, isSaving: mutation.isPending }
+  return {
+    ...query,
+    setWatched: mutation.mutate,
+    setWatchedAsync: mutation.mutateAsync,
+    isSaving: mutation.isPending,
+  }
 }
 
 export const useMarkAllTVEpisodesWatched = (userId: string) => {

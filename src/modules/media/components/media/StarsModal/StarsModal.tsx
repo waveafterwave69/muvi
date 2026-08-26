@@ -1,8 +1,9 @@
 'use client'
 
-import { Star } from 'lucide-react'
+import { Star, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import type { Variant } from '@/modules/media/api/couple/types'
+import type { MediaWatchStatus } from '@/modules/media/api/media/types'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './StarsModal.module.scss'
 import { useCurrentProfile } from '@/modules/auth'
@@ -14,6 +15,8 @@ interface Props {
   stars: number | null
   onSubmit: () => void
   isSubmitting?: boolean
+  currentStatus?: MediaWatchStatus
+  onRemove: () => void
   variant: Variant
   setVariant: (variant: Variant) => void
 }
@@ -31,6 +34,8 @@ export const StarsModal = ({
   setStars,
   onSubmit,
   isSubmitting = false,
+  currentStatus,
+  onRemove,
   variant,
   setVariant,
 }: Props) => {
@@ -44,17 +49,19 @@ export const StarsModal = ({
         <h3 className={styles.title}>Как тебе?</h3>
         <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
 
-        {data?.in_couple && <Tabs
-          tabs={viewingModes}
-          value={variant}
-          variant="primary"
-          size="sm"
-          onChange={(value) => {
-            if (value === 'solo' || value === 'couple') {
-              setVariant(value)
-            }
-          }}
-        />}
+        {data?.in_couple && (
+          <Tabs
+            tabs={viewingModes}
+            value={variant}
+            variant="primary"
+            size="sm"
+            onChange={(value) => {
+              if (value === 'solo' || value === 'couple') {
+                setVariant(value)
+              }
+            }}
+          />
+        )}
 
         <div className={styles.stars} role="group" aria-label="Оценка от 1 до 10">
           {ratings.map((rating) => (
@@ -83,6 +90,17 @@ export const StarsModal = ({
         >
           {isSubmitting ? 'Сохраняем...' : 'Сохранить'}
         </Button>
+        {currentStatus && (
+          <Button
+            className={styles.removeButton}
+            variant="outline"
+            leftIcon={<Trash2 aria-hidden="true" />}
+            onClick={onRemove}
+            disabled={isSubmitting}
+          >
+            Убрать статус
+          </Button>
+        )}
       </div>
     </Modal>
   )

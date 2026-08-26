@@ -79,6 +79,7 @@ const TVModal: FC<TVModalProps> = ({
           size="sm"
           onChange={(value) => {
             if (value === 'solo' || value === 'couple') {
+              setSelectedTab(null)
               setVariant(value)
             }
           }}

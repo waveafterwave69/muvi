@@ -69,6 +69,11 @@
   }
 }
 
+.coupleBadge {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--card-border-color));
+  background: var(--accent-hover);
+}
+
 .title {
   margin-top: 20px;
   color: var(--media-text-primary);

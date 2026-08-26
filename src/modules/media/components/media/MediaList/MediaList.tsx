@@ -97,9 +97,15 @@ export const MediaList = ({
               comment={coupleComments.get(mediaKey) ?? item.comment}
               key={mediaKey}
               coupleStatus={coupleStatus}
-              handleFavorite={() => handleFavoriteClick(item, status, coupleMediaId)}
-              handleWatched={() => handleWatchedClick(item, status, coupleMediaId)}
-              handleToggleTVModal={() => handleOpenTVModal(item, status, coupleMediaId)}
+              handleFavorite={() =>
+                handleFavoriteClick(item, soloStatus, coupleMediaId, coupleStatus)
+              }
+              handleWatched={() =>
+                handleWatchedClick(item, soloStatus, coupleMediaId, coupleStatus)
+              }
+              handleToggleTVModal={() =>
+                handleOpenTVModal(item, soloStatus, coupleMediaId, coupleStatus)
+              }
               handleRemoveFromCouple={
                 coupleMediaId !== undefined
                   ? () => {

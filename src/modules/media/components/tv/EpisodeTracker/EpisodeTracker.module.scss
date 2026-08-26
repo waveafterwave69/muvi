@@ -130,6 +130,32 @@
   }
 }
 
+.variantPrompt {
+  display: grid;
+  gap: 12px;
+
+  h3 {
+    font-size: 26px;
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+.variantPromptActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+
+  button {
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .tracker {
     overflow: hidden;
@@ -203,5 +229,9 @@
 
   .progressTrack {
     margin-top: 15px;
+  }
+
+  .variantPromptActions {
+    grid-template-columns: 1fr;
   }
 }
