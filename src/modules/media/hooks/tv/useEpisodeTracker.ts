@@ -1,13 +1,15 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useEpisodeProgress } from '../../api/episodeProgress/queries'
 import { useTVSeasonQuery } from '../../api/mediaDetails/queries'
 import type { MediaDetails } from '../../api/mediaDetails/types'
+import type { MediaActionTarget, MediaWatchStatus } from '@/shared/domain/media'
+import { useEpisodeProgress } from '@/features/episode-progress'
 
 interface UseEpisodeTrackerParams {
   media: MediaDetails
   userId: string
-  isInCollection: boolean
-  canEditProgress: boolean
+  variant: MediaActionTarget
+  status?: MediaWatchStatus
+  onStatusChange: (status: 'watching' | 'watched' | 'dropped') => Promise<void>
 }
 
 interface SeasonSelection {
@@ -18,8 +20,9 @@ interface SeasonSelection {
 export const useEpisodeTracker = ({
   media,
   userId,
-  isInCollection,
-  canEditProgress,
+  variant,
+  status,
+  onStatusChange,
 }: UseEpisodeTrackerParams) => {
   const seasons = useMemo(
     () =>
@@ -46,18 +49,14 @@ export const useEpisodeTracker = ({
   const {
     data: progress = [],
     isLoading: isProgressLoading,
-    setWatched,
+    setWatchedAsync,
     isSaving,
-  } = useEpisodeProgress(userId, media.id, isInCollection)
+  } = useEpisodeProgress(userId, media.id, variant, true)
   const {
     data: season,
     isLoading: isSeasonLoading,
     error: seasonError,
-  } = useTVSeasonQuery(
-    media.id,
-    selectedSeason,
-    isInCollection && seasons.length > 0 && isExpanded,
-  )
+  } = useTVSeasonQuery(media.id, selectedSeason, seasons.length > 0 && isExpanded)
 
   const seasonEpisodes = useMemo(() => season?.episodes ?? [], [season?.episodes])
   const watchedKeys = useMemo(
@@ -101,35 +100,90 @@ export const useEpisodeTracker = ({
   )
 
   const toggleEpisode = useCallback(
-    (episodeNumber: number) => {
-      if (!canEditProgress) return
+    async (episodeNumber: number) => {
+      const watched = !isEpisodeWatched(episodeNumber)
+      const nextWatchedCount = watched ? watchedCount + 1 : Math.max(watchedCount - 1, 0)
 
-      setWatched({
-        mediaId: media.id,
-        seasonNumber: selectedSeason,
-        episodeNumbers: [episodeNumber],
-        watched: !isEpisodeWatched(episodeNumber),
-      })
+      try {
+        if (watched && status === undefined) {
+          await onStatusChange('watching')
+        }
+
+        await setWatchedAsync({
+          mediaId: media.id,
+          variant,
+          seasonNumber: selectedSeason,
+          episodeNumbers: [episodeNumber],
+          watched,
+        })
+
+        if (watched) {
+          await onStatusChange(
+            totalEpisodes > 0 && nextWatchedCount >= totalEpisodes ? 'watched' : 'watching',
+          )
+        } else if (status === 'watched') {
+          await onStatusChange('watching')
+        }
+      } catch {
+        return
+      }
     },
-    [canEditProgress, isEpisodeWatched, media.id, selectedSeason, setWatched],
+    [
+      isEpisodeWatched,
+      media.id,
+      onStatusChange,
+      selectedSeason,
+      setWatchedAsync,
+      status,
+      totalEpisodes,
+      variant,
+      watchedCount,
+    ],
   )
 
-  const toggleWholeSeason = useCallback(() => {
-    if (!canEditProgress || seasonEpisodes.length === 0) return
+  const toggleWholeSeason = useCallback(async () => {
+    if (seasonEpisodes.length === 0) return
 
-    setWatched({
-      mediaId: media.id,
-      seasonNumber: selectedSeason,
-      episodeNumbers: seasonEpisodes.map((episode) => episode.episode_number),
-      watched: !isWholeSeasonWatched,
-    })
+    const watched = !isWholeSeasonWatched
+    const nextWatchedCount = watched
+      ? watchedCount + seasonEpisodes.length - watchedInSeason
+      : Math.max(watchedCount - watchedInSeason, 0)
+
+    try {
+      if (watched && status === undefined) {
+        await onStatusChange('watching')
+      }
+
+      await setWatchedAsync({
+        mediaId: media.id,
+        variant,
+        seasonNumber: selectedSeason,
+        episodeNumbers: seasonEpisodes.map((episode) => episode.episode_number),
+        watched,
+      })
+
+      if (watched) {
+        await onStatusChange(
+          totalEpisodes > 0 && nextWatchedCount >= totalEpisodes ? 'watched' : 'watching',
+        )
+      } else if (status === 'watched') {
+        await onStatusChange('watching')
+      }
+    } catch {
+      return
+    }
   }, [
-    canEditProgress,
     isWholeSeasonWatched,
     media.id,
+    onStatusChange,
     seasonEpisodes,
     selectedSeason,
-    setWatched,
+    setWatchedAsync,
+    status,
+    totalEpisodes,
+    variant,
+    watchedCount,
+    watchedInSeason,
   ])
 
   const toggleExpanded = useCallback(() => {

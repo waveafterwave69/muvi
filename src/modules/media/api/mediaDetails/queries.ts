@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getMediaById, getMovieCollection, getTVSeason } from './index'
-import type { MediaType } from '../media/types'
+import { MediaType } from '@/shared/domain/media'
 
 export const mediaKeys = {
   all: () => ['media'] as const,

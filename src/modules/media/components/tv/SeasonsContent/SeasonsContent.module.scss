@@ -5,37 +5,6 @@
   margin-top: 24px;
 }
 
-.readOnlyNotice {
-  display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  margin-top: 20px;
-  padding: 13px 15px;
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--card-border-color));
-  border-radius: 14px;
-  background: var(--accent-hover);
-
-  > svg {
-    width: 20px;
-    height: 20px;
-    flex: 0 0 auto;
-    margin-top: 1px;
-    color: var(--accent);
-  }
-
-  strong {
-    color: var(--text-primary);
-    font-size: 14px;
-  }
-
-  p {
-    margin-top: 3px;
-    color: var(--text-muted);
-    font-size: 12px;
-    line-height: 1.4;
-  }
-}
-
 .seasonSummary {
   margin-right: auto;
   padding-bottom: 9px;
@@ -81,16 +50,6 @@
 .episodeWatched {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   background: var(--accent-hover);
-}
-
-.episodeReadOnly {
-  cursor: default;
-  opacity: 0.82;
-
-  &:hover {
-    border-color: var(--card-border-color);
-    transform: none;
-  }
 }
 
 .episodeCheck {
@@ -185,11 +144,6 @@
   .controls {
     align-items: stretch;
     flex-wrap: wrap;
-  }
-
-  .readOnlyNotice {
-    margin-top: 16px;
-    padding: 12px;
   }
 
   .seasonSummary {

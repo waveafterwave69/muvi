@@ -1,6 +1,6 @@
 import { Card } from '@/shared/ui'
 import styles from './SkeletonMediaPage.module.scss'
-import type { MediaType } from '../../../api/media/types'
+import { MediaType } from '@/shared/domain/media'
 
 const ACTORS_COUNT = 6
 

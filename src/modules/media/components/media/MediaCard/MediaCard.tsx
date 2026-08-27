@@ -15,9 +15,9 @@ import {
 } from 'lucide-react'
 import { Button, Card, Link } from '@/shared/ui'
 import styles from './MediaCard.module.scss'
-import { getMediaHref, Media, MediaWatchStatus } from '@/modules/media/api/media/types'
-import { formatMediaComment } from '@/modules/media/lib/mediaComment'
-import TVCardProgress from '../../tv/TVCardProgress/TVCardProgress'
+import { Media } from '@/modules/media/api/media/types'
+import { TVCardProgress } from '@/features/episode-progress'
+import { formatMediaComment, getMediaHref, MediaWatchStatus, MediaActionTarget } from '@/shared/domain/media'
 
 interface MediaCardProps {
   media: Media
@@ -27,6 +27,7 @@ interface MediaCardProps {
   isUpdating: boolean
   showActions: boolean
   userId?: string
+  detailsVariant?: MediaActionTarget
   handleFavorite: () => void
   handleRemoveFromCouple?: () => void
   handleWatched: () => void
@@ -58,6 +59,7 @@ export const MediaCard = ({
   isUpdating,
   showActions,
   userId,
+  detailsVariant,
 }: MediaCardProps) => {
   const posterUrl = media.poster_path ? `https://image.tmdb.org/t/p/w500${media.poster_path}` : null
 
@@ -67,6 +69,9 @@ export const MediaCard = ({
   const visibleComment = comment ? formatMediaComment(comment) : ''
   const tvStatusText = status ? TV_STATUS_LABELS[status] : undefined
   const coupleStatusText = coupleStatus ? COUPLE_STATUS_LABELS[coupleStatus] : undefined
+  const detailsHref = detailsVariant
+    ? `${getMediaHref(media)}?mode=${detailsVariant}`
+    : getMediaHref(media)
   const tvStatusIcon =
     status === 'watched' ? (
       <Check aria-hidden="true" />
@@ -80,7 +85,7 @@ export const MediaCard = ({
   return (
     <Card className={styles.card}>
       <div className={styles.posterContainer}>
-        <Link href={getMediaHref(media)} variant="secondary" className={styles.posterLink}>
+        <Link href={detailsHref} variant="secondary" className={styles.posterLink}>
           {posterUrl ? (
             <Image
               src={posterUrl}
@@ -103,15 +108,15 @@ export const MediaCard = ({
             aria-label={`Рейтинг ${media.rating}`}
           >
             <Star aria-hidden="true" />
-
-            <span> {media.rating}</span>
+            <span>{media.rating}</span>
           </div>
         ) : (
-          <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
-            <Star aria-hidden="true" />
-
-            <span> {media.vote_average.toFixed(1)}</span>
-          </div>
+          media.vote_average > 0 && (
+            <div className={styles.rating} aria-label={`Рейтинг ${media.vote_average.toFixed(1)}`}>
+              <Star aria-hidden="true" />
+              <span>{media.vote_average.toFixed(1)}</span>
+            </div>
+          )
         )}
 
         {(coupleStatus || visibleComment || (media.type === 'tv' && hasStatus && userId)) && (
@@ -145,7 +150,11 @@ export const MediaCard = ({
             )}
 
             {media.type === 'tv' && hasStatus && userId && (
-              <TVCardProgress mediaId={media.id} userId={userId} />
+              <TVCardProgress
+                mediaId={media.id}
+                userId={userId}
+                variant={detailsVariant ?? 'solo'}
+              />
             )}
           </div>
         )}
@@ -167,7 +176,7 @@ export const MediaCard = ({
       </div>
 
       <div className={styles.content}>
-        <Link href={getMediaHref(media)} variant="secondary" className={styles.titleLink}>
+        <Link href={detailsHref} variant="secondary" className={styles.titleLink}>
           <h3 className={styles.title}>{media.title}</h3>
         </Link>
 

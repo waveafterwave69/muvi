@@ -2,18 +2,17 @@ import {
   AddMediaOptions,
   GetMediaStatusesParams,
   Media,
-  MediaType,
   MediaCategory,
   MediaResponse,
   MediaStatuses,
   MediaStatusRow,
-  MediaWatchStatus,
   UserMedia,
   UserMediaResponse,
   getMediaKey,
 } from './types'
 import { supabase } from '@/shared/api/supabase'
-import { normalizeMediaComment } from '../../lib/mediaComment'
+import { MediaType, MediaWatchStatus, normalizeMediaComment } from '@/shared/domain/media'
+import { ensureInactiveUserTVMediaDropped } from '@/features/episode-progress/api/inactivity'
 
 export const getMedia = async ({
   page = 1,
@@ -128,6 +127,8 @@ export const getMediaStatuses = async ({
     return new Map()
   }
 
+  await ensureInactiveUserTVMediaDropped(userId)
+
   const externalIds = Array.from(new Set(media.map((item) => item.id)))
   const requestedKeys = new Set(media.map(getMediaKey))
 
@@ -176,6 +177,10 @@ export const getAllUserMedia = async ({
   const {
     data: { user },
   } = await supabase.auth.getUser()
+
+  if (user?.id) {
+    await ensureInactiveUserTVMediaDropped(user.id)
+  }
 
   let query = supabase
     .from('user_media')

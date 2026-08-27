@@ -1,4 +1,4 @@
-import type { Media, MediaResponse, MediaType } from '../media/types'
+import type { Media, MediaResponse } from '../media/types'
 
 export interface Genre {
   id: number
@@ -87,20 +87,12 @@ export interface TVSeasonDetails {
   season_number: number
 }
 
-export interface MediaDetails {
-  type: MediaType
-  id: number
-  title: string
-  overview: string
-  backdrop_path: string | null
-  poster_path: string | null
+export interface MediaDetails extends Media {
   belongs_to_collection: MovieCollection | null
-  release_date: string
   runtime: number
   number_of_episodes?: number
   number_of_seasons?: number
   seasons?: TVSeasonSummary[]
-  vote_average: number
   genres: Genre[]
   director: string
   cast: CastMember[]

@@ -30,7 +30,6 @@ export const fetchProfile = async (userId: string | null) => {
 export const logoutUser = async () => {
   const { error } = await supabase.auth.signOut()
   if (error) {
-    console.error('Ошибка при выходе из Supabase:', error.message)
     throw error
   }
   return true

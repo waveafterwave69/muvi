@@ -1,14 +1,15 @@
 'use client'
 
 import { ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
-import { getMediaKey, type Media, type MediaType } from '@/modules/media/api/media/types'
+import { getMediaKey, type Media } from '@/modules/media/api/media/types'
 import { useHorizontalSlider } from '@/modules/media/hooks/useHorizontalSlider'
 import { useMediaStatus } from '@/modules/media/hooks/useMediaStatus'
 import { useAddMedia } from '@/modules/media/hooks/useAddMedia'
 import { useCurrentUser } from '@/modules/auth'
 import styles from './SimilarMedia.module.scss'
 import { MediaCard } from '../../media/MediaCard/MediaCard'
-import { MediaActionModals } from '../../media/MediaActionModals/MediaActionModals'
+import { MediaType } from '@/shared/domain/media'
+import { MediaActionModals } from '@/features/media-actions'
 
 interface SimilarMediaProps {
   media: Media[]
@@ -79,6 +80,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
             const mediaKey = getMediaKey(item)
             const status = statuses.get(mediaKey)
             const coupleMediaId = coupleMediaIds.get(mediaKey)
+            const coupleStatus = coupleStatuses.get(mediaKey)
 
             return (
               <li className={styles.mediaItem} key={mediaKey}>
@@ -86,13 +88,19 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
                   media={item}
                   comment={coupleComments.get(mediaKey)}
                   status={status}
-                  coupleStatus={coupleStatuses.get(mediaKey)}
+                  coupleStatus={coupleStatus}
                   isUpdating={isUpdating}
                   showActions={Boolean(user)}
                   userId={user?.id}
-                  handleFavorite={() => handleFavoriteClick(item, status)}
-                  handleWatched={() => handleWatchedClick(item, status)}
-                  handleToggleTVModal={() => handleOpenTVModal(item, status)}
+                  handleFavorite={() =>
+                    handleFavoriteClick(item, status, coupleMediaId, coupleStatus)
+                  }
+                  handleWatched={() =>
+                    handleWatchedClick(item, status, coupleMediaId, coupleStatus)
+                  }
+                  handleToggleTVModal={() =>
+                    handleOpenTVModal(item, status, coupleMediaId, coupleStatus)
+                  }
                   handleRemoveFromCouple={
                     coupleMediaId !== undefined
                       ? () => {

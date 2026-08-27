@@ -6,8 +6,10 @@ import type {
   CoupleMediaItem,
   CoupleMediaResponse,
   CouplePageData,
+  UpdateCoupleMediaParams,
+  UpdateCoupleMediaResult,
 } from './types'
-
+import { ensureInactiveCoupleTVMediaDropped } from '@/features/episode-progress/api/inactivity'
 
 export const getCouplePageData = async (): Promise<CouplePageData> => {
   const { data, error } = await supabase.rpc('get_couple_page_data')
@@ -39,6 +41,8 @@ export const getCoupleMedia = async ({
   search,
   signal,
 }: GetCoupleMediaParams): Promise<CoupleMediaResponse> => {
+  await ensureInactiveCoupleTVMediaDropped(coupleId)
+
   const from = (page - 1) * limit
   const to = from + limit - 1
   const normalizedSearch = search.trim()
@@ -51,15 +55,35 @@ export const getCoupleMedia = async ({
         media_id,
         status,
         created_at,
-        media:media!inner (*)
+        rating,
+        comment,
+        added_by,
+        media:media!inner (
+          id,
+          external_id,
+          source,
+          type,
+          backdrop_path,
+          poster_path,
+          title,
+          vote_average,
+          created_at,
+          updated_at
+        )
       `,
       { count: 'exact' },
     )
     .eq('couple_id', coupleId)
-    .eq('status', status)
-    .eq('media.type', mediaType)
     .order('created_at', { ascending: false })
     .range(from, to)
+
+  if (mediaType) {
+    query = query.eq('media.type', mediaType)
+  }
+
+  if (status) {
+    query = query.eq('status', status)
+  }
 
   if (normalizedSearch) {
     query = query.ilike('media.title', `%${normalizedSearch}%`)
@@ -69,9 +93,12 @@ export const getCoupleMedia = async ({
     query = query.abortSignal(signal)
   }
 
-  const { data, error, count } = await query.overrideTypes<CoupleMediaItem[], {
-    merge: false
-  }>()
+  const { data, error, count } = await query.overrideTypes<
+    CoupleMediaItem[],
+    {
+      merge: false
+    }
+  >()
 
   if (error) {
     throw new Error(`Не удалось загрузить коллекцию пары: ${error.message}`, {
@@ -91,6 +118,50 @@ export const getCoupleMedia = async ({
       hasNextPage: page * limit < total,
       hasPreviousPage: page > 1,
     },
+  }
+}
+
+export const updateCoupleMedia = async ({
+  coupleId,
+  mediaId,
+  status,
+  comment,
+  rating,
+}: UpdateCoupleMediaParams): Promise<UpdateCoupleMediaResult> => {
+  const { data, error } = await supabase.rpc('update_couple_media', {
+    p_couple_id: coupleId,
+    p_media_id: mediaId,
+    p_status: status,
+    p_comment: comment,
+    p_rating: rating,
+  })
+
+  if (error) {
+    throw new Error(`Не удалось обновить медиа в коллекции пары: ${error.message}`, {
+      cause: error,
+    })
+  }
+
+  if (!data) {
+    throw new Error('Сервер не вернул обновлённое медиа')
+  }
+
+  return data as UpdateCoupleMediaResult
+}
+
+export const removeMediaFromCoupleCollection = async (mediaId: number): Promise<void> => {
+  const { data, error } = await supabase.rpc('remove_media_from_couple_collection', {
+    p_media_id: mediaId,
+  })
+
+  if (error) {
+    throw new Error(`Не удалось удалить медиа из коллекции пары: ${error.message}`, {
+      cause: error,
+    })
+  }
+
+  if (!data) {
+    throw new Error('Медиа не найдено в коллекции пары')
   }
 }
 
@@ -115,9 +186,7 @@ const isCoupleInvitePreview = (value: unknown): value is CoupleInvitePreview => 
   )
 }
 
-export const getCoupleInvitePreview = async (
-  inviteId: string,
-): Promise<CoupleInvitePreview> => {
+export const getCoupleInvitePreview = async (inviteId: string): Promise<CoupleInvitePreview> => {
   const { data, error } = await supabase.rpc('get_couple_invite_preview', {
     p_token: inviteId,
   })

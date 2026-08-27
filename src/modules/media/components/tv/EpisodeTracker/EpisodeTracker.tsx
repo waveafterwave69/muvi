@@ -1,11 +1,15 @@
 'use client'
 
-import { ChevronDown, EyeOff } from 'lucide-react'
-import { getMediaKey } from '../../../api/media/types'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronDown, EyeOff, UserRound, UsersRound } from 'lucide-react'
+import { Button, Modal } from '@/shared/ui'
+import { useCurrentProfile } from '@/modules/auth'
+import type { MediaActionTarget } from '@/shared/domain/media'
 import type { MediaDetails } from '../../../api/mediaDetails/types'
 import { useEpisodeTracker } from '../../../hooks/tv/useEpisodeTracker'
-import { useMediaStatus } from '../../../hooks/useMediaStatus'
+import { useEpisodeProgressMode } from '../../../hooks/tv/useEpisodeProgressMode'
 import SeasonsContent from '../SeasonsContent/SeasonsContent'
+import EpisodeTrackerHeader from './EpisodeTrackerHeader'
 import styles from './EpisodeTracker.module.scss'
 
 interface EpisodeTrackerProps {
@@ -13,11 +17,25 @@ interface EpisodeTrackerProps {
   userId: string
 }
 
+type PendingProgressAction =
+  | { type: 'episode'; episodeNumber: number; variant?: MediaActionTarget }
+  | { type: 'season'; variant?: MediaActionTarget }
+
 const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
-  const { statuses, isUpdating: isStatusLoading } = useMediaStatus(media)
-  const status = statuses.get(getMediaKey(media))
-  const isInCollection = Boolean(status)
-  const canEditProgress = status === 'watching' || status === 'watched'
+  const {
+    variant,
+    status,
+    updateStatus,
+    isStatusLoading,
+    hasSoloCollection,
+    hasCoupleCollection,
+    showModeSelector,
+    selectVariant,
+  } = useEpisodeProgressMode(media)
+  const { data: currentProfile } = useCurrentProfile()
+  const [pendingAction, setPendingAction] = useState<PendingProgressAction | null>(null)
+  const executedAction = useRef<PendingProgressAction | null>(null)
+
   const {
     seasons,
     selectedSeason,
@@ -37,31 +55,73 @@ const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
     isEpisodesLoading,
     isSaving,
     seasonError,
-  } = useEpisodeTracker({ media, userId, isInCollection, canEditProgress })
+  } = useEpisodeTracker({
+    media,
+    userId,
+    variant,
+    status,
+    onStatusChange: updateStatus,
+  })
+
+  const shouldAskForVariant =
+    watchedCount === 0 &&
+    !hasSoloCollection &&
+    !hasCoupleCollection &&
+    Boolean(currentProfile?.in_couple)
+
+  const handleToggleEpisode = (episodeNumber: number) => {
+    if (shouldAskForVariant && !isEpisodeWatched(episodeNumber)) {
+      setPendingAction({ type: 'episode', episodeNumber })
+      return
+    }
+
+    void toggleEpisode(episodeNumber)
+  }
+
+  const handleToggleWholeSeason = () => {
+    if (shouldAskForVariant && !isWholeSeasonWatched) {
+      setPendingAction({ type: 'season' })
+      return
+    }
+
+    void toggleWholeSeason()
+  }
+
+  const chooseProgressVariant = (nextVariant: MediaActionTarget) => {
+    if (!pendingAction) return
+
+    executedAction.current = null
+    setPendingAction({ ...pendingAction, variant: nextVariant })
+    selectVariant(nextVariant)
+  }
+
+  useEffect(() => {
+    if (!pendingAction?.variant || pendingAction.variant !== variant) return
+    if (executedAction.current === pendingAction) return
+
+    executedAction.current = pendingAction
+    setPendingAction(null)
+
+    if (pendingAction.type === 'episode') {
+      void toggleEpisode(pendingAction.episodeNumber)
+    } else {
+      void toggleWholeSeason()
+    }
+  }, [pendingAction, toggleEpisode, toggleWholeSeason, variant])
 
   return (
     <section className={styles.tracker} aria-labelledby="episode-tracker-title">
-      <div className={styles.header}>
-        <div className={styles.heading}>
-          <p className={styles.eyebrow}>Мой сериал</p>
-          <h3 id="episode-tracker-title" className={styles.title}>
-            Прогресс просмотра
-          </h3>
-        </div>
-        <div className={styles.headerActions}>
-          <div
-            className={styles.counter}
-            aria-label={`Сериал просмотрен на ${roundedProgressPercent} процентов: ${watchedCount} из ${totalEpisodes} серий`}
-          >
-            <strong>{roundedProgressPercent}%</strong>
-            <span>
-              {watchedCount} из {totalEpisodes} серий
-            </span>
-          </div>
-        </div>
-      </div>
+      <EpisodeTrackerHeader
+        variant={variant}
+        watchedCount={watchedCount}
+        totalEpisodes={totalEpisodes}
+        roundedProgressPercent={roundedProgressPercent}
+        showModeSelector={showModeSelector}
+        isStatusLoading={isStatusLoading}
+        onModeChange={selectVariant}
+      />
 
-      {!isStatusLoading && isInCollection && seasons.length > 0 && (
+      {!isStatusLoading && seasons.length > 0 && (
         <button
           type="button"
           className={styles.collapseButton}
@@ -84,10 +144,7 @@ const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
       </div>
 
       <SeasonsContent
-        status={status}
-        isInCollection={isInCollection}
         isStatusLoading={isStatusLoading}
-        canEditProgress={canEditProgress}
         isExpanded={isExpanded}
         seasons={seasons}
         selectedSeason={selectedSeason}
@@ -96,12 +153,39 @@ const EpisodeTracker = ({ media, userId }: EpisodeTrackerProps) => {
         watchedInSeason={watchedInSeason}
         isWholeSeasonWatched={isWholeSeasonWatched}
         isEpisodeWatched={isEpisodeWatched}
-        onToggleEpisode={toggleEpisode}
-        onToggleWholeSeason={toggleWholeSeason}
+        onToggleEpisode={handleToggleEpisode}
+        onToggleWholeSeason={handleToggleWholeSeason}
         isLoading={isEpisodesLoading}
         isSaving={isSaving}
         error={seasonError}
       />
+
+      <Modal
+        isOpen={Boolean(pendingAction && !pendingAction.variant)}
+        onClose={() => setPendingAction(null)}
+        size="sm"
+        ariaLabel="Выбор коллекции для сериала"
+      >
+        <div className={styles.variantPrompt}>
+          <h3>Куда добавить сериал?</h3>
+          <p>Выберите, чей прогресс будет учитываться для отмеченных серий.</p>
+          <div className={styles.variantPromptActions}>
+            <Button
+              variant="secondary"
+              leftIcon={<UserRound aria-hidden="true" />}
+              onClick={() => chooseProgressVariant('solo')}
+            >
+              Соло
+            </Button>
+            <Button
+              leftIcon={<UsersRound aria-hidden="true" />}
+              onClick={() => chooseProgressVariant('couple')}
+            >
+              В пару
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   )
 }

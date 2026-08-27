@@ -11,11 +11,9 @@ import { useMediaDetailsPage } from '../../hooks/useMediaDetailsPage'
 import SkeletonMediaPage from './SkeletonMediaPage/SkeletonMediaPage'
 import type { MediaVideo } from '../../api/mediaDetails/types'
 import { useParams } from 'next/navigation'
-import type { MediaType } from '../../api/media/types'
 import type { MediaDetails } from '../../api/mediaDetails/types'
-import { getMediaKey } from '../../api/media/types'
-import { useMediaStatus } from '../../hooks/useMediaStatus'
 import EpisodeTracker from '../../components/tv/EpisodeTracker/EpisodeTracker'
+import { MediaType } from '@/shared/domain/media'
 
 interface MediaDetailsPageProps {
   mediaType?: MediaType
@@ -27,11 +25,6 @@ interface EpisodeTrackerCardProps {
 }
 
 const EpisodeTrackerCard = ({ media, userId }: EpisodeTrackerCardProps) => {
-  const { statuses } = useMediaStatus(media)
-  const status = statuses.get(getMediaKey(media))
-
-  if (status === undefined) return null
-
   return (
     <Card>
       <EpisodeTracker media={media} userId={userId} />

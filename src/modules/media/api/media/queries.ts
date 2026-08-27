@@ -8,16 +8,15 @@ import {
 } from '.'
 import {
   AddMediaOptions,
-  MediaIdentity,
-  MediaType,
   Media,
   MediaCategory,
   MediaStatuses,
-  MediaWatchStatus,
   getMediaKey,
 } from './types'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
+import { MediaIdentity, MediaType, MediaWatchStatus } from '@/shared/domain/media'
+import { invalidateMediaCardQueries, mediaCardCacheKeys } from '@/shared/api/query-cache/media'
 
 interface InfiniteMediaQueryParams {
   category?: MediaCategory
@@ -77,16 +76,9 @@ export const useAddMedia = (userId: string) => {
 
   return useMutation<void, Error, AddMediaVariables>({
     mutationFn: ({ media, options }) => addMediaToCollection(media, options),
-    mutationKey: ['user-media', 'add'],
+    mutationKey: [...mediaCardCacheKeys.solo, 'add'],
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ['user-media'],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ['userMedia', userId],
-        }),
-      ])
+      await invalidateMediaCardQueries(queryClient, userId)
     },
     onError: (error) => {
       toast.error(error.message)
@@ -99,16 +91,9 @@ export const useRemoveMedia = (userId: string) => {
 
   return useMutation<void, Error, MediaIdentity>({
     mutationFn: (media) => removeMediaFromCollection(media),
-    mutationKey: ['user-media', 'remove'],
+    mutationKey: [...mediaCardCacheKeys.solo, 'remove'],
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ['user-media'],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ['userMedia', userId],
-        }),
-      ])
+      await invalidateMediaCardQueries(queryClient, userId)
     },
     onError: (error) => {
       toast.error(error.message)
@@ -117,7 +102,7 @@ export const useRemoveMedia = (userId: string) => {
 }
 
 export const mediaStatusKeys = {
-  all: (userId: string) => ['user-media', userId, 'statuses'] as const,
+  all: (userId: string) => [...mediaCardCacheKeys.solo, userId, 'statuses'] as const,
 
   batch: (userId: string, media: MediaIdentity[]) =>
     [...mediaStatusKeys.all(userId), media.map(getMediaKey)] as const,
@@ -154,6 +139,7 @@ export const useMediaStatuses = ({ userId, media }: { userId: string; media: Med
         }),
 
       staleTime: 60_000,
+      refetchInterval: 60 * 60 * 1000,
     })),
 
     combine: (results) => {
@@ -185,7 +171,7 @@ export const useInfiniteFavoriteMediaQuery = ({
   search: string
 }) => {
   return useInfiniteQuery({
-    queryKey: ['user-media', mediaType, status, search],
+    queryKey: [...mediaCardCacheKeys.solo, mediaType, status, search],
 
     initialPageParam: 1,
 

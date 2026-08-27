@@ -2,22 +2,15 @@ import {
   Check,
   CheckCheck,
   Circle,
-  CircleX,
-  Heart,
   LoaderCircle,
-  LockKeyhole,
   Tv,
 } from 'lucide-react'
 import { Button, Select } from '@/shared/ui'
-import type { MediaWatchStatus } from '../../../api/media/types'
 import type { TVEpisode, TVSeasonSummary } from '../../../api/mediaDetails/types'
 import styles from './SeasonsContent.module.scss'
 
 interface SeasonsContentProps {
-  status?: MediaWatchStatus
   isStatusLoading: boolean
-  isInCollection: boolean
-  canEditProgress: boolean
   isExpanded: boolean
   seasons: readonly TVSeasonSummary[]
   selectedSeason: number
@@ -45,10 +38,7 @@ const formatAirDate = (date: string | null) => {
 }
 
 const SeasonsContent = ({
-  status,
   isStatusLoading,
-  isInCollection,
-  canEditProgress,
   isExpanded,
   seasons,
   selectedSeason,
@@ -71,20 +61,6 @@ const SeasonsContent = ({
     )
   }
 
-  if (!isInCollection) {
-    return (
-      <div className={styles.emptyState}>
-        <span className={styles.emptyIcon}>
-          <LockKeyhole />
-        </span>
-        <div>
-          <strong>Сначала добавьте сериал в свою коллекцию</strong>
-          <p>Выберите статус выше — после этого здесь можно будет отмечать серии.</p>
-        </div>
-      </div>
-    )
-  }
-
   if (seasons.length === 0) {
     return (
       <div className={styles.emptyState}>
@@ -103,24 +79,6 @@ const SeasonsContent = ({
 
   return (
     <div id="episode-tracker-content">
-      {!canEditProgress && (
-        <div className={styles.readOnlyNotice} role="note">
-          {status === 'planned' ? <Heart aria-hidden="true" /> : <CircleX aria-hidden="true" />}
-          <div>
-            <strong>
-              {status === 'planned'
-                ? 'Сериал находится в избранном'
-                : 'Сериал отмечен как заброшенный'}
-            </strong>
-            <p>
-              {status === 'planned'
-                ? 'Чтобы отмечать серии, измените статус на «Смотрю сейчас».'
-                : 'Предыдущий прогресс сохранён. Чтобы снова менять отметки, возобновите просмотр.'}
-            </p>
-          </div>
-        </div>
-      )}
-
       <div className={styles.controls}>
         <Select
           label="Сезон"
@@ -141,13 +99,9 @@ const SeasonsContent = ({
           variant="secondary"
           leftIcon={isWholeSeasonWatched ? <CheckCheck /> : <Check />}
           onClick={onToggleWholeSeason}
-          disabled={!canEditProgress || isLoading || isSaving || episodes.length === 0}
+          disabled={isLoading || isSaving || episodes.length === 0}
         >
-          {!canEditProgress
-            ? 'Изменение недоступно'
-            : isWholeSeasonWatched
-              ? 'Снять отметки'
-              : 'Отметить весь сезон'}
+          {isWholeSeasonWatched ? 'Снять отметки' : 'Отметить весь сезон'}
         </Button>
       </div>
 
@@ -166,10 +120,10 @@ const SeasonsContent = ({
               <button
                 key={episode.id}
                 type="button"
-                className={`${styles.episode} ${isWatched ? styles.episodeWatched : ''} ${!canEditProgress ? styles.episodeReadOnly : ''}`}
+                className={`${styles.episode} ${isWatched ? styles.episodeWatched : ''}`}
                 aria-pressed={isWatched}
                 onClick={() => onToggleEpisode(episode.episode_number)}
-                disabled={isSaving || !canEditProgress}
+                disabled={isSaving}
               >
                 <span className={styles.episodeCheck}>
                   {isWatched ? <Check aria-hidden="true" /> : <Circle aria-hidden="true" />}

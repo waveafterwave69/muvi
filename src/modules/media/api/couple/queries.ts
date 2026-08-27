@@ -6,25 +6,26 @@ import {
   getMediaKey,
   type AddMediaOptions,
   type Media,
-  type MediaIdentity,
   type MediaStatuses,
 } from '../media/types'
 import {
   addMediaToCoupleCollection,
   getCoupleMediaStatuses,
-  removeMediaFromCoupleCollection,
 } from '.'
+import { MediaIdentity } from '@/shared/domain/media'
+import { invalidateMediaCardQueries, mediaCardCacheKeys } from '@/shared/api/query-cache/media'
 
 interface AddMediaToCoupleVariables {
   media: Media
   options: AddMediaOptions
+  silent?: boolean
 }
 
 export const coupleMediaKeys = {
-  all: ['couple-media'] as const,
-  add: ['couple-media', 'add'] as const,
-  remove: ['couple-media', 'remove'] as const,
-  statuses: (userId: string) => ['couple-media', userId, 'statuses'] as const,
+  all: mediaCardCacheKeys.couple,
+  add: [...mediaCardCacheKeys.couple, 'add'] as const,
+  statuses: (userId: string) =>
+    [...mediaCardCacheKeys.couple, userId, 'statuses'] as const,
   statusBatch: (userId: string, media: MediaIdentity[]) =>
     [...coupleMediaKeys.statuses(userId), media.map(getMediaKey)] as const,
 }
@@ -51,9 +52,7 @@ export const useCoupleMediaStatuses = ({
       return []
     }
 
-    const uniqueMedia = Array.from(
-      new Map(media.map((item) => [getMediaKey(item), item])).values(),
-    )
+    const uniqueMedia = Array.from(new Map(media.map((item) => [getMediaKey(item), item])).values())
 
     return splitIntoBatches(uniqueMedia, 20)
   }, [media, userId])
@@ -63,6 +62,7 @@ export const useCoupleMediaStatuses = ({
       queryKey: coupleMediaKeys.statusBatch(userId, batch),
       queryFn: () => getCoupleMediaStatuses(batch),
       staleTime: 60_000,
+      refetchInterval: 60 * 60 * 1000,
     })),
     combine: (results) => {
       const statuses: MediaStatuses = new Map()
@@ -95,37 +95,17 @@ export const useAddMediaToCoupleCollection = () => {
   return useMutation<void, Error, AddMediaToCoupleVariables>({
     mutationFn: ({ media, options }) => addMediaToCoupleCollection(media, options),
     mutationKey: coupleMediaKeys.add,
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
       await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: coupleMediaKeys.all,
-        }),
+        invalidateMediaCardQueries(queryClient),
         queryClient.invalidateQueries({
           queryKey: coupleKeys.all,
         }),
       ])
 
-      toast.success('Медиа добавлено в коллекцию пары')
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
-}
-
-export const useRemoveMediaFromCoupleCollection = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation<void, Error, number>({
-    mutationFn: removeMediaFromCoupleCollection,
-    mutationKey: coupleMediaKeys.remove,
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: coupleMediaKeys.all }),
-        queryClient.invalidateQueries({ queryKey: coupleKeys.all }),
-      ])
-
-      toast.success('Медиа удалено из коллекции пары')
+      if (!variables.silent) {
+        toast.success('Медиа добавлено в коллекцию пары')
+      }
     },
     onError: (error) => {
       toast.error(error.message)

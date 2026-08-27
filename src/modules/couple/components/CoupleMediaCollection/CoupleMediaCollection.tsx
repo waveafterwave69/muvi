@@ -1,51 +1,36 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { useInfiniteCoupleMediaQuery } from '@/modules/couple/api/queries'
-import type { CoupleMediaFilters } from '@/modules/couple/api/types'
-import type { Media } from '@/modules/media/api/media/types'
-import { FavoriteFilters } from '@/modules/media/components/FavoriteFilters/FavoriteFilters'
-import { MediaList } from '@/modules/media/components/media/MediaList/MediaList'
-import { useDebounce } from '@/modules/media/hooks/useDebounce'
+import { useInfiniteCoupleMediaQuery } from '../../api/queries'
+import type { CoupleMediaFilters } from '../../api/types'
 import styles from './CoupleMediaCollection.module.scss'
+import { Filters } from '../Filters/Filters'
+import { MediaList } from '../MediaList/MediaList'
+import type { Profile } from '@/modules/profile'
 
 const initialFilters: CoupleMediaFilters = {
-  mediaType: 'movie',
-  status: 'planned',
+  mediaType: null,
+  status: null,
   search: '',
 }
 
 interface CoupleMediaCollectionProps {
+  profiles?: Array<Profile | null | undefined>
   coupleId: string
 }
 
-export const CoupleMediaCollection = ({ coupleId }: CoupleMediaCollectionProps) => {
+export const CoupleMediaCollection = ({ coupleId, profiles }: CoupleMediaCollectionProps) => {
   const [filters, setFilters] = useState<CoupleMediaFilters>(initialFilters)
-  const debouncedSearch = useDebounce(filters.search, 400)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
     useInfiniteCoupleMediaQuery({
       coupleId,
-      mediaType: filters.mediaType,
+      mediaType: null,
       status: filters.status,
-      search: debouncedSearch,
+      search: '',
     })
 
-  const media = useMemo(() => {
-    const items: Media[] = []
-
-    data?.pages.forEach((page) => {
-      page.items.forEach((item) => {
-        const { external_id, release_date, ...mediaItem } = item.media
-
-        items.push({
-          ...mediaItem,
-          id: external_id,
-          release_date: release_date ?? '',
-        })
-      })
-    })
-
-    return items
+  const mediaItems = useMemo(() => {
+    return data?.pages.flatMap((page) => page.items);
   }, [data])
 
   const onChangeFilter = <K extends keyof CoupleMediaFilters>(
@@ -57,18 +42,16 @@ export const CoupleMediaCollection = ({ coupleId }: CoupleMediaCollectionProps) 
 
   return (
     <section className={styles.root} aria-label="Коллекция пары">
-      <FavoriteFilters
-        filters={filters}
-        onChange={onChangeFilter}
-        title="Наша полка"
-        searchPlaceholder="Найти в коллекции пары..."
-      />
+      <Filters filters={filters} onChangeFilter={onChangeFilter} />
       <MediaList
-        media={media}
         isPending={isPending}
+        mediaItems={mediaItems}
         fetchNextPage={fetchNextPage}
+        filters={filters}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
+        coupleId={coupleId}
+        profiles={profiles}
       />
     </section>
   )

@@ -4,9 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ChevronLeft, ChevronRight, Film, GitBranch, Star } from 'lucide-react'
 import type { MediaDetails } from '@/modules/media/api/mediaDetails/types'
-import { getMediaHref, type Media } from '@/modules/media/api/media/types'
+import { type Media } from '@/modules/media/api/media/types'
 import { useHorizontalSlider } from '@/modules/media/hooks/useHorizontalSlider'
 import styles from './MovieSaga.module.scss'
+import { getMediaHref } from '@/shared/domain/media'
 
 interface MovieSagaProps {
   movie: MediaDetails
