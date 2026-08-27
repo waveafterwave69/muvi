@@ -1,10 +1,14 @@
 'use client'
 
-import { Check, MessageSquareText } from 'lucide-react'
+import { Check, MessageSquareText, Trash2 } from 'lucide-react'
 import { useId, type FormEvent } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './CommentModal.module.scss'
-import { MEDIA_COMMENT_MAX_LENGTH, MediaActionTarget } from '@/shared/domain/media'
+import {
+  MEDIA_COMMENT_MAX_LENGTH,
+  type MediaActionTarget,
+  type MediaWatchStatus,
+} from '@/shared/domain/media'
 
 export interface CommentModalProps {
   isOpen: boolean
@@ -13,8 +17,10 @@ export interface CommentModalProps {
   onCommentChange: (comment: string) => void
   onSubmit: () => void
   isSubmitting?: boolean
+  currentStatus?: MediaWatchStatus
+  onRemove: () => void
   target: MediaActionTarget
-  onTargetChange?: (value: MediaActionTarget) => void,
+  onTargetChange?: (value: MediaActionTarget) => void
   allowTargetSelection: boolean
 }
 
@@ -30,6 +36,8 @@ export const CommentModal = ({
   onCommentChange,
   onSubmit,
   isSubmitting = false,
+  currentStatus,
+  onRemove,
   target,
   onTargetChange,
   allowTargetSelection,
@@ -57,18 +65,20 @@ export const CommentModal = ({
           </div>
         </header>
 
-        {allowTargetSelection && <Tabs
-          className={styles.tabs}
-          tabs={viewingModes}
-          value={target}
-          variant="primary"
-          size="sm"
-          onChange={(v) => {
-            if(v === 'solo' || v === 'couple') {
-              onTargetChange?.(v)
-            }
-          }}
-        />}
+        {allowTargetSelection && (
+          <Tabs
+            className={styles.tabs}
+            tabs={viewingModes}
+            value={target}
+            variant="primary"
+            size="sm"
+            onChange={(value) => {
+              if (value === 'solo' || value === 'couple') {
+                onTargetChange?.(value)
+              }
+            }}
+          />
+        )}
 
         <div className={styles.field}>
           <div className={styles.labelRow}>
@@ -107,6 +117,18 @@ export const CommentModal = ({
         >
           {isSubmitting ? 'Сохраняем...' : 'Сохранить комментарий'}
         </Button>
+        {currentStatus && (
+          <Button
+            className={styles.removeButton}
+            type="button"
+            variant="outline"
+            leftIcon={<Trash2 aria-hidden="true" />}
+            onClick={onRemove}
+            disabled={isSubmitting}
+          >
+            Убрать статус
+          </Button>
+        )}
       </form>
     </Modal>
   )

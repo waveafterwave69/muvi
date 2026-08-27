@@ -1,6 +1,11 @@
 import { MediaActionTarget } from '@/shared/domain/media'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getEpisodeProgress, getTVEpisodeCount, markAllTVEpisodesWatched, setEpisodesWatched } from './index'
+import {
+  getEpisodeProgress,
+  getTVEpisodeCount,
+  markAllTVEpisodesWatched,
+  setEpisodesWatched,
+} from './index'
 import { toast } from 'sonner'
 import { EpisodeProgress, MarkAllTVEpisodesWatchedParams, SetEpisodesWatchedParams } from './types'
 
@@ -26,7 +31,12 @@ export const useEpisodeProgress = (
     enabled: enabled && Boolean(userId) && mediaId > 0,
   })
 
-  const mutation = useMutation<void, Error, SetEpisodesWatchedParams, { previous?: EpisodeProgress[] }>({
+  const mutation = useMutation<
+    void,
+    Error,
+    SetEpisodesWatchedParams,
+    { previous?: EpisodeProgress[] }
+  >({
     mutationFn: setEpisodesWatched,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey })
@@ -61,7 +71,12 @@ export const useEpisodeProgress = (
     onSettled: () => queryClient.invalidateQueries({ queryKey }),
   })
 
-  return { ...query, setWatched: mutation.mutate, isSaving: mutation.isPending }
+  return {
+    ...query,
+    setWatched: mutation.mutate,
+    setWatchedAsync: mutation.mutateAsync,
+    isSaving: mutation.isPending,
+  }
 }
 
 export const useTVEpisodeCount = (mediaId: number, enabled: boolean) =>

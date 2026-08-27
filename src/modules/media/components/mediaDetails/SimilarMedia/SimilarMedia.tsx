@@ -80,6 +80,7 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
             const mediaKey = getMediaKey(item)
             const status = statuses.get(mediaKey)
             const coupleMediaId = coupleMediaIds.get(mediaKey)
+            const coupleStatus = coupleStatuses.get(mediaKey)
 
             return (
               <li className={styles.mediaItem} key={mediaKey}>
@@ -87,13 +88,19 @@ const SimilarMedia = ({ media, mediaType = 'movie' }: SimilarMediaProps) => {
                   media={item}
                   comment={coupleComments.get(mediaKey)}
                   status={status}
-                  coupleStatus={coupleStatuses.get(mediaKey)}
+                  coupleStatus={coupleStatus}
                   isUpdating={isUpdating}
                   showActions={Boolean(user)}
                   userId={user?.id}
-                  handleFavorite={() => handleFavoriteClick(item, status)}
-                  handleWatched={() => handleWatchedClick(item, status)}
-                  handleToggleTVModal={() => handleOpenTVModal(item, status)}
+                  handleFavorite={() =>
+                    handleFavoriteClick(item, status, coupleMediaId, coupleStatus)
+                  }
+                  handleWatched={() =>
+                    handleWatchedClick(item, status, coupleMediaId, coupleStatus)
+                  }
+                  handleToggleTVModal={() =>
+                    handleOpenTVModal(item, status, coupleMediaId, coupleStatus)
+                  }
                   handleRemoveFromCouple={
                     coupleMediaId !== undefined
                       ? () => {

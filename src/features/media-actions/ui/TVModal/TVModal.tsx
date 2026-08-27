@@ -13,7 +13,7 @@ interface TVModalProps {
   currentStatus?: MediaWatchStatus
   isSubmitting?: boolean
   target: MediaActionTarget
-  onTargetChange?: (value: MediaActionTarget) => void,
+  onTargetChange?: (value: MediaActionTarget) => void
   allowTargetSelection: boolean
 }
 
@@ -45,7 +45,7 @@ const TVModal: FC<TVModalProps> = ({
   isSubmitting = false,
   target,
   onTargetChange,
-  allowTargetSelection
+  allowTargetSelection,
 }) => {
   const [selectedTab, setSelectedTab] = useState<TVWatchStatus | null>(null)
   const currentTab = selectedTab ?? getTVWatchStatus(currentStatus)
@@ -78,6 +78,7 @@ const TVModal: FC<TVModalProps> = ({
           size="sm"
           onChange={(value) => {
             if (value === 'solo' || value === 'couple') {
+              setSelectedTab(null)
               onTargetChange?.(value)
             }
           }}

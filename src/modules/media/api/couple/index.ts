@@ -1,12 +1,8 @@
 import { supabase } from '@/shared/api/supabase'
-import {
-  getMediaKey,
-  type AddMediaOptions,
-  type Media,
-  type MediaStatusRow,
-} from '../media/types'
+import { getMediaKey, type AddMediaOptions, type Media, type MediaStatusRow } from '../media/types'
 import type { CoupleMediaStatusMap } from './types'
 import { MediaIdentity, MediaWatchStatus, normalizeMediaComment } from '@/shared/domain/media'
+import { ensureInactiveCoupleTVMediaDropped } from '@/features/episode-progress/api/inactivity'
 
 export interface AddMediaToCoupleResult {
   couple_id: string
@@ -67,6 +63,8 @@ export const getCoupleMediaStatuses = async (
     return new Map()
   }
 
+  await ensureInactiveCoupleTVMediaDropped()
+
   const externalIds = Array.from(new Set(media.map((item) => item.id)))
   const requestedKeys = new Set(media.map(getMediaKey))
 
@@ -81,9 +79,12 @@ export const getCoupleMediaStatuses = async (
       `,
     )
     .in('media.external_id', externalIds)
-    .overrideTypes<Array<MediaStatusRow & { media_id: number; comment: string | null }>, {
-      merge: false
-    }>()
+    .overrideTypes<
+      Array<MediaStatusRow & { media_id: number; comment: string | null }>,
+      {
+        merge: false
+      }
+    >()
 
   if (error) {
     throw new Error(`Не удалось получить статусы медиа пары: ${error.message}`, {

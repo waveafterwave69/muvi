@@ -1,10 +1,10 @@
 'use client'
 
-import { Star } from 'lucide-react'
+import { Star, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button, Modal, Tabs } from '@/shared/ui'
 import styles from './StarsModal.module.scss'
-import { MediaActionTarget } from '@/shared/domain/media'
+import type { MediaActionTarget, MediaWatchStatus } from '@/shared/domain/media'
 
 interface Props {
   isOpen: boolean
@@ -13,8 +13,10 @@ interface Props {
   stars: number | null
   onSubmit: () => void
   isSubmitting?: boolean
+  currentStatus?: MediaWatchStatus
+  onRemove: () => void
   target: MediaActionTarget
-  onTargetChange?: (value: MediaActionTarget) => void,
+  onTargetChange?: (value: MediaActionTarget) => void
   allowTargetSelection: boolean
 }
 
@@ -31,6 +33,8 @@ export const StarsModal = ({
   setStars,
   onSubmit,
   isSubmitting = false,
+  currentStatus,
+  onRemove,
   target,
   onTargetChange,
   allowTargetSelection,
@@ -44,17 +48,19 @@ export const StarsModal = ({
         <h3 className={styles.title}>Как тебе?</h3>
         <p className={styles.description}>{stars ? `${stars}/10` : 'Поставь оценку от 1 до 10'}</p>
 
-        {allowTargetSelection && <Tabs
-          tabs={viewingModes}
-          value={target}
-          variant="primary"
-          size="sm"
-          onChange={(value) => {
-            if (value === 'solo' || value === 'couple') {
-              onTargetChange?.(value)
-            }
-          }}
-        />}
+        {allowTargetSelection && (
+          <Tabs
+            tabs={viewingModes}
+            value={target}
+            variant="primary"
+            size="sm"
+            onChange={(value) => {
+              if (value === 'solo' || value === 'couple') {
+                onTargetChange?.(value)
+              }
+            }}
+          />
+        )}
 
         <div className={styles.stars} role="group" aria-label="Оценка от 1 до 10">
           {ratings.map((rating) => (
@@ -83,6 +89,17 @@ export const StarsModal = ({
         >
           {isSubmitting ? 'Сохраняем...' : 'Сохранить'}
         </Button>
+        {currentStatus && (
+          <Button
+            className={styles.removeButton}
+            variant="outline"
+            leftIcon={<Trash2 aria-hidden="true" />}
+            onClick={onRemove}
+            disabled={isSubmitting}
+          >
+            Убрать статус
+          </Button>
+        )}
       </div>
     </Modal>
   )

@@ -24,7 +24,6 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
   const removeMediaFromCouple = useRemoveMediaFromCoupleCollection()
   const markAllTVEpisodesWatched = useMarkAllTVEpisodesWatched(userId ?? '')
 
-
   const {
     statuses,
     isPending: isStatusesPending,
@@ -45,11 +44,17 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     media,
   })
 
-  const addMedia = async (media: Media, options: AddMediaOptions, variant: MediaActionTarget) => {
+  const addMedia = async (
+    media: Media,
+    options: AddMediaOptions,
+    variant: MediaActionTarget,
+    silent = false,
+  ) => {
     if (variant === 'couple') {
       await addMediaToCouple.mutateAsync({
         media,
         options,
+        silent,
       })
     } else {
       await addMediaToCollection.mutateAsync({

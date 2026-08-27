@@ -10,6 +10,7 @@ import {
   Check,
   CircleX,
   Clock2,
+  HeartHandshake,
   LibraryBig,
   ListChecks,
   MoveLeft,
@@ -36,10 +37,28 @@ const getImageUrl = (path: string | null | undefined, size: string = 'original')
   return `https://image.tmdb.org/t/p/${size}${path}`
 }
 
-const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
-  const { addMedia, removeCoupleMedia, removeMedia, isUpdating, statuses } = useMediaStatus(media)
+const COUPLE_STATUS_LABELS = {
+  planned: 'В планах',
+  watching: 'Смотрим',
+  watched: 'Просмотрено',
+  dropped: 'Заброшено',
+} as const
 
-  const status = statuses.get(getMediaKey(media))
+const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
+  const {
+    addMedia,
+    removeCoupleMedia,
+    removeMedia,
+    isUpdating,
+    statuses,
+    coupleMediaIds,
+    coupleStatuses,
+  } = useMediaStatus(media)
+
+  const mediaKey = getMediaKey(media)
+  const status = statuses.get(mediaKey)
+  const coupleStatus = coupleStatuses.get(mediaKey)
+  const coupleMediaId = coupleMediaIds.get(mediaKey)
   const isFavorite = status === 'planned'
   const isWatched = status === 'watched'
   const hasTVStatus = status === 'watched' || status === 'watching' || status === 'dropped'
@@ -120,6 +139,14 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
           <span className={styles.badge}>
             <Clock2 aria-hidden="true" /> {formatRuntime(media.runtime)}
           </span>
+          {coupleStatus && (
+            <span
+              className={`${styles.badge} ${styles.coupleBadge}`}
+              aria-label={`Статус в коллекции пары: ${COUPLE_STATUS_LABELS[coupleStatus]}`}
+            >
+              <HeartHandshake aria-hidden="true" />В паре · {COUPLE_STATUS_LABELS[coupleStatus]}
+            </span>
+          )}
         </div>
 
         <h3 className={styles.title}>{media.title}</h3>
@@ -174,7 +201,9 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
                 leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus />}
                 aria-label={isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
                 disabled={isUpdating}
-                onClick={() => handleFavoriteClick(mappedMedia, status)}
+                onClick={() =>
+                  handleFavoriteClick(mappedMedia, status, coupleMediaId, coupleStatus)
+                }
               >
                 <span className={styles.watchedButtonLabel}>
                   {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
@@ -188,7 +217,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
                 leftIcon={isWatched ? <Check aria-hidden="true" /> : <Plus />}
                 aria-label={isWatched ? 'Удалить из просмотренного' : 'Добавить в просмотренное'}
                 disabled={isUpdating}
-                onClick={() => handleWatchedClick(mappedMedia, status)}
+                onClick={() => handleWatchedClick(mappedMedia, status, coupleMediaId, coupleStatus)}
               >
                 <span className={styles.watchedButtonLabel}>
                   {isWatched ? 'Просмотрено' : 'Добавить в просмотренное'}
@@ -202,9 +231,13 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
                 variant={isFavorite ? 'primary' : 'secondary'}
                 className={styles.watchedButton}
                 leftIcon={isFavorite ? <Check aria-hidden="true" /> : <Plus aria-hidden="true" />}
-                aria-label={isFavorite ? 'Убрать сериал из избранного' : 'Добавить сериал в избранное'}
+                aria-label={
+                  isFavorite ? 'Убрать сериал из избранного' : 'Добавить сериал в избранное'
+                }
                 disabled={isUpdating}
-                onClick={() => handleFavoriteClick(mappedMedia, status)}
+                onClick={() =>
+                  handleFavoriteClick(mappedMedia, status, coupleMediaId, coupleStatus)
+                }
               >
                 <span className={styles.watchedButtonLabel}>
                   {isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'}
@@ -226,7 +259,7 @@ const MediaPromo: FC<MediaPromoProps> = ({ media, isAuthenticated, type }) => {
                         : 'Выбрать статус сериала'
                 }
                 disabled={isUpdating}
-                onClick={() => handleOpenTVModal(mappedMedia, status)}
+                onClick={() => handleOpenTVModal(mappedMedia, status, coupleMediaId, coupleStatus)}
               >
                 {status === 'watching'
                   ? 'Смотрю сейчас'
