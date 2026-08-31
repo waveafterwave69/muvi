@@ -105,7 +105,7 @@ export const useEpisodeTracker = ({
       const nextWatchedCount = watched ? watchedCount + 1 : Math.max(watchedCount - 1, 0)
 
       try {
-        if (watched && status === undefined) {
+        if (watched && status !== 'watching' && status !== 'watched') {
           await onStatusChange('watching')
         }
 
@@ -150,7 +150,7 @@ export const useEpisodeTracker = ({
       : Math.max(watchedCount - watchedInSeason, 0)
 
     try {
-      if (watched && status === undefined) {
+      if (watched && status !== 'watching' && status !== 'watched') {
         await onStatusChange('watching')
       }
 
