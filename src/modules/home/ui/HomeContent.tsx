@@ -52,18 +52,22 @@ const HomeContent = () => {
         Тёплое место для любимых фильмов и общих планов.
       </motion.p>
       <motion.div variants={itemVariants} className={styles.buttons}>
-        {!data && <Button
-          onClick={() => handleRedirectAuth('login')}
-          className={styles.button__border}
-          variant="secondary"
-        >
-          <LogIn size={22} /> Войти
-        </Button>}
+        {!data && (
+          <Button
+            onClick={() => handleRedirectAuth('login')}
+            className={styles.button__border}
+            variant="secondary"
+          >
+            <LogIn size={22} /> Войти
+          </Button>
+        )}
 
-        {!data && <Button onClick={() => handleRedirectAuth('signup')}>
-          Зарегистрироваться
-          <MoveRight size={24} />
-        </Button>}
+        {!data && (
+          <Button onClick={() => handleRedirectAuth('signup')}>
+            Зарегистрироваться
+            <MoveRight size={24} />
+          </Button>
+        )}
       </motion.div>
     </motion.div>
   )
