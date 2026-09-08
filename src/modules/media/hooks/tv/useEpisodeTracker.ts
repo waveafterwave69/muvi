@@ -9,7 +9,10 @@ interface UseEpisodeTrackerParams {
   userId: string
   variant: MediaActionTarget
   status?: MediaWatchStatus
-  onStatusChange: (status: 'watching' | 'watched' | 'dropped') => Promise<void>
+  onStatusChange: (
+    status: 'watching' | 'watched' | 'dropped',
+    options?: { syncEpisodeProgress?: boolean },
+  ) => Promise<void>
 }
 
 interface SeasonSelection {
@@ -103,10 +106,17 @@ export const useEpisodeTracker = ({
     async (episodeNumber: number) => {
       const watched = !isEpisodeWatched(episodeNumber)
       const nextWatchedCount = watched ? watchedCount + 1 : Math.max(watchedCount - 1, 0)
+      const nextStatus =
+        watched && totalEpisodes > 0 && nextWatchedCount >= totalEpisodes
+          ? 'watched'
+          : 'watching'
 
       try {
-        if (watched && status === undefined) {
-          await onStatusChange('watching')
+        let effectiveStatus = status
+
+        if (watched && status !== 'watching' && status !== 'watched') {
+          await onStatusChange('watching', { syncEpisodeProgress: false })
+          effectiveStatus = 'watching'
         }
 
         await setWatchedAsync({
@@ -117,12 +127,10 @@ export const useEpisodeTracker = ({
           watched,
         })
 
-        if (watched) {
-          await onStatusChange(
-            totalEpisodes > 0 && nextWatchedCount >= totalEpisodes ? 'watched' : 'watching',
-          )
-        } else if (status === 'watched') {
-          await onStatusChange('watching')
+        if (watched && effectiveStatus !== nextStatus) {
+          await onStatusChange(nextStatus, { syncEpisodeProgress: false })
+        } else if (!watched && effectiveStatus === 'watched') {
+          await onStatusChange('watching', { syncEpisodeProgress: false })
         }
       } catch {
         return
@@ -148,10 +156,17 @@ export const useEpisodeTracker = ({
     const nextWatchedCount = watched
       ? watchedCount + seasonEpisodes.length - watchedInSeason
       : Math.max(watchedCount - watchedInSeason, 0)
+    const nextStatus =
+      watched && totalEpisodes > 0 && nextWatchedCount >= totalEpisodes
+        ? 'watched'
+        : 'watching'
 
     try {
-      if (watched && status === undefined) {
-        await onStatusChange('watching')
+      let effectiveStatus = status
+
+      if (watched && status !== 'watching' && status !== 'watched') {
+        await onStatusChange('watching', { syncEpisodeProgress: false })
+        effectiveStatus = 'watching'
       }
 
       await setWatchedAsync({
@@ -162,12 +177,10 @@ export const useEpisodeTracker = ({
         watched,
       })
 
-      if (watched) {
-        await onStatusChange(
-          totalEpisodes > 0 && nextWatchedCount >= totalEpisodes ? 'watched' : 'watching',
-        )
-      } else if (status === 'watched') {
-        await onStatusChange('watching')
+      if (watched && effectiveStatus !== nextStatus) {
+        await onStatusChange(nextStatus, { syncEpisodeProgress: false })
+      } else if (!watched && effectiveStatus === 'watched') {
+        await onStatusChange('watching', { syncEpisodeProgress: false })
       }
     } catch {
       return

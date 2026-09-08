@@ -8,6 +8,7 @@ export type AddMediaHandler = (
   options: AddMediaOptions,
   variant: MediaActionTarget,
   silent?: boolean,
+  syncEpisodeProgress?: boolean,
 ) => Promise<void>
 
 export type RemoveMediaHandler = (media: Pick<Media, 'id' | 'type'>) => Promise<void>

@@ -49,6 +49,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
     options: AddMediaOptions,
     variant: MediaActionTarget,
     silent = false,
+    syncEpisodeProgress = true,
   ) => {
     if (variant === 'couple') {
       await addMediaToCouple.mutateAsync({
@@ -63,7 +64,7 @@ export const useMediaStatus = (items: Media[] | Media | MediaDetails | MediaDeta
       })
     }
 
-    if (media.type === 'tv' && options.status === 'watched') {
+    if (syncEpisodeProgress && media.type === 'tv' && options.status === 'watched') {
       await markAllTVEpisodesWatched.mutateAsync({ mediaId: media.id, variant })
     }
   }
