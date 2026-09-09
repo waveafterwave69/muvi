@@ -5,6 +5,10 @@ import { getMediaKey } from '../../api/media/types'
 import { useMediaStatus } from '../useMediaStatus'
 import { MediaActionTarget } from '@/shared/domain/media'
 
+interface UpdateStatusOptions {
+  syncEpisodeProgress?: boolean
+}
+
 export const useEpisodeProgressMode = (media: MediaDetails) => {
   const router = useRouter()
   const pathname = usePathname()
@@ -44,7 +48,10 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
           : preferredVariant
   const status = variant === 'couple' ? coupleStatus : soloStatus
 
-  const updateStatus = (nextStatus: 'watching' | 'watched' | 'dropped') =>
+  const updateStatus = (
+    nextStatus: 'watching' | 'watched' | 'dropped',
+    { syncEpisodeProgress = true }: UpdateStatusOptions = {},
+  ) =>
     addMedia(
       media,
       {
@@ -54,6 +61,7 @@ export const useEpisodeProgressMode = (media: MediaDetails) => {
       },
       variant,
       true,
+      syncEpisodeProgress,
     )
 
   const selectVariant = (nextVariant: MediaActionTarget) => {
